@@ -7,6 +7,7 @@
 {
   imports =
     [
+      ./hardware-configuration.nix
       ./../../nixosModules/services/networkStorage.nix
       ./../../nixosModules/environments/cpp.nix
       ./../../nixosModules/environments/dotnet.nix
@@ -21,7 +22,10 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "nixos"; # Define your hostname.
+
+  # Enable VS Code remote server
+  services.vscode-server.enable = true;
 
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
