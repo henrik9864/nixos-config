@@ -5,6 +5,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./../../nixosModules/system/ip.nix
+      ./../../nixosModules/services/docker.nix
     ];
 
   # Use the GRUB 2 boot loader.
@@ -49,6 +50,12 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
+  # Enable Docker
+  services.docker = {
+    enable = true;
+    extraUsers = [ "henrik" ];
+  };
 
   system.stateVersion = "25.11"; # Did you read the comment?
 }
