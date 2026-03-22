@@ -34,7 +34,7 @@ in
             default = true;
             description = ''
               Whether to mount lazily on first access rather than blocking boot.
-              Creates a systemd .automount unit instead of mounting at boot.
+              Uses noauto + x-systemd.automount under the hood.
             '';
           };
 
@@ -67,29 +67,28 @@ in
       lib.mapAttrsToList (_: mount: mount.fsType) cfg.mounts
     );
 
-    # Use systemd.mounts instead of fileSystems so switch-to-configuration
-    # never tries to directly start the .mount unit on rebuild
-    systemd.mounts = lib.mapAttrsToList (_: mount: {
-      what = mount.device;
-      where = mount.mountPoint;
-      type = mount.fsType;
-      options = lib.concatStringsSep "," mount.options;
-      # Only wanted by automount unit, not by any boot target
-      wantedBy = lib.mkIf (!mount.automount) [ "multi-user.target" ];
-    }) cfg.mounts;
+    # Generate a fileSystems entry for each mount
+    fileSystems = lib.mapAttrs' (_: mount:
+      let
+        automountOptions =
+          lib.optionals mount.automount [
+            "noauto"
+            "x-systemd.automount"
+          ]
+          ++ lib.optional (mount.automount && mount.idleTimeout != null)
+            "x-systemd.idle-timeout=${toString mount.idleTimeout}";
 
-    # For automount mounts: create a systemd.automounts entry that triggers
-    # the mount on first access instead of at boot
-    systemd.automounts = lib.filter (x: x != null) (
-      lib.mapAttrsToList (_: mount:
-        if mount.automount then {
-          where = mount.mountPoint;
-          wantedBy = [ "multi-user.target" ];
-          automountConfig = lib.optionalAttrs (mount.idleTimeout != null) {
-            TimeoutIdleSec = toString mount.idleTimeout;
-          };
-        } else null
-      ) cfg.mounts
-    );
+        allOptions = automountOptions ++ mount.options;
+      in
+      lib.nameValuePair mount.mountPoint (
+        {
+          device = mount.device;
+          fsType = mount.fsType;
+        }
+        // lib.optionalAttrs (allOptions != [ ]) {
+          options = allOptions;
+        }
+      )
+    ) cfg.mounts;
   };
 }
