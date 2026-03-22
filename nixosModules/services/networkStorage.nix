@@ -29,11 +29,30 @@ in
             example = "cifs";
           };
 
+          automount = lib.mkOption {
+            type = lib.types.bool;
+            default = true;
+            description = ''
+              Whether to mount lazily on first access rather than blocking boot.
+              Creates a systemd .automount unit instead of mounting at boot.
+            '';
+          };
+
+          idleTimeout = lib.mkOption {
+            type = lib.types.nullOr lib.types.int;
+            default = null;
+            description = ''
+              Unmount the share after this many seconds of inactivity.
+              Set to null to keep it mounted indefinitely once connected.
+            '';
+            example = 600;
+          };
+
           options = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             default = [ ];
             description = "Additional mount options";
-            example = [ "noauto" "x-systemd.automount" "x-systemd.idle-timeout=600" ];
+            example = [ "ro" "vers=4" ];
           };
         };
       });
@@ -48,15 +67,29 @@ in
       lib.mapAttrsToList (_: mount: mount.fsType) cfg.mounts
     );
 
-    # Generate a fileSystems entry for each mount
-    fileSystems = lib.mapAttrs' (_: mount:
-      lib.nameValuePair mount.mountPoint {
-        device = mount.device;
-        fsType = mount.fsType;
-      }
-      // lib.optionalAttrs (mount.options != [ ]) {
-        options = mount.options;
-      }
-    ) cfg.mounts;
+    # Use systemd.mounts instead of fileSystems so switch-to-configuration
+    # never tries to directly start the .mount unit on rebuild
+    systemd.mounts = lib.mapAttrsToList (_: mount: {
+      what = mount.device;
+      where = mount.mountPoint;
+      type = mount.fsType;
+      options = lib.concatStringsSep "," mount.options;
+      # Only wanted by automount unit, not by any boot target
+      wantedBy = lib.mkIf (!mount.automount) [ "multi-user.target" ];
+    }) cfg.mounts;
+
+    # For automount mounts: create a systemd.automounts entry that triggers
+    # the mount on first access instead of at boot
+    systemd.automounts = lib.filter (x: x != null) (
+      lib.mapAttrsToList (_: mount:
+        if mount.automount then {
+          where = mount.mountPoint;
+          wantedBy = [ "multi-user.target" ];
+          automountConfig = lib.optionalAttrs (mount.idleTimeout != null) {
+            TimeoutIdleSec = toString mount.idleTimeout;
+          };
+        } else null
+      ) cfg.mounts
+    );
   };
 }

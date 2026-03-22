@@ -13,19 +13,34 @@
       ./../../nixosModules/environments/dotnet.nix
       ./../../nixosModules/environments/fpga.nix
       ./../../nixosModules/environments/buildroot.nix
+      ./../../nixosModules/system/ip.nix
     ];
 
   # Enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Setup static ip
+  system.ip = {
+    enable = true;
+    interface = "ens18";
+    address = "192.168.10.60";
+    gateway = "192.168.10.1";
+  };
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Enable bleeding edge linux kernel
+  boot.kernelPackages = pkgs.linuxPackages_testing;
 
   networking.hostName = "nixos"; # Define your hostname.
 
   # Enable VS Code remote server
   services.vscode-server.enable = true;
+
+  # Enable QEMU emulation during builds
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
@@ -36,11 +51,22 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.henrik = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" ];
+    shell = pkgs.zsh;
     packages = with pkgs; [
       tree
       nixd
     ];
+  };
+
+  # Enable zsh
+  programs.zsh = {
+    enable = true;
+    ohMyZsh = {
+      enable = true;
+      theme = "robbyrussell";
+      plugins = [ "git" "sudo" "docker" "z" "fzf" ];
+    }; 
   };
 
   # Ensure vs code lsp works
@@ -52,8 +78,21 @@
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     git
-    unzip
+    usbutils
     file
+    usbutils
+    fzf
+
+    # Rockchip
+    libusb1
+    (pkgs.rkdeveloptool.overrideAttrs (old: {
+      src = pkgs.fetchFromGitHub {
+        owner = "radxa";
+        repo = "rkdeveloptool";
+        rev = "master";  # or a specific commit
+        hash = "sha256-kh6tQky2HBbkbY5dGd1VFDETbKm6YE1PnifFPt2lHK4=";  # nix will tell you the correct hash
+      };
+    }))
   ];
 
   # Configure NAS

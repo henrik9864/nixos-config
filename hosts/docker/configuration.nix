@@ -4,6 +4,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./../../nixosModules/system/ip.nix
     ];
 
   # Use the GRUB 2 boot loader.
@@ -11,6 +12,14 @@
   boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
 
   networking.hostName = "nixos-docker"; # Define your hostname.
+
+  # Setup static ip
+  system.ip = {
+    enable = true;
+    interface = "ens18";
+    address = "192.168.10.61";
+    gateway = "192.168.10.1";
+  };
 
   # Enable VS Code remote server
   services.vscode-server.enable = true;
