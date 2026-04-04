@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.environments.fpga;
@@ -8,10 +13,20 @@ in
     enable = lib.mkEnableOption "FPGA development environment using open source tools";
 
     families = lib.mkOption {
-      type = lib.types.listOf (lib.types.enum [ "ice40" "ecp5" "gowin" "machxo2" ]);
+      type = lib.types.listOf (
+        lib.types.enum [
+          "ice40"
+          "ecp5"
+          "gowin"
+          "machxo2"
+        ]
+      );
       default = [ "ice40" ];
       description = "FPGA families to support. Determines which nextpnr backends and bitstream tools are installed.";
-      example = [ "ice40" "ecp5" ];
+      example = [
+        "ice40"
+        "ecp5"
+      ];
     };
 
     extraPackages = lib.mkOption {
@@ -23,7 +38,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs;
+    environment.systemPackages =
+      with pkgs;
       let
         hasFamily = f: builtins.elem f cfg.families;
       in
@@ -42,15 +58,15 @@ in
         dfu-util
       ]
       ++ lib.optionals (hasFamily "ice40") [
-        icestorm       # icepack, iceprog, icetime
+        icestorm # icepack, iceprog, icetime
         icesprog
       ]
       ++ lib.optionals (hasFamily "ecp5") [
-        trellis        # ecppack, ecpprog
+        trellis # ecppack, ecpprog
         openFPGALoader
       ]
       ++ lib.optionals (hasFamily "gowin") [
-        apicula        # gowin bitstream tools
+        apicula # gowin bitstream tools
         openFPGALoader
       ]
       ++ lib.optionals (hasFamily "machxo2") [

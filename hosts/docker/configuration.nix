@@ -1,12 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./../../nixosModules/system/ip.nix
-      ./../../nixosModules/services/docker.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./../../nixosModules/system/ip.nix
+    ./../../nixosModules/services/docker.nix
+  ];
 
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
@@ -59,4 +64,3 @@
 
   system.stateVersion = "25.11"; # Did you read the comment?
 }
-

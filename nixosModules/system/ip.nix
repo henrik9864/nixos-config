@@ -35,9 +35,15 @@ in
 
     nameservers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [ "1.1.1.1" "8.8.8.8" ];
+      default = [
+        "1.1.1.1"
+        "8.8.8.8"
+      ];
       description = "List of DNS nameservers";
-      example = [ "192.168.1.1" "1.1.1.1" ];
+      example = [
+        "192.168.1.1"
+        "1.1.1.1"
+      ];
     };
   };
 

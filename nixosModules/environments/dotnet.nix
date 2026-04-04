@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.environments.dotnet;
@@ -25,15 +30,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages =
-      [
-        combinedSdk
+    environment.systemPackages = [
+      combinedSdk
 
-        # Tools
-        pkgs.omnisharp-roslyn
-        pkgs.nuget-to-json
-      ]
-      ++ cfg.extraPackages;
+      # Tools
+      pkgs.omnisharp-roslyn
+      pkgs.nuget-to-json
+    ]
+    ++ cfg.extraPackages;
 
     environment.sessionVariables = {
       DOTNET_ROOT = "${combinedSdk}";

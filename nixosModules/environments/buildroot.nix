@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.environments.buildroot;
@@ -29,7 +34,10 @@ in
       type = lib.types.listOf lib.types.str;
       default = [ ];
       description = "Extra BR2 config lines appended to the defconfig";
-      example = [ "BR2_PACKAGE_DROPBEAR=y" "BR2_SYSTEM_DHCP=\"eth0\"" ];
+      example = [
+        "BR2_PACKAGE_DROPBEAR=y"
+        "BR2_SYSTEM_DHCP=\"eth0\""
+      ];
     };
 
     jobs = lib.mkOption {

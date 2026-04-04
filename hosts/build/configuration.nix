@@ -2,22 +2,30 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-      ./../../nixosModules/services/networkStorage.nix
-      ./../../nixosModules/environments/cpp.nix
-      ./../../nixosModules/environments/dotnet.nix
-      ./../../nixosModules/environments/fpga.nix
-      ./../../nixosModules/environments/buildroot.nix
-      ./../../nixosModules/system/ip.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    ./../../nixosModules/services/networkStorage.nix
+    ./../../nixosModules/environments/cpp.nix
+    ./../../nixosModules/environments/dotnet.nix
+    ./../../nixosModules/environments/fpga.nix
+    ./../../nixosModules/environments/buildroot.nix
+    ./../../nixosModules/system/ip.nix
+  ];
 
   # Enable flakes
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Setup static ip
   system.ip = {
@@ -65,8 +73,14 @@
     ohMyZsh = {
       enable = true;
       theme = "robbyrussell";
-      plugins = [ "git" "sudo" "docker" "z" "fzf" ];
-    }; 
+      plugins = [
+        "git"
+        "sudo"
+        "docker"
+        "z"
+        "fzf"
+      ];
+    };
   };
 
   # Ensure vs code lsp works
@@ -89,8 +103,8 @@
       src = pkgs.fetchFromGitHub {
         owner = "radxa";
         repo = "rkdeveloptool";
-        rev = "master";  # or a specific commit
-        hash = "sha256-kh6tQky2HBbkbY5dGd1VFDETbKm6YE1PnifFPt2lHK4=";  # nix will tell you the correct hash
+        rev = "master"; # or a specific commit
+        hash = "sha256-kh6tQky2HBbkbY5dGd1VFDETbKm6YE1PnifFPt2lHK4="; # nix will tell you the correct hash
       };
     }))
   ];
@@ -103,7 +117,10 @@
       share = {
         device = "192.168.10.196:/mnt/HDD16/Share";
         mountPoint = "/mnt/s";
-        options = [ "rw" "nolock" ];
+        options = [
+          "rw"
+          "nolock"
+        ];
       };
     };
   };
@@ -142,4 +159,3 @@
   system.stateVersion = "25.11"; # Did you read the comment?
 
 }
-

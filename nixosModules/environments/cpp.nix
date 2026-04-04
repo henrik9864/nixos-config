@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.environments.cpp;
@@ -8,7 +13,10 @@ in
     enable = lib.mkEnableOption "C++ development environment with CMake";
 
     compiler = lib.mkOption {
-      type = lib.types.enum [ "gcc" "clang" ];
+      type = lib.types.enum [
+        "gcc"
+        "clang"
+      ];
       default = "gcc";
       description = "The C++ compiler toolchain to use";
     };
@@ -22,7 +30,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs;
+    environment.systemPackages =
+      with pkgs;
       let
         compilerPkg = if cfg.compiler == "gcc" then [ gcc ] else [ clang ];
       in
@@ -46,7 +55,7 @@ in
 
         # Debugger
         gdb
-        
+
         # Testing
         gtest
       ]
