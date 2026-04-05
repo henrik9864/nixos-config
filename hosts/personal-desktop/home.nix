@@ -2,7 +2,7 @@
 
 {
   imports = [
-    inputs.plasma-manager.homeModules.plasma-manager
+    #inputs.plasma-manager.homeModules.plasma-manager
   ];
 
   home.username = "henrik";
@@ -26,23 +26,34 @@
 
   home.file = { };
 
-  programs.plasma = {
-    enable = true;
-    workspace = {
-      lookAndFeel = "org.kde.breezedark.desktop";
-      colorScheme = "CatppuccinMochaBlue";
-      iconTheme = "Papirus-Dark";
-    };
+  # programs.plasma = {
+  #   enable = true;
+  #   workspace = {
+  #     lookAndFeel = "org.kde.breezedark.desktop";
+  #     colorScheme = "CatppuccinMochaBlue";
+  #     iconTheme = "Papirus-Dark";
+  #   };
+  #
+  #   hotkeys.commands."launch-kitty" = {
+  #     name = "Launch Kitty";
+  #     key = "Ctrl+Alt+T";
+  #     command = "kitty";
+  #   };
+  #
+  #   configFile."kdeglobals"."General"."TerminalApplication" = "kitty";
+  #   configFile."kdeglobals"."General"."TerminalService" = "kitty.desktop";
+  # };
 
-    hotkeys.commands."launch-kitty" = {
-      name = "Launch Kitty";
-      key = "Ctrl+Alt+T";
-      command = "kitty";
-    };
+  #wayland.windowManager.hyprland = {
+  #  enable = true;
 
-    configFile."kdeglobals"."General"."TerminalApplication" = "kitty";
-    configFile."kdeglobals"."General"."TerminalService" = "kitty.desktop";
-  };
+  #  xwayland.enable = true;
+  #  settings = {
+  #    input = {
+  #      kb_layout = "us";
+  #    };
+  #  };
+  #};
 
   programs.vscode = {
     enable = true;

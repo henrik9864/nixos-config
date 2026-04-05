@@ -8,6 +8,8 @@
 {
   imports = [
     ./hardware-configuration.nix
+    # ./kde-plasma.nix
+    ./hyprland.nix
     ./../../nixosModules/services/networkStorage.nix
   ];
 
@@ -20,6 +22,9 @@
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
+
+  #boot.kernelPackages = pkgs.linuxPackages_6_1_hardened;
 
   boot.initrd.availableKernelModules = [
     "ahci"
@@ -32,22 +37,6 @@
   time.timeZone = "Europe/Oslo";
 
   i18n.defaultLocale = "en_US.UTF-8";
-
-  # Enable the X11 windowing system
-  services.xserver.enable = true;
-
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
-    settings = {
-      General = {
-        InputMethod = "";
-      };
-    };
-  };
-
-  # KDE Plasma 6
-  services.desktopManager.plasma6.enable = true;
 
   # Keymap
   services.xserver.xkb = {
@@ -78,7 +67,6 @@
     ];
     shell = pkgs.zsh;
     packages = with pkgs; [
-      kdePackages.kate
     ];
   };
 
@@ -94,7 +82,7 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [ ];
+  #environment.systemPackages = with pkgs; [ ];
 
   services.openssh.enable = true;
 
