@@ -24,8 +24,6 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 10;
 
-  #boot.kernelPackages = pkgs.linuxPackages_6_1_hardened;
-
   boot.initrd.availableKernelModules = [
     "ahci"
     "sd_mod"
@@ -75,14 +73,13 @@
     useUserPackages = true;
     extraSpecialArgs = { inherit inputs; };
     users.henrik = import ./home.nix;
+    backupFileExtension = "backup";
   };
 
   programs.firefox.enable = true;
   programs.zsh.enable = true;
 
   nixpkgs.config.allowUnfree = true;
-
-  #environment.systemPackages = with pkgs; [ ];
 
   services.openssh.enable = true;
 

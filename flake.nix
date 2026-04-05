@@ -32,6 +32,16 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.nixpkgs.follows = "hyprland";
     };
+
+    hypr-config = {
+      url = "github:tonybanters/hypr";
+      flake = false;
+    };
+
+    waybar-config = {
+      url = "github:tonybanters/waybar";
+      flake = false;
+    };
   };
 
   outputs =

@@ -239,6 +239,22 @@
         "type": "github"
       }
     },
+    "hypr-config": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769416002,
+        "narHash": "sha256-jQTnpY8pPFN0sFW+Vv4BOX8MUMCr2RVxTFpPM26fOJc=",
+        "owner": "tonybanters",
+        "repo": "hypr",
+        "rev": "0c5a13e35b25aac007003035d3b8d52ff4eca5ab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tonybanters",
+        "repo": "hypr",
+        "type": "github"
+      }
+    },
     "hyprcursor": {
       "inputs": {
         "hyprlang": [
@@ -1103,12 +1119,14 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "hypr-config": "hypr-config",
         "hyprland": "hyprland",
         "hyprland-plugins": "hyprland-plugins",
         "lanzaboote": "lanzaboote",
         "nixpkgs": "nixpkgs_3",
         "plasma-manager": "plasma-manager",
-        "vscode-server": "vscode-server"
+        "vscode-server": "vscode-server",
+        "waybar-config": "waybar-config"
       }
     },
     "rust-overlay": {
@@ -1195,6 +1213,22 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixos-vscode-server",
+        "type": "github"
+      }
+    },
+    "waybar-config": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769416002,
+        "narHash": "sha256-HDKCQkfuW9lVpCpUalo4k6oOgG8fwGLdrj5wPruYRRc=",
+        "owner": "tonybanters",
+        "repo": "waybar",
+        "rev": "78a27dca5860823e2e2f953612fc62727ee8302e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tonybanters",
+        "repo": "waybar",
         "type": "github"
       }
     },

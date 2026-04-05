@@ -1,90 +1,115 @@
-{ pkgs, inputs, ... }:
-
 {
-  imports = [
-    #inputs.plasma-manager.homeModules.plasma-manager
-  ];
-
+  pkgs,
+  inputs,
+  lib,
+  ...
+}:
+{
   home.username = "henrik";
   home.homeDirectory = "/home/henrik";
 
-  home.packages = with pkgs; [
-    # Nix linting/formatting
-    nixd
-    nixfmt-rfc-style
+  home.activation.cleanupStaleSymlinks = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+    for path in \
+      "$HOME/.config/hypr" \
+      "$HOME/.config/waybar" \
+      "$HOME/.gtkrc-2.0"; do
+      if [ -L "$path" ]; then
+        echo "Removing stale symlink: $path"
+        rm "$path"
+      fi
+    done
+  '';
 
-    # Fonts
-    nerd-fonts.jetbrains-mono
-
-    efibootmgr
-    lon
-    discord
-    pciutils
+  imports = [
+    ./hyprland/default.nix
+    ./waybar/default.nix
   ];
 
-  home.sessionVariables = { };
+  home.file.".config/waypaper/config.ini".text = ''
+    [Settings]
+    folder = ~/walls
+    backend = hyprpaper
+    monitors = All
+    fill = fillRRRRRRRR
+    sort = name
+    color = #ffffff
+    subfolders = False
+    show_hidden = False
+    show_exif = False
+  '';
 
-  home.file = { };
+  home.packages = with pkgs; [
+    home-manager
+    nixd
+    nixfmt-rfc-style
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+    efibootmgr
+    discord
+    pciutils
+    # used by waybar/binds
+    swaynotificationcenter
+    wlogout
+    waypaper
+    hyprpaper
+    udiskie
+    cliphist
+    wl-clipboard
+    pavucontrol
+    playerctl
+    grim
+    slurp
+    nemo
+    rofi
+  ];
 
-  # programs.plasma = {
-  #   enable = true;
-  #   workspace = {
-  #     lookAndFeel = "org.kde.breezedark.desktop";
-  #     colorScheme = "CatppuccinMochaBlue";
-  #     iconTheme = "Papirus-Dark";
-  #   };
-  #
-  #   hotkeys.commands."launch-kitty" = {
-  #     name = "Launch Kitty";
-  #     key = "Ctrl+Alt+T";
-  #     command = "kitty";
-  #   };
-  #
-  #   configFile."kdeglobals"."General"."TerminalApplication" = "kitty";
-  #   configFile."kdeglobals"."General"."TerminalService" = "kitty.desktop";
-  # };
-
-  #wayland.windowManager.hyprland = {
-  #  enable = true;
-
-  #  xwayland.enable = true;
-  #  settings = {
-  #    input = {
-  #      kb_layout = "us";
-  #    };
-  #  };
-  #};
+  home.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    MOZ_ENABLE_WAYLAND = "1";
+    XDG_CURRENT_DESKTOP = "Hyprland";
+    XDG_SESSION_TYPE = "wayland";
+    XDG_SESSION_DESKTOP = "Hyprland";
+    QT_QPA_PLATFORM = "wayland";
+    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    GDK_BACKEND = "wayland";
+    SDL_VIDEODRIVER = "wayland";
+  };
 
   programs.vscode = {
     enable = true;
-    extensions = with pkgs.vscode-extensions; [
-      jnoortheen.nix-ide
-    ];
-    userSettings = {
-      "nix.enableLanguageServer" = true;
-      "nix.serverPath" = "nixd";
-      "nix.formatterPath" = "nixfmt";
-      "nix.nixpkgs.expr" = "import <nixpkgs> { }";
-      "[nix]" = {
-        "editor.formatOnSave" = true;
-        "editor.defaultFormatter" = "jnoortheen.nix-ide";
+    profiles.default = {
+      extensions = with pkgs.vscode-extensions; [ jnoortheen.nix-ide ];
+      userSettings = {
+        "nix.enableLanguageServer" = true;
+        "nix.serverPath" = "nixd";
+        "nix.formatterPath" = "nixfmt";
+        "nix.nixpkgs.expr" = "import <nixpkgs> { }";
+        "[nix]" = {
+          "editor.formatOnSave" = true;
+          "editor.defaultFormatter" = "jnoortheen.nix-ide";
+        };
+        "editor.fontFamily" = "JetBrainsMono Nerd Font";
+        "editor.fontSize" = 14;
+        "editor.fontLigatures" = true;
       };
-      "editor.fontFamily" = "JetBrainsMono Nerd Font";
-      "editor.fontSize" = 14;
-      "editor.fontLigatures" = true;
     };
   };
 
   programs.git = {
     enable = true;
-    userName = "Henrik Strocka";
-    userEmail = "henstr@hotmail.com";
+    settings.user = {
+      name = "Henrik Strocka";
+      email = "henstr@hotmail.com";
+    };
   };
 
   programs.zsh = {
     enable = true;
     initContent = ''
       export LS_COLORS="$LS_COLORS:ow=1;38;2;0;0;0;48;2;64;160;43"
+      if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then
+        exec Hyprland
+      fi
     '';
     oh-my-zsh = {
       enable = true;
@@ -98,6 +123,11 @@
     };
   };
 
+  programs.zsh.shellAliases = {
+    nrs = "sudo nixos-rebuild switch";
+    nrsf = "sudo nixos-rebuild switch --fast";
+  };
+
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
@@ -106,16 +136,22 @@
   programs.kitty = {
     enable = true;
     shellIntegration.enableZshIntegration = true;
-    theme = "Catppuccin-Mocha";
+    themeFile = "Catppuccin-Mocha";
     font = {
       name = "JetBrainsMono Nerd Font";
       size = 11;
+    };
+    keybindings = {
+      "ctrl+insert" = "copy_to_clipboard";
+      "shift+insert" = "paste_from_clipboard";
+    };
+    settings = {
+      background_opacity = "0.85";
     };
   };
 
   fonts.fontconfig.enable = true;
 
   home.stateVersion = "25.11";
-
   programs.home-manager.enable = true;
 }

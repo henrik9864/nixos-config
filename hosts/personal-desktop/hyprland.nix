@@ -4,7 +4,6 @@
   inputs,
   ...
 }:
-
 {
   services.xserver.videoDrivers = [ "nvidia" ];
 
@@ -18,7 +17,6 @@
   hardware.nvidia.modesetting.enable = true;
   hardware.nvidia.nvidiaSettings = true;
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-
   hardware.graphics.enable = true;
 
   services.getty.autologinUser = "henrik";
@@ -26,23 +24,26 @@
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
-    package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+    package = inputs.hyprland.packages."${pkgs.stdenv.hostPlatform.system}".hyprland;
   };
 
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
-  };
-
-  environment.systemPackages = [
-    pkgs.kitty
-
-    pkgs.waybar
-    pkgs.dunst
-
-    pkgs.libnotify
+  environment.systemPackages = with pkgs; [
+    kitty
+    waybar
+    hyprpaper
+    hypridle
+    hyprlock
+    rofi
+    dunst
+    libnotify
+    grim
+    slurp
+    wl-clipboard
+    brightnessctl
+    pamixer
+    kdePackages.dolphin
+    polkit_gnome
+    btop
+    fastfetch
   ];
-
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
-  environment.sessionVariables.MOZ_ENABLE_WAYLAND = "1";
 }
