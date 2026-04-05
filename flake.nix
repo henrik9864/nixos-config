@@ -33,14 +33,9 @@
       inputs.nixpkgs.follows = "hyprland";
     };
 
-    hypr-config = {
-      url = "github:tonybanters/hypr";
-      flake = false;
-    };
-
-    waybar-config = {
-      url = "github:tonybanters/waybar";
-      flake = false;
+    hyprsession = {
+      url = "github:joshurtree/hyprsession";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 

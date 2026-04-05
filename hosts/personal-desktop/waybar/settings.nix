@@ -105,6 +105,15 @@ in
       on-click = "pamixer -t";
       on-click-right = "pavucontrol";
     };
+    monitor = [
+      "HDMI-A-1,2560x1440@59.95,0x0,1"
+      "DP-2,2560x1440@239.76,2560x0,1"
+      "DP-3,2560x1440@59.95,5120x0,1"
+    ];
+    cursor = {
+      theme = "Bibata-Modern-Classic";
+      size = 24;
+    };
     "custom/notification" = {
       tooltip = true;
       tooltip-format = "Notifications";

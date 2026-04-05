@@ -138,6 +138,24 @@
         "systems": "systems_3"
       },
       "locked": {
+        "lastModified": 1710146030,
+        "narHash": "sha256-SZ5L6eA7HJ/nmkzGG7/ISclqe6oZdOZTNoesiInkXPQ=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "b1d9ab70662946ef0850d488da1c9019f3a9752a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_2": {
+      "inputs": {
+        "systems": "systems_4"
+      },
+      "locked": {
         "lastModified": 1681202837,
         "narHash": "sha256-H+Rh19JDwRtpVPAWp64F+rlEtxUWBAQW28eAi3SRSzg=",
         "owner": "numtide",
@@ -236,22 +254,6 @@
         "owner": "nix-community",
         "ref": "release-25.11",
         "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "hypr-config": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1769416002,
-        "narHash": "sha256-jQTnpY8pPFN0sFW+Vv4BOX8MUMCr2RVxTFpPM26fOJc=",
-        "owner": "tonybanters",
-        "repo": "hypr",
-        "rev": "0c5a13e35b25aac007003035d3b8d52ff4eca5ab",
-        "type": "github"
-      },
-      "original": {
-        "owner": "tonybanters",
-        "repo": "hypr",
         "type": "github"
       }
     },
@@ -672,6 +674,27 @@
       "original": {
         "owner": "hyprwm",
         "repo": "hyprlang",
+        "type": "github"
+      }
+    },
+    "hyprsession": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767553580,
+        "narHash": "sha256-8mYThyeRJDVgfxsE082BXkaEqShWksexCTP+WVI2bKw=",
+        "owner": "joshurtree",
+        "repo": "hyprsession",
+        "rev": "364ccba80bd07f2f2e9a00bcf12b943809f35474",
+        "type": "github"
+      },
+      "original": {
+        "owner": "joshurtree",
+        "repo": "hyprsession",
         "type": "github"
       }
     },
@@ -1119,14 +1142,13 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
-        "hypr-config": "hypr-config",
         "hyprland": "hyprland",
         "hyprland-plugins": "hyprland-plugins",
+        "hyprsession": "hyprsession",
         "lanzaboote": "lanzaboote",
         "nixpkgs": "nixpkgs_3",
         "plasma-manager": "plasma-manager",
-        "vscode-server": "vscode-server",
-        "waybar-config": "waybar-config"
+        "vscode-server": "vscode-server"
       }
     },
     "rust-overlay": {
@@ -1195,9 +1217,24 @@
         "type": "github"
       }
     },
+    "systems_4": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "vscode-server": {
       "inputs": {
-        "flake-utils": "flake-utils",
+        "flake-utils": "flake-utils_2",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -1213,22 +1250,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixos-vscode-server",
-        "type": "github"
-      }
-    },
-    "waybar-config": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1769416002,
-        "narHash": "sha256-HDKCQkfuW9lVpCpUalo4k6oOgG8fwGLdrj5wPruYRRc=",
-        "owner": "tonybanters",
-        "repo": "waybar",
-        "rev": "78a27dca5860823e2e2f953612fc62727ee8302e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "tonybanters",
-        "repo": "waybar",
         "type": "github"
       }
     },

@@ -93,5 +93,10 @@
     xwayland = {
       force_zero_scaling = true;
     };
+
+    env = [
+      "XCURSOR_THEME,Bibata-Modern-Classic"
+      "XCURSOR_SIZE,24"
+    ];
   };
 }

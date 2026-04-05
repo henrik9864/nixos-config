@@ -38,6 +38,11 @@
     show_exif = False
   '';
 
+  home.file.".config/aichat/.aichatignore".text = ''
+    .git/
+    *.lock
+  '';
+
   home.packages = with pkgs; [
     home-manager
     nix-search-tv
@@ -74,6 +79,26 @@
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     GDK_BACKEND = "wayland";
     SDL_VIDEODRIVER = "wayland";
+  };
+
+  programs.aichat = {
+    enable = true;
+    settings = {
+      model = "ollama:llama3.2";
+      clients = [
+        {
+          type = "openai-compatible";
+          name = "ollama";
+          api_base = "http://127.0.0.1:11434/v1";
+          models = [
+            {
+              name = "llama3.2";
+              supports_function_calling = true;
+            }
+          ];
+        }
+      ];
+    };
   };
 
   programs.vscode = {
@@ -150,6 +175,20 @@
     settings = {
       background_opacity = "0.85";
     };
+    extraConfig = ''
+      startup_session ~/.config/kitty/startup.session
+    '';
+  };
+
+  home.file.".config/kitty/startup.session".text = ''
+    launch --type=os-window sh -c "fastfetch; exec $SHELL"
+  '';
+
+  home.pointerCursor = {
+    gtk.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Classic";
+    size = 24;
   };
 
   fonts.fontconfig.enable = true;

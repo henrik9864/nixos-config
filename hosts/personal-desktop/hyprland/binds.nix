@@ -20,7 +20,7 @@
       "$mod, E, exec, nemo"
       "$mod, N, exec, swaync-client -t -sw"
       "$mod, W, exec, waypaper"
-      "$mod SHIFT, R, exec, hyprctl reload"
+      "$mod SHIFT, R, exec, hyprctl dispatch exit"
 
       # screenshot
       ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"

@@ -11,6 +11,7 @@
     # ./kde-plasma.nix
     ./hyprland.nix
     ./../../nixosModules/services/networkStorage.nix
+    ./../../nixosModules/services/llm.nix
   ];
 
   # Enable flakes
@@ -68,6 +69,11 @@
     ];
   };
 
+  environment.systemPackages = with pkgs; [
+    fastfetch
+    inputs.hyprsession.packages.${pkgs.system}.default
+  ];
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -96,6 +102,16 @@
         ];
       };
     };
+  };
+
+  services.llm = {
+    enable = true;
+    acceleration = "cuda";
+    models = [
+      "llama3.2"
+      # "hf.co/bartowski/Llama-3.2-3B-Instruct-GGUF"
+    ];
+    extraUsers = [ "henrik" ];
   };
 
   fileSystems."/mnt/storage" = {
