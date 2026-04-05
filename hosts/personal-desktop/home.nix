@@ -40,6 +40,7 @@
 
   home.packages = with pkgs; [
     home-manager
+    nix-search-tv
     nixd
     nixfmt-rfc-style
     nerd-fonts.jetbrains-mono
@@ -126,6 +127,7 @@
   programs.zsh.shellAliases = {
     nrs = "sudo nixos-rebuild switch";
     nrsf = "sudo nixos-rebuild switch --fast";
+    ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
   };
 
   programs.fzf = {
