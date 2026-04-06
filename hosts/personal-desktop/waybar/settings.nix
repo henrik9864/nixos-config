@@ -42,10 +42,10 @@ in
       "custom/power-menu"
     ];
     clock = {
-      format = "{:%H:%M}";
+      format = "{:%d/%m/%Y - %H:%M:%S}";
       tooltip = "true";
       tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-      format-alt = "{:%d/%m/%Y}";
+      interval = 1;
     };
     "hyprland/workspaces" = {
       active-only = false;
@@ -74,7 +74,7 @@ in
       };
     };
     cpu = {
-      format = "<span foreground='${green}'> </span> {usage}%";
+      format = "<span foreground='${green}'>󰻠 </span>{usage}%";
       interval = 2;
       on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --title float_kitty btop'";
     };
@@ -88,31 +88,22 @@ in
       interval = 60;
     };
     network = {
-      format-wifi = "<span foreground='${magenta}'> </span> {signalStrength}%";
+      format-wifi = "<span foreground='${magenta}'>󰤨 </span> {signalStrength}%";
       format-ethernet = "<span foreground='${magenta}'>󰀂 </span>";
       tooltip-format = "Connected to {essid} {ifname} via {gwaddr}";
-      format-disconnected = "<span foreground='${magenta}'>󰖪 </span>";
+      format-disconnected = "<span foreground='${magenta}'>󰤭 </span>";
     };
     tray = {
       icon-size = 20;
       spacing = 8;
     };
     pulseaudio = {
-      format = "{icon} {volume}%";
+      format = "<span foreground='${blue}'>{icon}</span> {volume}%";
       format-muted = "<span foreground='${blue}'> </span> {volume}%";
-      format-icons.default = [ "<span foreground='${blue}'> </span>" ];
+      format-icons.default = [ "󰕾" ];
       scroll-step = 2;
       on-click = "pamixer -t";
       on-click-right = "pavucontrol";
-    };
-    monitor = [
-      "HDMI-A-1,2560x1440@59.95,0x0,1"
-      "DP-2,2560x1440@239.76,2560x0,1"
-      "DP-3,2560x1440@59.95,5120x0,1"
-    ];
-    cursor = {
-      theme = "Bibata-Modern-Classic";
-      size = 24;
     };
     "custom/notification" = {
       tooltip = true;
@@ -133,7 +124,7 @@ in
     "custom/power-menu" = {
       tooltip = true;
       tooltip-format = "Power menu";
-      format = "<span foreground='${red}'> </span>";
+      format = "<span foreground='${red}'>󰐥 </span>";
       on-click = "wlogout";
     };
   };
