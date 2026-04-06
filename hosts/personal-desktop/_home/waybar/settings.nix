@@ -34,6 +34,7 @@ in
     modules-center = [ "clock" ];
     modules-right = [
       "custom/proxmox"
+      "custom/ssh"
       "custom/spacer"
       "cpu"
       "memory"
@@ -118,6 +119,16 @@ in
       exec = "waybar-proxmox";
       return-type = "json";
       on-click = "xdg-open https://192.168.10.24:8006";
+    };
+    "custom/ssh" = {
+      format = "{}";
+      interval = 1;
+      exec = "waybar-ssh";
+      return-type = "json";
+      on-click = "waybar-ssh click";
+      on-scroll-up = "waybar-ssh scroll-up; pkill -RTMIN+1 waybar";
+      on-scroll-down = "waybar-ssh scroll-down; pkill -RTMIN+1 waybar";
+      signal = 1;
     };
     "custom/spacer" = {
       format = " ";

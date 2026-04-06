@@ -23,6 +23,7 @@
   imports = [
     ./hyprland/default.nix
     ./waybar/default.nix
+    ./scripts.nix
   ];
 
   home.file.".config/waypaper/config.ini".text = ''
@@ -81,6 +82,18 @@
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     GDK_BACKEND = "wayland";
     SDL_VIDEODRIVER = "wayland";
+  };
+
+  gtk = {
+    enable = true;
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+      gtk-tooltip-timeout = 0;
+    };
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+      gtk-tooltip-timeout = 0;
+    };
   };
 
   programs.aichat = {

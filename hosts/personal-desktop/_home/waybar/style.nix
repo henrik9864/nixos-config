@@ -64,7 +64,7 @@ in
     }
     #pulseaudio, #network, #cpu, #memory, #disk,
     #custom-notification, #custom-power-menu, #custom-proxmox,
-    #language {
+    #custom-ssh, #language {
       padding-left: 5px;
       padding-right: 5px;
       margin-right: 10px;
@@ -74,7 +74,12 @@ in
       margin-left: 15px;
     }
     #custom-spacer {
-      margin-right: 300px;
+      margin-right: 30px;
+    }
+    #custom-ssh {
+      color: ${cyan};
+      min-width: 84px;
+      padding-left: 5px;
     }
     #custom-power-menu {
       padding-right: 2px;
