@@ -3,6 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+
+    import-tree.url = "github:vic/import-tree";
+
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,12 +24,6 @@
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    plasma-manager = {
-      url = "github:nix-community/plasma-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
 
     hyprland = {
@@ -40,58 +42,54 @@
   };
 
   outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      vscode-server,
-      lanzaboote,
-      home-manager,
-      plasma-manager,
-      ...
-    }:
-    {
-      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          vscode-server.nixosModules.default
-          ./hosts/build/configuration.nix
-        ];
-      };
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
 
-      nixosConfigurations.nixos-docker = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          vscode-server.nixosModules.default
-          ./hosts/docker/configuration.nix
-        ];
-      };
+      flake.nixosConfigurations = {
 
-      nixosConfigurations.nixos-personal = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/personal-desktop/configuration.nix
-          home-manager.nixosModules.home-manager
-          lanzaboote.nixosModules.lanzaboote
+        nixos = inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
+          modules = [
+            inputs.vscode-server.nixosModules.default
+            (inputs.import-tree ./hosts/build)
+            (inputs.import-tree ./nixosModules)
+          ];
+        };
 
-          (
-            { pkgs, lib, ... }:
-            {
-              environment.systemPackages = [
-                pkgs.sbctl
-              ];
+        nixos-docker = inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
+          modules = [
+            inputs.vscode-server.nixosModules.default
+            (inputs.import-tree ./hosts/docker)
+            (inputs.import-tree ./nixosModules)
+          ];
+        };
 
-              boot.loader.systemd-boot.enable = lib.mkForce false;
+        nixos-personal = inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
+          modules = [
+            inputs.home-manager.nixosModules.home-manager
+            inputs.lanzaboote.nixosModules.lanzaboote
+            (inputs.import-tree ./hosts/personal-desktop)
+            (inputs.import-tree ./nixosModules)
+            (
+              { pkgs, lib, ... }:
+              {
+                environment.systemPackages = [ pkgs.sbctl ];
+                boot.loader.systemd-boot.enable = lib.mkForce false;
+                boot.lanzaboote = {
+                  enable = true;
+                  pkiBundle = "/var/lib/sbctl";
+                };
+              }
+            )
+          ];
+        };
 
-              boot.lanzaboote = {
-                enable = true;
-                pkiBundle = "/var/lib/sbctl";
-              };
-            }
-          )
-        ];
       };
     };
 }

@@ -8,20 +8,13 @@
 {
   imports = [
     ./hardware-configuration.nix
-    # ./kde-plasma.nix
-    ./hyprland.nix
-    ./../../nixosModules/services/networkStorage.nix
-    ./../../nixosModules/services/llm.nix
-    ./../../nixosModules/services/gaming.nix
   ];
 
-  # Enable flakes
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
   ];
 
-  # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 10;
@@ -38,17 +31,14 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # Keymap
   services.xserver.xkb = {
     layout = "no";
     variant = "nodeadkeys";
   };
   console.keyMap = "no";
 
-  # Printing
   services.printing.enable = true;
 
-  # Sound
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -66,8 +56,7 @@
       "wheel"
     ];
     shell = pkgs.zsh;
-    packages = with pkgs; [
-    ];
+    packages = with pkgs; [ ];
   };
 
   environment.systemPackages = with pkgs; [
@@ -79,7 +68,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = { inherit inputs; };
-    users.henrik = import ./home.nix;
+    users.henrik = import ./_home/home.nix;
     backupFileExtension = "backup";
   };
 
@@ -92,7 +81,6 @@
 
   services.networkStorage = {
     enable = true;
-
     mounts = {
       share = {
         device = "192.168.10.196:/mnt/HDD16/Share";
@@ -110,13 +98,7 @@
     acceleration = "cuda";
     models = [
       "llama3.2"
-      # "hf.co/bartowski/Llama-3.2-3B-Instruct-GGUF"
     ];
-    extraUsers = [ "henrik" ];
-  };
-
-  services.gaming = {
-    enable = true;
     extraUsers = [ "henrik" ];
   };
 

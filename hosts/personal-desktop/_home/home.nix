@@ -53,7 +53,6 @@
     efibootmgr
     discord
     pciutils
-    # used by waybar/binds
     swaynotificationcenter
     wlogout
     waypaper
