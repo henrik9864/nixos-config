@@ -33,11 +33,14 @@ in
     ];
     modules-center = [ "clock" ];
     modules-right = [
+      "custom/proxmox"
+      "custom/spacer"
       "cpu"
       "memory"
       "disk"
       "pulseaudio"
       "network"
+      "hyprland/language"
       "custom/notification"
       "custom/power-menu"
     ];
@@ -73,6 +76,10 @@ in
         "5" = [ ];
       };
     };
+    "hyprland/language" = {
+      format = "󰌌 {short}";
+      keyboard-name = "lvt-titan-m-pro-gaming-mouse-keyboard";
+    };
     cpu = {
       format = "<span foreground='${green}'>󰻠 </span>{usage}%";
       interval = 2;
@@ -105,14 +112,27 @@ in
       on-click = "pamixer -t";
       on-click-right = "pavucontrol";
     };
+    "custom/proxmox" = {
+      format = "󰒋 {}";
+      interval = 30;
+      exec = "waybar-proxmox";
+      return-type = "json";
+      on-click = "xdg-open https://192.168.10.24:8006";
+    };
+    "custom/spacer" = {
+      format = " ";
+      tooltip = false;
+    };
     "custom/notification" = {
       tooltip = true;
-      tooltip-format = "Notifications";
       format = "{icon}";
       format-icons = {
-        notification = "<span foreground='red'><sup></sup></span>";
-        none = "";
-        dnd-none = "";
+        "none" = "<span foreground='${blue}'>󰂚</span>";
+        "notification" = "<span foreground='${red}'>󰂞</span>";
+        "dnd-none" = "<span foreground='${blue}'>󰂛</span>";
+        "dnd-notification" = "<span foreground='${red}'>󰂞</span>";
+        "inhibited-none" = "<span foreground='${blue}'>󰂚</span>";
+        "inhibited-notification" = "<span foreground='${red}'>󰂞</span>";
       };
       return-type = "json";
       exec-if = "which swaync-client";

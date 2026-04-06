@@ -63,7 +63,8 @@ in
       padding: 8px;
     }
     #pulseaudio, #network, #cpu, #memory, #disk,
-    #custom-notification, #custom-power-menu {
+    #custom-notification, #custom-power-menu, #custom-proxmox,
+    #language {
       padding-left: 5px;
       padding-right: 5px;
       margin-right: 10px;
@@ -71,6 +72,9 @@ in
     }
     #pulseaudio, #custom-notification {
       margin-left: 15px;
+    }
+    #custom-spacer {
+      margin-right: 300px;
     }
     #custom-power-menu {
       padding-right: 2px;

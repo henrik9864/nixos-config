@@ -66,6 +66,9 @@
     slurp
     nemo
     rofi
+    nmap
+    curl
+    jq
   ];
 
   home.sessionVariables = {

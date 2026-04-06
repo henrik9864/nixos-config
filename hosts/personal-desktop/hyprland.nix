@@ -4,6 +4,21 @@
   inputs,
   ...
 }:
+let
+  waybar-proxmox = pkgs.writeShellScriptBin "waybar-proxmox" ''
+    token=$(cat "$HOME/.secrets/proxmox-token" 2>/dev/null) || exit 1
+
+    resources=$(${pkgs.curl}/bin/curl -sf \
+      --insecure \
+      -H "Authorization: PVEAPIToken=$token" \
+      "https://192.168.10.24:8006/api2/json/cluster/resources?type=vm") || exit 1
+
+    total=$(echo "$resources" | ${pkgs.jq}/bin/jq '[.data[] | select(.type == "qemu" or .type == "lxc")] | length')
+    running=$(echo "$resources" | ${pkgs.jq}/bin/jq '[.data[] | select((.type == "qemu" or .type == "lxc") and .status == "running")] | length')
+
+    echo "{\"text\": \"$running/$total\", \"tooltip\": \"$running running out of $total VMs/CTs\"}"
+  '';
+in
 {
   services.xserver.videoDrivers = [ "nvidia" ];
 
@@ -45,5 +60,6 @@
     polkit_gnome
     btop
     fastfetch
+    waybar-proxmox
   ];
 }
