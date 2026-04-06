@@ -12,6 +12,7 @@
     ./hyprland.nix
     ./../../nixosModules/services/networkStorage.nix
     ./../../nixosModules/services/llm.nix
+    ./../../nixosModules/services/gaming.nix
   ];
 
   # Enable flakes
@@ -111,6 +112,11 @@
       "llama3.2"
       # "hf.co/bartowski/Llama-3.2-3B-Instruct-GGUF"
     ];
+    extraUsers = [ "henrik" ];
+  };
+
+  services.gaming = {
+    enable = true;
     extraUsers = [ "henrik" ];
   };
 
