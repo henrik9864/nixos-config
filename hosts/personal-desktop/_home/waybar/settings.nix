@@ -129,6 +129,7 @@ in
       on-scroll-up = "waybar-ssh scroll-up; pkill -RTMIN+1 waybar";
       on-scroll-down = "waybar-ssh scroll-down; pkill -RTMIN+1 waybar";
       signal = 1;
+      tooltip = false;
     };
     "custom/spacer" = {
       format = " ";

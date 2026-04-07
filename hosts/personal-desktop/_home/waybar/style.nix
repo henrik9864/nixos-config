@@ -74,7 +74,7 @@ in
       margin-left: 15px;
     }
     #custom-spacer {
-      margin-right: 30px;
+      margin-right: 260px;
     }
     #custom-ssh {
       color: ${cyan};

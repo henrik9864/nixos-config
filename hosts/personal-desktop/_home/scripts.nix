@@ -78,7 +78,7 @@ let
           ;;
         click)
           TARGET="''${TARGETS[$INDEX]}"
-          kitty --title float_kitty ssh "$TARGET" &
+          kitty --title float_kitty ssh -o "SetEnv TERM=xterm-256color" "$TARGET" &
           disown
           exit 0
           ;;
