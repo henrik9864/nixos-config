@@ -74,6 +74,7 @@
 
   programs.firefox.enable = true;
   programs.zsh.enable = true;
+  programs.nix-index-database.comma.enable = true;
 
   nixpkgs.config.allowUnfree = true;
 
@@ -99,6 +100,11 @@
     models = [
       "llama3.2"
     ];
+    extraUsers = [ "henrik" ];
+  };
+
+  services.gaming = {
+    enable = true;
     extraUsers = [ "henrik" ];
   };
 

@@ -39,6 +39,11 @@
       url = "github:joshurtree/hyprsession";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -74,6 +79,7 @@
           modules = [
             inputs.home-manager.nixosModules.home-manager
             inputs.lanzaboote.nixosModules.lanzaboote
+            inputs.nix-index-database.nixosModules.nix-index
             (inputs.import-tree ./hosts/personal-desktop)
             (inputs.import-tree ./nixosModules)
             (

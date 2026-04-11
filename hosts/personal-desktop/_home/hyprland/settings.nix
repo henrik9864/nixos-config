@@ -3,6 +3,18 @@
   wayland.windowManager.hyprland.settings = {
     "$mod" = "SUPER";
 
+    monitor = [
+      "HDMI-A-1,2560x1440@59.95,0x0,1"
+      "DP-2,2560x1440@59.95,2560x0,1"
+      "DP-3,2560x1440@59.95,5120x0,1"
+    ];
+
+    workspace = [
+      "1, monitor:HDMI-A-1, default:true, floating:1"
+      "2, monitor:DP-2, default:true, floating:1"
+      "3, monitor:DP-3, default:true, floating:1"
+    ];
+
     input = {
       kb_layout = "no";
       kb_variant = "nodeadkeys";
