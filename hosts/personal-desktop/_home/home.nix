@@ -70,6 +70,7 @@
     nmap
     curl
     jq
+    htop
   ];
 
   home.sessionVariables = {
