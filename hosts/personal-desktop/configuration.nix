@@ -4,9 +4,7 @@
   inputs,
   lib,
   ...
-}:
-
-{
+}: {
   imports = [
     ./hardware-configuration.nix
   ];
@@ -57,18 +55,22 @@
       "wheel"
     ];
     shell = pkgs.zsh;
-    packages = with pkgs; [ ];
+    packages = with pkgs; [];
   };
 
   environment.systemPackages = with pkgs; [
     fastfetch
     inputs.hyprsession.packages.${pkgs.system}.default
+    alejandra
+    gcc
+    file
+    ripgrep
   ];
 
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = {inherit inputs;};
     users.henrik = import ./_home/home.nix;
     backupFileExtension = "backup";
   };
@@ -79,6 +81,7 @@
 
   programs.nvf = {
     enable = true;
+
     settings = {
       vim.theme.enable = true;
       vim.theme.name = "gruvbox";
@@ -90,35 +93,48 @@
       vim.filetree.neo-tree.enable = true;
 
       vim.options = {
-        shiftwidth = 2;
-        tabstop = 2;
-        softtabstop = 2;
-        expandtab = true;
-        smartindent = true;
+        smartindent = false;
         whichwrap = "b,s,<,>,[,],h,l";
       };
 
       vim.keymaps = [
         {
           key = "<leader>e";
-          mode = [ "n" ];
+          mode = ["n"];
           silent = true;
           action = ":Neotree toggle<CR>";
         }
         {
           key = "<leader>cc";
-          mode = [ "n" ];
+          mode = ["n"];
           silent = true;
           action = ":CodeCompanionChat toggle<CR>";
         }
+        {
+          key = "<leader>f";
+          mode = ["n"];
+          silent = true;
+          action = ":!alejandra %<CR>";
+        }
       ];
 
-      vim.lsp.enable = true;
-      vim.treesitter.enable = true;
-
       vim.languages = {
-        nix.enable = true;
+        nix = {
+          enable = true;
+          lsp.enable = true;
+          extraDiagnostics.enable = true;
+          format = {
+            enable = true;
+            type = "alejandra";
+          };
+          treesitter.enable = true;
+        };
       };
+
+      vim.git.gitsigns.enable = true;
+      vim.binds.whichKey.enable = true;
+      #vim.surround.enable = true;
+      #vim.comment.enable = true;
 
       vim.assistant.copilot.enable = true;
       vim.assistant.codecompanion-nvim = {
@@ -166,12 +182,12 @@
       "gemma4:26b"
       "gemma4:e4b"
     ];
-    extraUsers = [ "henrik" ];
+    extraUsers = ["henrik"];
   };
 
   services.gaming = {
     enable = true;
-    extraUsers = [ "henrik" ];
+    extraUsers = ["henrik"];
   };
 
   fileSystems."/mnt/storage" = {
