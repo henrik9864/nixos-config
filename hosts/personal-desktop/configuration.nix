@@ -83,14 +83,13 @@
     enable = true;
 
     settings = {
-      vim.theme.enable = true;
-      vim.theme.name = "gruvbox";
-      vim.theme.style = "dark";
-      vim.theme.transparent = true;
-
+      vim.theme = {
+        enable = true;
+        name = "gruvbox";
+        style = "dark";
+        transparent = true;
+      };
       vim.statusline.lualine.enable = true;
-      vim.autocomplete.nvim-cmp.enable = true;
-      vim.filetree.neo-tree.enable = true;
 
       vim.options = {
         smartindent = false;
@@ -103,18 +102,21 @@
           mode = ["n"];
           silent = true;
           action = ":Neotree toggle<CR>";
+          desc = "Toggle file tree";
         }
         {
           key = "<leader>cc";
           mode = ["n"];
           silent = true;
           action = ":CodeCompanionChat toggle<CR>";
+          desc = "Toggle CodeCompanion chat";
         }
         {
           key = "<leader>f";
           mode = ["n"];
           silent = true;
-          action = ":!alejandra %<CR>";
+          action = ":w<bar>!alejandra %<CR>";
+          desc = "Format Nix file with alejandra";
         }
       ];
 
@@ -131,26 +133,29 @@
         };
       };
 
+      vim.autocomplete.nvim-cmp.enable = true;
+      vim.filetree.neo-tree.enable = true;
       vim.git.gitsigns.enable = true;
       vim.binds.whichKey.enable = true;
-      #vim.surround.enable = true;
-      #vim.comment.enable = true;
 
-      vim.assistant.copilot.enable = true;
-      vim.assistant.codecompanion-nvim = {
-        enable = true;
-        setupOpts = {
-          adapters = lib.generators.mkLuaInline ''
-            {
-              ollama = require("codecompanion.adapters").extend("ollama", {
-                schema = { model = { default = "gemma4:e4b" } },
-              }),
-              copilot = require("codecompanion.adapters").extend("copilot", {}),
-            }
-          '';
-          strategies = lib.generators.mkLuaInline ''
-            { chat = { adapter = "copilot" }, inline = { adapter = "copilot" } }
-          '';
+      vim.assistant = {
+        copilot.enable = true;
+        codecompanion-nvim = {
+          enable = true;
+          setupOpts = {
+            enableDefaultKeymaps = true;
+            adapters = lib.generators.mkLuaInline ''
+              {
+                ollama = require("codecompanion.adapters").extend("ollama", {
+                  schema = { model = { default = "gemma4:e4b" } },
+                }),
+                copilot = require("codecompanion.adapters").extend("copilot", {}),
+              }
+            '';
+            strategies = lib.generators.mkLuaInline ''
+              { chat = { adapter = "copilot" }, inline = { adapter = "copilot" } }
+            '';
+          };
         };
       };
     };
