@@ -89,18 +89,13 @@
       vim.autocomplete.nvim-cmp.enable = true;
       vim.filetree.neo-tree.enable = true;
 
-      vim.globals = {
-        mapleader = " ";
-        shell = "${pkgs.zsh}/bin/zsh";
-        shellcmdflag = "-ic";
-      };
-
       vim.options = {
         shiftwidth = 2;
         tabstop = 2;
         softtabstop = 2;
         expandtab = true;
         smartindent = true;
+        whichwrap = "b,s,<,>,[,],h,l";
       };
 
       vim.keymaps = [
