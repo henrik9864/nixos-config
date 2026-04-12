@@ -76,6 +76,29 @@
   programs.zsh.enable = true;
   programs.nix-index-database.comma.enable = true;
 
+  programs.nvf = {
+    enable = true;
+    settings = {
+      vim.theme.enable = true;
+      vim.theme.name = "gruvbox";
+      vim.theme.style = "dark";
+      vim.theme.transparent = true;
+
+      vim.statusline.lualine.enable = true;
+      vim.telescope.enable = true;
+      vim.autocomplete.nvim-cmp.enable = true;
+
+      vim.languages = {
+        enableLSP = true;
+        enableTreesitter = true;
+
+        nix.enable = true;
+      };
+
+      vim.assistant.copilot.enable = true;
+    };
+  };
+
   nixpkgs.config.allowUnfree = true;
 
   services.openssh.enable = true;
