@@ -2,6 +2,7 @@
   config,
   pkgs,
   inputs,
+  lib,
   ...
 }:
 
@@ -85,17 +86,62 @@
       vim.theme.transparent = true;
 
       vim.statusline.lualine.enable = true;
-      vim.telescope.enable = true;
       vim.autocomplete.nvim-cmp.enable = true;
+      vim.filetree.neo-tree.enable = true;
+
+      vim.globals = {
+        mapleader = " ";
+        shell = "${pkgs.zsh}/bin/zsh";
+        shellcmdflag = "-ic";
+      };
+
+      vim.options = {
+        shiftwidth = 2;
+        tabstop = 2;
+        softtabstop = 2;
+        expandtab = true;
+        smartindent = true;
+      };
+
+      vim.keymaps = [
+        {
+          key = "<leader>e";
+          mode = [ "n" ];
+          silent = true;
+          action = ":Neotree toggle<CR>";
+        }
+        {
+          key = "<leader>cc";
+          mode = [ "n" ];
+          silent = true;
+          action = ":CodeCompanionChat toggle<CR>";
+        }
+      ];
+
+      vim.lsp.enable = true;
+      vim.treesitter.enable = true;
 
       vim.languages = {
-        enableLSP = true;
-        enableTreesitter = true;
-
         nix.enable = true;
       };
 
       vim.assistant.copilot.enable = true;
+      vim.assistant.codecompanion-nvim = {
+        enable = true;
+        setupOpts = {
+          adapters = lib.generators.mkLuaInline ''
+            {
+              ollama = require("codecompanion.adapters").extend("ollama", {
+                schema = { model = { default = "gemma4:e4b" } },
+              }),
+              copilot = require("codecompanion.adapters").extend("copilot", {}),
+            }
+          '';
+          strategies = lib.generators.mkLuaInline ''
+            { chat = { adapter = "copilot" }, inline = { adapter = "copilot" } }
+          '';
+        };
+      };
     };
   };
 
@@ -122,6 +168,8 @@
     acceleration = "cuda";
     models = [
       "llama3.2"
+      "gemma4:26b"
+      "gemma4:e4b"
     ];
     extraUsers = [ "henrik" ];
   };

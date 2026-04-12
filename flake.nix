@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -80,12 +81,18 @@
 
         nixos-personal = inputs.nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
+          specialArgs = {
+            inherit inputs;
+            pkgs-unstable = import inputs.nixpkgs-unstable {
+              system = "x86_64-linux";
+              config.allowUnfree = true;
+            };
+          };
           modules = [
             inputs.home-manager.nixosModules.home-manager
             inputs.lanzaboote.nixosModules.lanzaboote
             inputs.nix-index-database.nixosModules.nix-index
-	    inputs.nvf.nixosModules.default
+            inputs.nvf.nixosModules.default
             (inputs.import-tree ./hosts/personal-desktop)
             (inputs.import-tree ./nixosModules)
             (

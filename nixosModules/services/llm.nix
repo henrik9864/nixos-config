@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  pkgs-unstable ? pkgs,
   ...
 }:
 
@@ -69,11 +70,12 @@ in
       host = cfg.host;
       port = cfg.port;
       loadModels = cfg.models;
+      package = pkgs-unstable.ollama;
     };
 
     environment.systemPackages = [
       pkgs.oterm
-      pkgs.ollama
+      pkgs-unstable.ollama
     ];
 
     users.users = lib.mkMerge (
