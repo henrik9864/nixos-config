@@ -93,6 +93,8 @@
 
       vim.options = {
         smartindent = false;
+        shiftwidth = 2;
+        tabstop = 2;
         whichwrap = "b,s,<,>,[,],h,l";
       };
 
@@ -118,9 +120,77 @@
           action = ":w<bar>!alejandra %<CR>";
           desc = "Format Nix file with alejandra";
         }
+        {
+          key = "<C-Left>";
+          mode = ["n"];
+          action = ":vertical resize -2<CR>";
+          desc = "Resize split left";
+          silent = true;
+        }
+        {
+          key = "<C-Right>";
+          mode = ["n"];
+          action = ":vertical resize +2<CR>";
+          desc = "Resize split right";
+          silent = true;
+        }
+        {
+          key = "<C-Up>";
+          mode = ["n"];
+          action = ":resize -2<CR>";
+          desc = "Resize split up";
+          silent = true;
+        }
+        {
+          key = "<C-Down>";
+          mode = ["n"];
+          action = ":resize +2<CR>";
+          desc = "Resize split down";
+          silent = true;
+        }
+
+        # Move between splits with Shift+Arrow
+        {
+          key = "<A-Left>";
+          mode = ["n"];
+          action = "<C-w>h";
+          desc = "Move to left split";
+          silent = true;
+        }
+        {
+          key = "<A-Right>";
+          mode = ["n"];
+          action = "<C-w>l";
+          desc = "Move to right split";
+          silent = true;
+        }
+        {
+          key = "<A-Up>";
+          mode = ["n"];
+          action = "<C-w>k";
+          desc = "Move to upper split";
+          silent = true;
+        }
+        {
+          key = "<A-Down>";
+          mode = ["n"];
+          action = "<C-w>j";
+          desc = "Move to lower split";
+          silent = true;
+        }
       ];
 
       vim.languages = {
+        markdown = {
+          enable = true;
+          treesitter.enable = true;
+        };
+
+        yaml = {
+          enable = true;
+          treesitter.enable = true;
+        };
+
         nix = {
           enable = true;
           lsp.enable = true;
@@ -133,13 +203,40 @@
         };
       };
 
+      vim.luaConfigRC.treesitter-parser-fix = ''
+        -- Register Nix-packaged treesitter grammars that have mangled names
+        for _, dir in ipairs(vim.api.nvim_list_runtime_paths()) do
+          for _, so in ipairs(vim.fn.glob(dir .. "/parser/vimplugin_treesitter_grammar_*.so", false, true)) do
+            local lang = vim.fn.fnamemodify(so, ":t:r"):gsub("^vimplugin_treesitter_grammar_", "")
+            pcall(vim.treesitter.language.add, lang, { path = so .. "/" .. lang .. ".so" })
+          end
+        end
+      '';
+
+      vim.treesitter.indent.enable = false;
+
+      vim.luaConfigRC.treesitter-indent-fix = ''
+        vim.schedule(function()
+          vim.api.nvim_create_autocmd("FileType", {
+            group = vim.api.nvim_create_augroup("nvf_treesitter_indent_fix", { clear = true }),
+            pattern = "*",
+            callback = function()
+              if vim.treesitter.get_parser(0, nil, { error = false }) then
+                vim.bo.indentexpr = "v:lua.require'nvim-treesitter.indent'.get_indent(v:lnum)"
+              end
+            end,
+          })
+        end)
+      '';
+
       vim.autocomplete.nvim-cmp.enable = true;
       vim.filetree.neo-tree.enable = true;
       vim.git.gitsigns.enable = true;
       vim.binds.whichKey.enable = true;
 
+      #This is a test line - TODO remove
+
       vim.assistant = {
-        copilot.enable = true;
         codecompanion-nvim = {
           enable = true;
           setupOpts = {
@@ -149,7 +246,15 @@
                 ollama = require("codecompanion.adapters").extend("ollama", {
                   schema = { model = { default = "gemma4:e4b" } },
                 }),
-                copilot = require("codecompanion.adapters").extend("copilot", {}),
+                copilot = require("codecompanion.adapters").extend("copilot", {
+                  schema = { model = { default = "gpt-5.4-mini" } },
+                }),
+                ["copilot-opus"] = require("codecompanion.adapters").extend("copilot", {
+                  schema = { model = { default = "claude-opus-4" } },
+                }),
+                ["copilot-sonnet"] = require("codecompanion.adapters").extend("copilot", {
+                  schema = { model = { default = "claude-sonnet-4" } },
+                }),
               }
             '';
             strategies = lib.generators.mkLuaInline ''
@@ -158,6 +263,7 @@
           };
         };
       };
+
     };
   };
 
