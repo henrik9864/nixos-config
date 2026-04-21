@@ -178,6 +178,20 @@
           desc = "Move to lower split";
           silent = true;
         }
+        {
+          key = "<leader>f";
+          mode = ["n"];
+          silent = true;
+          action = ":Telescope find_files<CR>";
+          desc = "Find files";
+        }
+        {
+          key = "<leader>v";
+          mode = ["x"];
+          silent = true;
+          action = ":<C-u>lua ask_codecompanion()<CR>";
+          desc = "Ask CodeCompanion about selection";
+        }
       ];
 
       vim.languages = {
@@ -229,12 +243,11 @@
         end)
       '';
 
+      vim.telescope.enable = true;
       vim.autocomplete.nvim-cmp.enable = true;
       vim.filetree.neo-tree.enable = true;
       vim.git.gitsigns.enable = true;
       vim.binds.whichKey.enable = true;
-
-      #This is a test line - TODO remove
 
       vim.assistant = {
         codecompanion-nvim = {
@@ -264,6 +277,25 @@
         };
       };
 
+      #TODO remove this line
+
+      vim.luaConfigRC.quick-ask = ''
+        _G.ask_codecompanion = function()
+          local start_pos = vim.api.nvim_buf_get_mark(0, "<")
+          local end_pos = vim.api.nvim_buf_get_mark(0, ">")
+          local lines = vim.api.nvim_buf_get_lines(0, start_pos[1] - 1, end_pos[1], false)
+          if #lines > 0 then
+            lines[#lines] = lines[#lines]:sub(1, end_pos[2] + 1)
+            lines[1] = lines[1]:sub(start_pos[2] + 1)
+          end
+          local selected_text = table.concat(lines, "\n")
+          vim.ui.input({ prompt = "Ask about selection: " }, function(input)
+            if not input or input == "" then return end
+            local prompt = string.format("```\n%s\n```\n\n%s", selected_text, input)
+            require("codecompanion").chat({ content = prompt })
+          end)
+        end
+      '';
     };
   };
 

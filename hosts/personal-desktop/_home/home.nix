@@ -71,6 +71,7 @@
     curl
     jq
     htop
+    curl
   ];
 
   home.sessionVariables = {
@@ -144,13 +145,6 @@
       email = "henstr@hotmail.com";
     };
   };
-
-  #programs.neovim = {
-  #  enable = true;
-  #  extraConfig = ''
-  #    set number relativenumber
-  #  '';
-  #};
 
   programs.zsh = {
     enable = true;
