@@ -14,6 +14,7 @@
 
   # Boot
   boot = {
+    kernelPackages = pkgs.linuxPackages_7_0;
     loader = {
       systemd-boot = {
         enable = true;
@@ -64,6 +65,7 @@
     gcc
     file
     ripgrep
+    prusa-slicer
     inputs.hyprsession.packages.${pkgs.system}.default
   ];
 
@@ -120,13 +122,6 @@
             silent = true;
             action = ":CodeCompanionChat toggle<CR>";
             desc = "Toggle CodeCompanion chat";
-          }
-          {
-            key = "<leader>v";
-            mode = ["x"];
-            silent = true;
-            action = ":<C-u>lua ask_codecompanion()<CR>";
-            desc = "Ask CodeCompanion about selection";
           }
           {
             key = "<C-Left>";
@@ -244,17 +239,8 @@
             enableDefaultKeymaps = true;
             adapters = lib.generators.mkLuaInline ''
               {
-                ollama = require("codecompanion.adapters").extend("ollama", {
-                  schema = { model = { default = "gemma4:e4b" } },
-                }),
                 copilot = require("codecompanion.adapters").extend("copilot", {
-                  schema = { model = { default = "gpt-5.4-mini" } },
-                }),
-                ["copilot-opus"] = require("codecompanion.adapters").extend("copilot", {
-                  schema = { model = { default = "claude-opus-4" } },
-                }),
-                ["copilot-sonnet"] = require("codecompanion.adapters").extend("copilot", {
-                  schema = { model = { default = "claude-sonnet-4" } },
+                  schema = { model = { default = "gpt-4o" } },
                 }),
               }
             '';
@@ -264,23 +250,7 @@
           };
         };
 
-        vim.luaConfigRC.quick-ask = ''
-          _G.ask_codecompanion = function()
-            local start_pos = vim.api.nvim_buf_get_mark(0, "<")
-            local end_pos = vim.api.nvim_buf_get_mark(0, ">")
-            local lines = vim.api.nvim_buf_get_lines(0, start_pos[1] - 1, end_pos[1], false)
-            if #lines > 0 then
-              lines[#lines] = lines[#lines]:sub(1, end_pos[2] + 1)
-              lines[1] = lines[1]:sub(start_pos[2] + 1)
-            end
-            local selected_text = table.concat(lines, "\n")
-            vim.ui.input({ prompt = "Ask about selection: " }, function(input)
-              if not input or input == "" then return end
-              local prompt = string.format("```\n%s\n```\n\n%s", selected_text, input)
-              require("codecompanion").chat({ content = prompt })
-            end)
-          end
-        '';
+
       };
     };
   };

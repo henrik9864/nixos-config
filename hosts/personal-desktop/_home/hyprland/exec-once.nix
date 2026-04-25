@@ -10,6 +10,6 @@
     "waypaper --restore &"
     "udiskie --automount --notify --smart-tray &"
     "[workspace 9 silent] discord"
-    "hyprsession"
+    #"hyprsession"
   ];
 }
