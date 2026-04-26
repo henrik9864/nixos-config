@@ -53,7 +53,6 @@ in
       {
         hostName = cfg.hostName;
         system = "x86_64-linux";
-        # ssh-ng requires sshUser to be a trusted-user on the remote
         protocol = "ssh-ng";
         sshUser = cfg.sshUser;
         sshKey = cfg.sshKey;
