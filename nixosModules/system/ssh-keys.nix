@@ -17,7 +17,7 @@ in
   config = lib.mkIf cfg.enable {
     users.users.${cfg.user}.openssh.authorizedKeys.keyFiles =
       builtins.attrValues (
-        builtins.mapAttrs (name: _: ../../../keys/${name}) (builtins.readDir ../../../keys)
+        builtins.mapAttrs (name: _: ../../keys/${name}) (builtins.readDir ../../keys)
       );
   };
 }
