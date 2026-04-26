@@ -14,6 +14,7 @@
   boot.loader.grub.device = "/dev/sda";
 
   system.sshKeys.enable = true;
+  system.nixCache.enable = true;
 
   networking.hostName = "nixos-docker";
 

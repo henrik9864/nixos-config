@@ -4,6 +4,10 @@
   pkgs,
   ...
 }: {
+  imports = [
+    ./hardware-configuration.nix
+  ];
+
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/vda";
 
@@ -22,7 +26,7 @@
 
   users.users.henrik = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = ["wheel"];
   };
 
   security.sudo.wheelNeedsPassword = false;
@@ -48,14 +52,18 @@
   #   nix.settings.trusted-public-keys = [ "<contents of /etc/harmonia/public-key>" ];
   services.harmonia = {
     enable = true;
-    signKeyPaths = [ "/etc/harmonia/secret-key" ];
+    signKeyPaths = ["/etc/harmonia/secret-key"];
     settings.bind = "0.0.0.0:5000";
+    settings.priority = 30;
   };
 
-  networking.firewall.allowedTCPPorts = [ 5000 ];
+  # Allow trusted users to upload to the cache via nix copy
+  nix.settings.trusted-users = ["root" "henrik"];
+
+  networking.firewall.allowedTCPPorts = [5000];
 
   # Allow the harmonia user to access the nix store
-  nix.settings.allowed-users = [ "harmonia" ];
+  nix.settings.allowed-users = ["harmonia"];
 
   system.stateVersion = "25.11";
 }

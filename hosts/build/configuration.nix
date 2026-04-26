@@ -17,6 +17,7 @@
   networking.networkmanager.enable = true;
 
   system.sshKeys.enable = true;
+  system.nixCache.enable = true;
 
   system.ip = {
     enable = true;

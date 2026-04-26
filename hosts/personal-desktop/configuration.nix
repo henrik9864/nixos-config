@@ -10,6 +10,7 @@
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
   nixpkgs.config.allowUnfree = true;
+  system.nixCache.enable = true;
   system.stateVersion = "25.11";
 
   # Boot
