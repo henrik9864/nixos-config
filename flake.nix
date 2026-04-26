@@ -79,6 +79,15 @@
           ];
         };
 
+        nixos-nix-cache = inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
+          modules = [
+            (inputs.import-tree ./hosts/nix-cache)
+            (inputs.import-tree ./nixosModules)
+          ];
+        };
+
         nixos-docker = inputs.nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = { inherit inputs; };
