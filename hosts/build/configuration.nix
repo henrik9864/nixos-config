@@ -16,6 +16,8 @@
   networking.hostName = "nixos-build";
   networking.networkmanager.enable = true;
 
+  system.sshKeys.enable = true;
+
   system.ip = {
     enable = true;
     interface = "ens18";

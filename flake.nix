@@ -50,6 +50,7 @@
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
   };
 
   outputs =
@@ -65,6 +66,15 @@
           modules = [
             inputs.vscode-server.nixosModules.default
             (inputs.import-tree ./hosts/build)
+            (inputs.import-tree ./nixosModules)
+          ];
+        };
+
+        nixos-proxmox-template = inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit inputs; };
+          modules = [
+            (inputs.import-tree ./hosts/proxmox-template)
             (inputs.import-tree ./nixosModules)
           ];
         };
