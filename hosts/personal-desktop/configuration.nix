@@ -9,8 +9,18 @@
   ];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.trusted-users = [ "root" "henrik" ];
   nixpkgs.config.allowUnfree = true;
   system.nixCache.enable = true;
+
+  system.remoteBuild = {
+    enable = true;
+    hostName = "192.168.10.62";
+    hostPublicKeyFile = ../../keys/nix-cache-host.pub;
+    sshUser = "henrik";
+    maxJobs = 4;
+    speedFactor = 2;
+  };
   system.stateVersion = "25.11";
 
   # Boot
