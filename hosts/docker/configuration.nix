@@ -16,14 +16,6 @@
   system.sshKeys.enable = true;
   system.nixCache.enable = true;
 
-  system.remoteBuild = {
-    enable = true;
-    hostName = "192.168.10.62";
-    sshUser = "henrik";
-    maxJobs = 4;
-    speedFactor = 2;
-  };
-
   networking.hostName = "nixos-docker";
 
   system.ip = {

@@ -9,7 +9,6 @@ in
 
     hostName = lib.mkOption {
       type = lib.types.str;
-      default = "192.168.10.62";
       description = "Hostname or IP of the remote build machine";
       example = "192.168.10.62";
     };
@@ -17,14 +16,20 @@ in
     hostPublicKeyFile = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;
-      description = "Path to a file containing the remote build machine's SSH host public key (from ssh-keyscan). Used to populate root's known_hosts declaratively.";
+      description = "Path to a file containing the remote build machine's SSH host public key. Used to populate known_hosts declaratively.";
       example = "../../keys/nix-cache-host.pub";
     };
 
     sshUser = lib.mkOption {
       type = lib.types.str;
-      default = "henrik";
-      description = "SSH user to connect as on the remote build machine";
+      description = "SSH user on the remote build machine. Must be in trusted-users on the remote.";
+      example = "henrik";
+    };
+
+    sshKey = lib.mkOption {
+      type = lib.types.str;
+      description = "Path to the SSH private key used for remote builds.";
+      example = "/home/henrik/.ssh/nix-build";
     };
 
     maxJobs = lib.mkOption {
@@ -42,29 +47,25 @@ in
 
   config = lib.mkIf cfg.enable {
     nix.distributedBuilds = true;
+    nix.settings.builders-use-substitutes = true;
 
     nix.buildMachines = [
       {
         hostName = cfg.hostName;
         system = "x86_64-linux";
-        protocol = "ssh";
+        # ssh-ng requires sshUser to be a trusted-user on the remote
+        protocol = "ssh-ng";
         sshUser = cfg.sshUser;
-        sshKey = "/root/.ssh/nix-build";
+        sshKey = cfg.sshKey;
         maxJobs = cfg.maxJobs;
         speedFactor = cfg.speedFactor;
         supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
       }
     ];
 
-    # Declaratively add the remote build host to root's known_hosts
     programs.ssh.knownHosts = lib.mkIf (cfg.hostPublicKeyFile != null) {
       "${cfg.hostName}".publicKey = lib.strings.trim (builtins.readFile cfg.hostPublicKeyFile);
     };
-
-    # Fall back to local builds if the remote is unavailable
-    nix.extraOptions = ''
-      builders-use-substitutes = true
-    '';
   };
 }
 

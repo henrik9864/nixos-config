@@ -18,6 +18,7 @@
     hostName = "192.168.10.62";
     hostPublicKeyFile = ../../keys/nix-cache-host.pub;
     sshUser = "henrik";
+    sshKey = "/home/henrik/.ssh/nix-build";
     maxJobs = 4;
     speedFactor = 2;
   };
