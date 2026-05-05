@@ -1,5 +1,4 @@
-{ ... }:
-let
+{...}: let
   custom = {
     font = "JetBrainsMono Nerd Font";
     font_size = "14px";
@@ -17,8 +16,7 @@ let
     orange = "#D65D0E";
     opacity = "1";
   };
-in
-{
+in {
   programs.waybar.settings.mainBar = with custom; {
     position = "bottom";
     layer = "top";
@@ -31,12 +29,13 @@ in
       "hyprland/workspaces"
       "tray"
     ];
-    modules-center = [ "clock" ];
+    modules-center = ["clock"];
     modules-right = [
       "custom/proxmox"
       "custom/ssh"
       "custom/spacer"
       "cpu"
+      "custom/gpu"
       "memory"
       "disk"
       "pulseaudio"
@@ -70,9 +69,9 @@ in
         sort-by-number = true;
       };
       persistent-workspaces = {
-        "1" = [ ];
-        "2" = [ ];
-        "3" = [ ];
+        "1" = [];
+        "2" = [];
+        "3" = [];
       };
     };
     "hyprland/language" = {
@@ -106,7 +105,7 @@ in
     pulseaudio = {
       format = "<span foreground='${blue}'>{icon}</span> {volume}%";
       format-muted = "<span foreground='${blue}'> </span> {volume}%";
-      format-icons.default = [ "󰕾" ];
+      format-icons.default = ["󰕾"];
       scroll-step = 2;
       on-click = "pamixer -t";
       on-click-right = "pavucontrol";
@@ -156,6 +155,18 @@ in
       tooltip-format = "Power menu";
       format = "<span foreground='${red}'>󰐥 </span>";
       on-click = "wlogout";
+    };
+
+    "custom/gpu" = {
+      format = "<span foreground='${yellow}'>󰍛 </span>{}";
+      interval = 2;
+      tooltip = false;
+      return-type = "json";
+
+      exec = ''
+        nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits |
+        awk '{ printf("{\"text\":\"%s%% \"}\n", $1) }'
+      '';
     };
   };
 }

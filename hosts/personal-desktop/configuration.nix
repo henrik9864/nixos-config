@@ -263,33 +263,46 @@
           enable = true;
           setupOpts = {
             enableDefaultKeymaps = true;
-adapters = lib.generators.mkLuaInline ''
-  {
-    http = {
-      llamacpp = function()
-        return require("codecompanion.adapters").extend("openai_compatible", {
-          env = {
-            url = "http://127.0.0.1:8080",
-            api_key = "dummy",
-            chat_url = "/v1/chat/completions",
-          },
-          schema = {
-            model = {
-              default = "local",
-            },
-          },
-        })
-      end,
-    },
-  }
-'';
-strategies = lib.generators.mkLuaInline ''
-  { chat = { adapter = "llamacpp" }, inline = { adapter = "llamacpp" } }
-'';
+            adapters = lib.generators.mkLuaInline ''
+              {
+                http = {
+                  llamacpp = function()
+                    return require("codecompanion.adapters").extend("openai_compatible", {
+                      env = {
+                        url = "http://127.0.0.1:8080",
+                        api_key = "dummy",
+                        chat_url = "/v1/chat/completions",
+                      },
+                      schema = {
+                        model = {
+                          default = "local",
+                        },
+                      },
+                    })
+                  end,
+
+                  chatgpt_codex = function()
+                    return require("codecompanion.adapters").extend("openai_compatible", {
+                      env = {
+                        url = "https://api.openai.com/v1",
+                        api_key = os.getenv("OPENAI_API_KEY"),
+                        chat_url = "/chat/completions",
+                      },
+                      schema = {
+                        model = {
+                          default = "gpt-4.1-mini",
+                        },
+                      },
+                    })
+                  end,
+                },
+              }
+            '';
+            strategies = lib.generators.mkLuaInline ''
+              { chat = { adapter = "llamacpp" }, inline = { adapter = "llamacpp" } }
+            '';
           };
         };
-
-
       };
     };
   };
@@ -334,7 +347,7 @@ strategies = lib.generators.mkLuaInline ''
     acceleration = "cuda";
     contextSize = 16384;
     #contextSize = 8192;
-    extraArgs = [ "--flash-attn on" ];
+    extraArgs = ["--flash-attn on"];
     #gpuLayers = 30;
   };
 
