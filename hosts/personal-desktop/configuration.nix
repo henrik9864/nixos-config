@@ -8,8 +8,14 @@
     ./hardware-configuration.nix
   ];
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
-  nix.settings.trusted-users = [ "root" "henrik" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+  nix.settings.trusted-users = [
+    "root"
+    "henrik"
+  ];
   nixpkgs.config.allowUnfree = true;
   system.nixCache.enable = true;
 
@@ -34,7 +40,10 @@
       };
       efi.canTouchEfiVariables = true;
     };
-    initrd.availableKernelModules = ["ahci" "sd_mod"];
+    initrd.availableKernelModules = [
+      "ahci"
+      "sd_mod"
+    ];
   };
 
   # Networking
@@ -66,7 +75,10 @@
   users.users.henrik = {
     isNormalUser = true;
     description = "Henrik Strocka";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
     shell = pkgs.zsh;
   };
 
@@ -86,6 +98,8 @@
     firefox.enable = true;
     zsh.enable = true;
     nix-index-database.comma.enable = true;
+
+    nix-ld.enable = true;
 
     nvf = {
       enable = true;
@@ -249,16 +263,29 @@
           enable = true;
           setupOpts = {
             enableDefaultKeymaps = true;
-            adapters = lib.generators.mkLuaInline ''
-              {
-                copilot = require("codecompanion.adapters").extend("copilot", {
-                  schema = { model = { default = "gpt-4o" } },
-                }),
-              }
-            '';
-            strategies = lib.generators.mkLuaInline ''
-              { chat = { adapter = "copilot" }, inline = { adapter = "copilot" } }
-            '';
+adapters = lib.generators.mkLuaInline ''
+  {
+    http = {
+      llamacpp = function()
+        return require("codecompanion.adapters").extend("openai_compatible", {
+          env = {
+            url = "http://127.0.0.1:8080",
+            api_key = "dummy",
+            chat_url = "/v1/chat/completions",
+          },
+          schema = {
+            model = {
+              default = "local",
+            },
+          },
+        })
+      end,
+    },
+  }
+'';
+strategies = lib.generators.mkLuaInline ''
+  { chat = { adapter = "llamacpp" }, inline = { adapter = "llamacpp" } }
+'';
           };
         };
 
@@ -285,15 +312,30 @@
     mounts.share = {
       device = "192.168.10.196:/mnt/HDD16/Share";
       mountPoint = "/mnt/s";
-      options = ["rw" "nolock"];
+      options = [
+        "rw"
+        "nolock"
+      ];
+    };
+
+    mounts.llm = {
+      device = "192.168.10.196:/mnt/HDD16/LLM";
+      mountPoint = "/mnt/llm";
+      options = [
+        "rw"
+        "nolock"
+      ];
     };
   };
 
   services.llm = {
     enable = true;
+    modelsDir = "/mnt/llm/models/";
     acceleration = "cuda";
-    models = ["llama3.2" "gemma4:26b" "gemma4:e4b"];
-    extraUsers = ["henrik"];
+    contextSize = 16384;
+    #contextSize = 8192;
+    extraArgs = [ "--flash-attn on" ];
+    #gpuLayers = 30;
   };
 
   services.gaming = {

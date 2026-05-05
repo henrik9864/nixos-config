@@ -44,11 +44,78 @@
     *.lock
   '';
 
+  programs.zed-editor = {
+    enable = true;
+    extensions = [
+      "nix"
+      "gruvbox-material"
+    ];
+
+    userSettings = {
+      theme = {
+        mode = "dark";
+        dark = "Gruvbox Dark";
+        light = "One Light";
+      };
+
+      assistant = {
+        enabled = true;
+      };
+
+      hour_format = "hour24";
+      vim_mode = false;
+
+      collaboration = {
+        enabled = true;
+      };
+
+      telemetry = {
+        diagnostics = false;
+        metrics = false;
+      };
+
+      lsp.nixd.settings = {
+        nixd = {
+          nixpkgs = {
+            expr = "import (builtins.getFlake \"path:/home/henrik/nixos-config\").inputs.nixpkgs { }";
+          };
+
+          formatting = {
+            command = [ "nixfmt" ];
+          };
+
+          options = {
+            nixos = {
+              expr = "(builtins.getFlake \"path:/home/henrik/nixos-config\").nixosConfigurations.nixos-personal.options";
+            };
+          };
+        };
+      };
+
+      languages = {
+        Nix = {
+          language_servers = [ "nixd" ];
+          tabSize = 2;
+          format_on_save = "on";
+          formatter.external = {
+            command = "nixfmt";
+            arguments = [
+              "--quiet"
+              "--"
+            ];
+          };
+        };
+      };
+    };
+  };
+
   home.packages = with pkgs; [
     home-manager
     nix-search-tv
     nixd
     nixfmt-rfc-style
+    statix
+    deadnix
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
     efibootmgr
