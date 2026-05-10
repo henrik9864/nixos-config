@@ -42,71 +42,6 @@
     };
   };
 
-  programs.zed-editor = {
-    enable = true;
-    extensions = [
-      "nix"
-      "gruvbox-material"
-    ];
-
-    userSettings = {
-      theme = {
-        mode = "dark";
-        dark = "Gruvbox Dark";
-        light = "One Light";
-      };
-
-      assistant = {
-        enabled = true;
-      };
-
-      hour_format = "hour24";
-      vim_mode = false;
-
-      collaboration = {
-        enabled = true;
-      };
-
-      telemetry = {
-        diagnostics = false;
-        metrics = false;
-      };
-
-      lsp.nixd.settings = {
-        nixd = {
-          nixpkgs = {
-            expr = "import (builtins.getFlake \"path:/home/henrik/nixos-config\").inputs.nixpkgs { }";
-          };
-
-          formatting = {
-            command = ["nixfmt"];
-          };
-
-          options = {
-            nixos = {
-              expr = "(builtins.getFlake \"path:/home/henrik/nixos-config\").nixosConfigurations.nixos-personal.options";
-            };
-          };
-        };
-      };
-
-      languages = {
-        Nix = {
-          language_servers = ["nixd"];
-          tabSize = 2;
-          format_on_save = "on";
-          formatter.external = {
-            command = "nixfmt";
-            arguments = [
-              "--quiet"
-              "--"
-            ];
-          };
-        };
-      };
-    };
-  };
-
   home.packages = with pkgs; [
     home-manager
     nix-search-tv
@@ -248,9 +183,10 @@
     enable = true;
     shellIntegration.enableZshIntegration = true;
     themeFile = "Catppuccin-Mocha";
+
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 11;
+      size = 10;
     };
     keybindings = {
       "ctrl+insert" = "copy_to_clipboard";
@@ -258,6 +194,8 @@
     };
     settings = {
       background_opacity = "0.85";
+      cursor_trail = 1;
+      cursor_trail_devay = "0.1 0.4";
     };
     extraConfig = ''
       startup_session ~/.config/kitty/startup.session
