@@ -3,12 +3,11 @@
   inputs,
   lib,
   ...
-}:
-{
+}: {
   home.username = "henrik";
   home.homeDirectory = "/home/henrik";
 
-  home.activation.cleanupStaleSymlinks = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+  home.activation.cleanupStaleSymlinks = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
     for path in \
       "$HOME/.config/hypr" \
       "$HOME/.config/waybar" \
@@ -26,23 +25,22 @@
     ./scripts.nix
   ];
 
-  home.file.".config/waypaper/config.ini".text = ''
-    [Settings]
-    folder = ~/walls
-    backend = hyprpaper
-    monitors = All
-    fill = fillRRRRRRRR
-    sort = name
-    color = #ffffff
-    subfolders = False
-    show_hidden = False
-    show_exif = False
-  '';
-
   home.file.".config/aichat/.aichatignore".text = ''
     .git/
     *.lock
   '';
+
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      preload = ["~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"];
+      wallpaper = [
+        "HDMI-A-1,~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"
+        "DP-2,~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"
+        "DP-3,~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"
+      ];
+    };
+  };
 
   programs.zed-editor = {
     enable = true;
@@ -81,7 +79,7 @@
           };
 
           formatting = {
-            command = [ "nixfmt" ];
+            command = ["nixfmt"];
           };
 
           options = {
@@ -94,7 +92,7 @@
 
       languages = {
         Nix = {
-          language_servers = [ "nixd" ];
+          language_servers = ["nixd"];
           tabSize = 2;
           format_on_save = "on";
           formatter.external = {
@@ -139,6 +137,8 @@
     jq
     htop
     curl
+    evtest
+    prismlauncher
   ];
 
   home.sessionVariables = {
@@ -188,7 +188,7 @@
   programs.vscode = {
     enable = true;
     profiles.default = {
-      extensions = with pkgs.vscode-extensions; [ jnoortheen.nix-ide ];
+      extensions = with pkgs.vscode-extensions; [jnoortheen.nix-ide];
       userSettings = {
         "nix.enableLanguageServer" = true;
         "nix.serverPath" = "nixd";

@@ -41,7 +41,6 @@
       efi.canTouchEfiVariables = true;
     };
     initrd.availableKernelModules = [
-      "ahci"
       "sd_mod"
     ];
   };
@@ -259,6 +258,12 @@
         vim.git.gitsigns.enable = true;
         vim.binds.whichKey.enable = true;
 
+        vim.extraPlugins = {
+          vim-be-good = {
+            package = pkgs.vimPlugins.vim-be-good;
+          };
+        };
+
         vim.assistant.codecompanion-nvim = {
           enable = true;
           setupOpts = {
@@ -275,22 +280,7 @@
                       },
                       schema = {
                         model = {
-                          default = "local",
-                        },
-                      },
-                    })
-                  end,
-
-                  chatgpt_codex = function()
-                    return require("codecompanion.adapters").extend("openai_compatible", {
-                      env = {
-                        url = "https://api.openai.com/v1",
-                        api_key = os.getenv("OPENAI_API_KEY"),
-                        chat_url = "/chat/completions",
-                      },
-                      schema = {
-                        model = {
-                          default = "gpt-4.1-mini",
+                          default = "Qwen3.5-9B-DeepSeek-V4-Flash-Q4_K_M",
                         },
                       },
                     })
