@@ -120,26 +120,6 @@
     };
   };
 
-  programs.vscode = {
-    enable = true;
-    profiles.default = {
-      extensions = with pkgs.vscode-extensions; [jnoortheen.nix-ide];
-      userSettings = {
-        "nix.enableLanguageServer" = true;
-        "nix.serverPath" = "nixd";
-        "nix.formatterPath" = "nixfmt";
-        "nix.nixpkgs.expr" = "import <nixpkgs> { }";
-        "[nix]" = {
-          "editor.formatOnSave" = true;
-          "editor.defaultFormatter" = "jnoortheen.nix-ide";
-        };
-        "editor.fontFamily" = "JetBrainsMono Nerd Font";
-        "editor.fontSize" = 14;
-        "editor.fontLigatures" = true;
-      };
-    };
-  };
-
   programs.git = {
     enable = true;
     settings.user = {
