@@ -118,6 +118,8 @@
           shiftwidth = 2;
           tabstop = 2;
           whichwrap = "b,s,<,>,[,],h,l";
+          scrolloff = 5;
+          smoothscroll = true;
         };
 
         vim.keymaps = [
@@ -212,6 +214,27 @@
             action = ":CccPick<CR>";
             desc = "Open color picker";
           }
+          {
+            key = "å";
+            mode = ["n" "v"];
+            silent = true;
+            action = "{";
+            desc = "Paragraph up (Norwegian keyboard)";
+          }
+          {
+            key = "¨";
+            mode = ["n" "v"];
+            silent = true;
+            action = "}";
+            desc = "Paragraph down (Norwegian keyboard)";
+          }
+          {
+            key = "ø";
+            mode = ["n" "v"];
+            silent = true;
+            action = ":";
+            desc = "Command mode (Norwegian keyboard)";
+          }
         ];
 
         vim.languages = {
@@ -265,6 +288,7 @@
         vim.filetree.neo-tree.enable = true;
         vim.git.gitsigns.enable = true;
         vim.binds.whichKey.enable = true;
+        vim.visuals.indent-blankline.enable = true;
 
         vim.ui.colorizer = {
           enable = true;
@@ -278,7 +302,7 @@
         };
 
         vim.extraPlugins = {
-          ccc-nvim = { 
+          ccc-nvim = {
             package = pkgs.vimPlugins.ccc-nvim;
             setup = ''require("ccc").setup({})'';
           };
@@ -369,9 +393,7 @@
     modelsDir = "/mnt/llm/models/";
     acceleration = "cuda";
     contextSize = 16384;
-    #contextSize = 8192;
     extraArgs = ["--flash-attn on"];
-    #gpuLayers = 30;
   };
 
   services.gaming = {

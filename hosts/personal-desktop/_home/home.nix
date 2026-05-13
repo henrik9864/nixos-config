@@ -63,6 +63,7 @@
     curl
     evtest
     prismlauncher
+    ckan
   ];
 
   home.sessionVariables = {
