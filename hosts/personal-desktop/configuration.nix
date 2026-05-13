@@ -205,6 +205,13 @@
             action = "<C-w>j";
             desc = "Move to lower split";
           }
+          {
+            key = "<leader>cp";
+            mode = ["n"];
+            silent = true;
+            action = ":CccPick<CR>";
+            desc = "Open color picker";
+          }
         ];
 
         vim.languages = {
@@ -259,9 +266,21 @@
         vim.git.gitsigns.enable = true;
         vim.binds.whichKey.enable = true;
 
+        vim.ui.colorizer = {
+          enable = true;
+
+          setupOpts.filetypes."*" = {
+            AARRGGBB = true;
+            RGB = true;
+            RRGGBB = true;
+            RRGGBBAA = true;
+          };
+        };
+
         vim.extraPlugins = {
-          vim-be-good = {
-            package = pkgs.vimPlugins.vim-be-good;
+          ccc-nvim = { 
+            package = pkgs.vimPlugins.ccc-nvim;
+            setup = ''require("ccc").setup({})'';
           };
         };
 

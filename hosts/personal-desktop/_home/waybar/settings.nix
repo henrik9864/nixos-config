@@ -3,17 +3,17 @@
     font = "JetBrainsMono Nerd Font";
     font_size = "14px";
     font_weight = "bold";
-    text_color = "#FBF1C7";
-    background_0 = "#1D2021";
-    background_1 = "#282828";
-    border_color = "#928374";
-    red = "#CC241D";
-    green = "#98971A";
-    yellow = "#FABD2F";
-    blue = "#458588";
-    magenta = "#B16286";
-    cyan = "#689D6A";
-    orange = "#D65D0E";
+    text_color = "#E0E8F0";
+    background_0 = "#0F202E";
+    background_1 = "#1A3A52";
+    border_color = "#5A7D9A";
+    red = "#E06C75";
+    green = "#96BB94";
+    yellow = "#E6C679";
+    blue = "#7FBBE5";
+    magenta = "#9981D3";
+    cyan = "#66C3C8";
+    orange = "#EB9F85";
     opacity = "1";
   };
 in {

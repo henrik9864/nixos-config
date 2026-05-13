@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./settings-hw.nix
     ./settings.nix
     ./exec-once.nix
     ./binds.nix

@@ -7,11 +7,11 @@
   # TODO: Move to separate file
   services.hyprpaper = {
     settings = {
-      preload = ["~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"];
+      preload = ["~/walls/otherWallpaper/space_kurz/space_earth.jpg"];
       wallpaper = [
-        "HDMI-A-1,~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"
-        "DP-2,~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"
-        "DP-3,~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"
+        "HDMI-A-1,~/walls/otherWallpaper/space_kurz/space_eath.jpg"
+        "DP-2,~/walls/otherWallpaper/space_kurz/space_earth.jpg"
+        "DP-3,~/walls/otherWallpaper/space_kurz/space_eath.jpg"
       ];
     };
   };
