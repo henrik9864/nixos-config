@@ -33,6 +33,7 @@
   # Boot
   boot = {
     kernelPackages = pkgs.linuxPackages_7_0;
+    # kernelPackages = inputs.nix-cachyos-kernel.legacyPackages.x86_64-linux.linuxPackages-cachyos-latest;
     loader = {
       systemd-boot = {
         enable = true;
@@ -268,6 +269,19 @@
           enable = true;
           setupOpts = {
             enableDefaultKeymaps = true;
+
+            display = {
+              chat = {
+                window = {
+                  layout = "float";
+                  width = 0.8;
+                  height = 0.8;
+                  relative = "editor";
+                  border = "rounded";
+                };
+              };
+            };
+
             adapters = lib.generators.mkLuaInline ''
               {
                 http = {

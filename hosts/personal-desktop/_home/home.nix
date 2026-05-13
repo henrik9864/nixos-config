@@ -22,6 +22,7 @@
   imports = [
     ./hyprland/default.nix
     ./waybar/default.nix
+    ./hyprpaper/default.nix
     ./scripts.nix
   ];
 
@@ -29,18 +30,6 @@
     .git/
     *.lock
   '';
-
-  services.hyprpaper = {
-    enable = true;
-    settings = {
-      preload = ["~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"];
-      wallpaper = [
-        "HDMI-A-1,~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"
-        "DP-2,~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"
-        "DP-3,~/walls/otherWallpaper/gruvbox/forest_bridge.jpg"
-      ];
-    };
-  };
 
   home.packages = with pkgs; [
     home-manager
@@ -166,7 +155,7 @@
 
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 10;
+      size = 9.5;
     };
     keybindings = {
       "ctrl+insert" = "copy_to_clipboard";

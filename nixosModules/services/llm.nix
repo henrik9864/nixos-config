@@ -10,6 +10,12 @@ in {
   options.services.llm = {
     enable = lib.mkEnableOption "Local LLM service via llama.cpp";
 
+    version = lib.mkOption {
+      type = lib.types.str;
+      default = "9124";
+      description = "Llama-cpp version.";
+    };
+
     modelsDir = lib.mkOption {
       type = lib.types.str;
       description = "Path to models folder";
@@ -73,11 +79,28 @@ in {
 
   config = lib.mkIf cfg.enable (
     let
-      pkg = pkgs-unstable.llama-cpp.override {
-        cudaSupport = cfg.acceleration == "cuda";
-        rocmSupport = cfg.acceleration == "rocm";
-        vulkanSupport = cfg.acceleration == "vulkan";
-      };
+      pkg =
+        (pkgs-unstable.llama-cpp.override {
+          cudaSupport = cfg.acceleration == "cuda";
+          rocmSupport = cfg.acceleration == "rocm";
+          vulkanSupport = cfg.acceleration == "vulkan";
+        }).overrideAttrs (oldAttrs: rec {
+          version = cfg.version;
+          src = pkgs.fetchFromGitHub {
+            owner = "ggerganov";
+            repo = "llama.cpp";
+            rev = "b${cfg.version}";
+            hash = "sha256-ce5PhrBoU+uzRyBozbLyuee5L0f8d8YwgXK4967Ak90=";
+          };
+
+          npmDepsHash = "sha256-cV3noOyKmst9vfxyvkCNhihPgwfVGhmPPT4UMloeWZM=";
+
+          cmakeFlags =
+            (oldAttrs.cmakeFlags or [])
+            ++ [
+              "-DCMAKE_CUDA_ARCHITECTURES=75"
+            ];
+        });
     in {
       systemd.services.llama-cpp = {
         description = "llama.cpp HTTP server";
@@ -91,7 +114,6 @@ in {
               "--ctx-size ${toString cfg.contextSize}"
               "--n-gpu-layers ${toString cfg.gpuLayers}"
               "--models-dir ${cfg.modelsDir}"
-              #"--model /mnt/llm/models/Qwen3.5-9B-DeepSeek-V4-Flash-IQ4_XS.gguf"
             ]
             ++ cfg.extraArgs);
           Restart = "on-failure";
