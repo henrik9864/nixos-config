@@ -17,7 +17,7 @@
       vim.statusline.lualine.enable = true;
 
       vim.options = {
-        smartindent = false;
+        smartindent = true;
         shiftwidth = 2;
         tabstop = 2;
         whichwrap = "b,s,<,>,[,],h,l";
@@ -159,9 +159,16 @@
           };
           treesitter.enable = true;
         };
-      };
+        csharp = {
+          enable = true;
+          lsp = {
+            enable = true;
+            server = "roslyn";
+          };
+          treesitter.enable = true;
 
-      vim.treesitter.indent.enable = false;
+        };
+      };
 
       vim.luaConfigRC.treesitter-parser-fix = ''
         for _, dir in ipairs(vim.api.nvim_list_runtime_paths()) do
@@ -187,11 +194,23 @@
       '';
 
       vim.telescope.enable = true;
-      vim.autocomplete.nvim-cmp.enable = true;
       vim.filetree.neo-tree.enable = true;
       vim.git.gitsigns.enable = true;
       vim.binds.whichKey.enable = true;
       vim.visuals.indent-blankline.enable = true;
+      vim.treesitter.indent.enable = false;
+      vim.lsp.enable = true;
+
+      vim.autocomplete.nvim-cmp = {
+        enable = true;
+
+        setupOpts = {
+          completion = {
+            autocomplete = ["TextChanged"];
+            completeopt = "menu,menuone,noselect";
+          };
+        };
+      };
 
       vim.ui.colorizer = {
         enable = true;
@@ -208,6 +227,19 @@
         ccc-nvim = {
           package = pkgs.vimPlugins.ccc-nvim;
           setup = ''require("ccc").setup({})'';
+        };
+
+        hml-nvim = {
+          package = pkgs.vimUtils.buildVimPlugin {
+            name = "hml-nvim";
+            src = pkgs.fetchFromGitHub {
+              owner = "mawkler";
+              repo = "hml.nvim";
+              rev = "main";
+              sha256 = "sha256-IdsYy0K4Q1qTpUwhf97bS2vGDHB+MBjZILy1MyVlIiE=";
+            };
+          };
+          setup = ''require("hml").setup({})'';
         };
       };
 

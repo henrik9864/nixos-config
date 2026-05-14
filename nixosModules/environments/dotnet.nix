@@ -36,6 +36,9 @@ in
       # Tools
       pkgs.omnisharp-roslyn
       pkgs.nuget-to-json
+
+      # Lsp
+      pkgs.roslyn-ls
     ]
     ++ cfg.extraPackages;
 

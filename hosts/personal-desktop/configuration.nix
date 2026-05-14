@@ -149,6 +149,11 @@
     extraUsers = ["henrik"];
   };
 
+  services.environments.dotnet = {
+    enable = true;
+    sdks = [ pkgs.dotnet-sdk_9 pkgs.dotnet-sdk_11 ];
+  };
+
   # Filesystems
   fileSystems."/mnt/storage" = {
     device = "/dev/disk/by-uuid/9CF4C5D4F4C5B136";
