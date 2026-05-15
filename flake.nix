@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+    nicotine.url = "github:henrik9864/nicotine-nix";
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -113,6 +114,7 @@
             inputs.lanzaboote.nixosModules.lanzaboote
             inputs.nix-index-database.nixosModules.nix-index
             inputs.nvf.nixosModules.default
+            inputs.nicotine.nixosModules.default
             (inputs.import-tree ./hosts/personal-desktop)
             (inputs.import-tree ./nixosModules)
             (

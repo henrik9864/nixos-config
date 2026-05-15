@@ -7,6 +7,7 @@
   imports = [
     ./hardware-configuration.nix
     ./nvf.nix
+    ./nvf_keymaps.nix
   ];
 
   nix.settings.experimental-features = [
@@ -20,15 +21,15 @@
   nixpkgs.config.allowUnfree = true;
   system.nixCache.enable = true;
 
-  system.remoteBuild = {
-    enable = true;
-    hostName = "192.168.10.62";
-    hostPublicKeyFile = ../../keys/nix-cache-host.pub;
-    sshUser = "henrik";
-    sshKey = "/home/henrik/.ssh/nix-build";
-    maxJobs = 4;
-    speedFactor = 2;
-  };
+  # system.remoteBuild = {
+  #   enable = true;
+  #   hostName = "192.168.10.62";
+  #   hostPublicKeyFile = ../../keys/nix-cache-host.pub;
+  #   sshUser = "henrik";
+  #   sshKey = "/home/henrik/.ssh/nix-build";
+  #   maxJobs = 4;
+  #   speedFactor = 2;
+  # };
   system.stateVersion = "25.11";
 
   # Boot
@@ -46,6 +47,8 @@
       "sd_mod"
     ];
   };
+
+  programs.nicotine.enable = true;
 
   # Networking
   networking = {
