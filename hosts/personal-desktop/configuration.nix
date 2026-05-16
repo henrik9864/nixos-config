@@ -49,6 +49,7 @@
   };
 
   programs.nicotine.enable = true;
+  programs.eveguru.enable = true;
 
   # Networking
   networking = {
