@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-unstable,
   inputs,
   lib,
   ...
@@ -7,6 +8,8 @@
   programs.nvf = {
     enable = true;
     settings = {
+      vim.package = pkgs-unstable.neovim-unwrapped;
+
       vim.theme = {
         enable = true;
         name = "gruvbox";
@@ -157,7 +160,7 @@
                     },
                     schema = {
                       model = {
-                        default = "Qwen3.5-9B-DeepSeek-V4-Flash-Q4_K_M",
+                        default = "Qwen3.6-27B-Q3_K_M",
                       },
                     },
                   })

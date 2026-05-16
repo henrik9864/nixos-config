@@ -10,8 +10,8 @@
       preload = ["~/walls/otherWallpaper/space_kurz/space_earth.jpg"];
       wallpaper = [
         "HDMI-A-1,~/walls/otherWallpaper/space_kurz/space_earth.jpg"
+        "DP-1,~/walls/otherWallpaper/space_kurz/space_earth.jpg"
         "DP-2,~/walls/otherWallpaper/space_kurz/space_earth.jpg"
-        "DP-3,~/walls/otherWallpaper/space_kurz/space_earth.jpg"
       ];
     };
   };
