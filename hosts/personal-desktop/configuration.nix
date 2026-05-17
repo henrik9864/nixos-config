@@ -146,7 +146,10 @@
     acceleration = "cuda";
     contextSize = 16384;
     extraArgs = ["--flash-attn on"];
+    version = "9181";
   };
+
+  services.openWebui.enable = true;
 
   services.gaming = {
     enable = true;

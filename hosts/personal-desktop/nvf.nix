@@ -160,7 +160,7 @@
                     },
                     schema = {
                       model = {
-                        default = "Qwen3.6-27B-Q3_K_M",
+                        default = "Qwen3.6-27B-UD-Q5_K_XL-MTP",
                       },
                     },
                   })

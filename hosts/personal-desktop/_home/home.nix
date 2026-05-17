@@ -64,6 +64,7 @@
     evtest
     prismlauncher
     ckan
+    ncdu
   ];
 
   home.sessionVariables = {
