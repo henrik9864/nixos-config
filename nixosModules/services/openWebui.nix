@@ -6,23 +6,14 @@
   ...
 }: let
   cfg = config.services.openWebui;
-  llamaBaseUrl =
-    if config.services.llm.enable
-    then "http://${config.services.llm.host}:${toString config.services.llm.port}"
-    else null;
 in {
   options.services.openWebui = {
     enable = lib.mkEnableOption "Open WebUI service";
     package = lib.mkOption {
       type = lib.types.package;
       default = pkgs-unstable.open-webui;
-      defaultText = lib.literalMD "`pkgs.unstable.open-webui`";
+      defaultText = lib.literalMD "`pkgs-unstable.open-webui`";
       description = "The open-webui package to use.";
-    };
-    user = lib.mkOption {
-      type = lib.types.str;
-      default = "henrik";
-      description = "User to run the Open WebUI service as.";
     };
     host = lib.mkOption {
       type = lib.types.str;
@@ -37,50 +28,52 @@ in {
     dataDir = lib.mkOption {
       type = lib.types.str;
       default = "/var/lib/open-webui";
-      description = "Data directory for Open WebUI (database, uploads, etc.).";
-    };
-    databasePath = lib.mkOption {
-      type = lib.types.str;
-      default = "${cfg.dataDir}/data.db";
-      description = "Path to the SQLite database file.";
-    };
-    ollamaApiBaseUrl = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = llamaBaseUrl;
-      defaultText = lib.literalMD "Auto-detected from `services.llm` if enabled, otherwise `null`.";
-      description = "URL of the Ollama/OpenAI-compatible API backend (e.g. llama.cpp server).";
+      description = "Data directory for Open WebUI.";
     };
     extraEnv = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = {};
       description = "Extra environment variables to pass to the service.";
-      example = lib.literalExpression ''
-        {
-          ANONYMIZED_TELEMETRY = "false";
-          ENABLE_SIGNUP = "true";
-        }
-      '';
     };
   };
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = config.services.llm.enable;
+        message = "services.openWebui requires services.llm";
+      }
+    ];
     systemd.services.open-webui = {
       description = "Open WebUI";
       wantedBy = ["multi-user.target"];
-      after = ["network.target"];
-      wants = ["network.target"];
+      after =
+        ["network.target" "llama-cpp.service"]
+        ++ lib.optional config.services.searxng.enable "searxng.service";
+      wants =
+        ["llama-cpp.service"]
+        ++ lib.optional config.services.searxng.enable "searxng.service";
       serviceConfig = {
-        ExecStart = "${cfg.package}/bin/open-webui serve";
+        ExecStart = "${cfg.package}/bin/open-webui serve --host ${cfg.host} --port ${toString cfg.port}";
         Environment =
           [
             "DATA_DIR=${cfg.dataDir}"
-            "HOST=${cfg.host}"
-            "PORT=${toString cfg.port}"
+            "DATABASE_PATH=${cfg.dataDir}/data.db"
+            "HF_HOME=${cfg.dataDir}/hf"
+            "SENTENCE_TRANSFORMERS_HOME=${cfg.dataDir}/sentence-transformers"
+            "TIKTOKEN_CACHE_DIR=${cfg.dataDir}/tiktoken-cache"
+            "NLTK_DATA=${cfg.dataDir}/nltk"
+            "ENABLE_OLLAMA_API=false"
+            "OPENAI_API_BASE_URL=http://${config.services.llm.host}:${toString config.services.llm.port}/v1"
+            "OPENAI_API_KEY=sk-dummy"
           ]
-          ++ (lib.optional (cfg.ollamaApiBaseUrl != null) "OLLAMA_BASE_URL=${cfg.ollamaApiBaseUrl}")
-          ++ (lib.optionals (cfg.databasePath != "") ["DATABASE_PATH=${cfg.databasePath}"])
-          ++ lib.mapAttrsToList (name: value: "${name}=${value}") cfg.extraEnv;
+          ++ lib.optionals config.services.searxng.enable [
+            "ENABLE_RAG_WEB_SEARCH=true"
+            "RAG_WEB_SEARCH_ENGINE=searxng"
+            "SEARXNG_QUERY_URL=http://${config.services.searxng.host}:${toString config.services.searxng.port}/search?q=<query>&format=json"
+          ]
+          ++ lib.mapAttrsToList (n: v: "${n}=${v}") cfg.extraEnv;
         Restart = "on-failure";
-        User = cfg.user;
+        DynamicUser = true;
         WorkingDirectory = cfg.dataDir;
         StateDirectory = "open-webui";
       };

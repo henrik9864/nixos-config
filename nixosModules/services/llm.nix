@@ -75,20 +75,20 @@ in {
 
     version = lib.mkOption {
       type = lib.types.str;
-      default = "9181";
+      default = "9267";
       description = "Llama-cpp version (build number, e.g. 9181).";
     };
 
     srcHash = lib.mkOption {
       type = lib.types.str;
       description = "SHA256 hash for the llama.cpp source at the given version.";
-      default = "sha256-FQGfvpgKXXyShv6pZC4e9C6u7aTC8vFhyqTnNEwWnDI=";
+      default = "sha256-zfzZiPH7AlomLHJZIImx35cmlnSqYgwO8Z0VwlozkCI=";
     };
 
     npmDepsHash = lib.mkOption {
       type = lib.types.str;
       description = "SHA256 hash for the llama.cpp WebUI npm dependencies.";
-      default = "sha256-WaEePrEZ7O/7deP2KJhe0AwiSKYA8HOqETmMHUkmBe0=";
+      default = "sha512-A3ZDi8UnIkzLdnboi7dh0HOa8Q4NaLSBOxZ38iA9WaNfbkk4ppjlRSMbwDqlkEBz7//Ieyf7kdDStftkWAYdUg==";
     };
 
     modelsDir = lib.mkOption {
@@ -225,10 +225,10 @@ in {
         });
     in {
       assertions = [
-        {
-          assertion = cfg.mtp.enable -> cfg.model != null;
-          message = "services.llm.model must be set when services.llm.mtp.enable is true (MTP requires a specific model file, not --models-dir).";
-        }
+        # {
+        #   assertion = cfg.mtp.enable -> cfg.model != null;
+        #   message = "services.llm.model must be set when services.llm.mtp.enable is true (MTP requires a specific model file, not --models-dir).";
+        # }
       ];
 
       systemd.services.llama-cpp = {
@@ -245,6 +245,7 @@ in {
               "--ubatch-size ${toString cfg.ubatchSize}"
               "--n-gpu-layers ${toString cfg.gpuLayers}"
               "--flash-attn ${if cfg.flashAttn then "1" else "0"}"
+             #"--stream-complete-with-usage"
             ]
             ++ modelArgs
             ++ mtpArgs

@@ -65,6 +65,7 @@
     prismlauncher
     ckan
     ncdu
+    yazi
   ];
 
   home.sessionVariables = {

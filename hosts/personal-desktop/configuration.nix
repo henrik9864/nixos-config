@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-unstable ? pkgs,
   inputs,
   lib,
   ...
@@ -18,8 +19,8 @@
     "root"
     "henrik"
   ];
+
   nixpkgs.config.allowUnfree = true;
-  system.nixCache.enable = true;
 
   # system.remoteBuild = {
   #   enable = true;
@@ -30,16 +31,15 @@
   #   maxJobs = 4;
   #   speedFactor = 2;
   # };
-  system.stateVersion = "25.11";
 
   # Boot
   boot = {
-    kernelPackages = pkgs.linuxPackages_7_0;
+    kernelPackages = pkgs-unstable.linuxPackages_7_0;
     # kernelPackages = inputs.nix-cachyos-kernel.legacyPackages.x86_64-linux.linuxPackages-cachyos-latest;
     loader = {
       systemd-boot = {
         enable = true;
-        configurationLimit = 10;
+        configurationLimit = 1;
       };
       efi.canTouchEfiVariables = true;
     };
@@ -143,13 +143,18 @@
   services.llm = {
     enable = true;
     modelsDir = "/mnt/llm/models/";
+    # model = "Qwen3.6-27B-UD-Q5_K_XL-MTP.gguf";
     acceleration = "cuda";
     contextSize = 16384;
-    extraArgs = ["--flash-attn on"];
-    version = "9181";
+    #contextSize = 2048;
+    flashAttn = true;
+    mtp.enable = true;
+    ubatchSize = 256;
+    #version = "9181";
   };
 
   services.openWebui.enable = true;
+  services.searxng.enable = true;
 
   services.gaming = {
     enable = true;
@@ -171,4 +176,6 @@
     device = "/dev/disk/by-uuid/0886AA3186AA1F66";
     fsType = "ntfs";
   };
+
+  system.stateVersion = "25.11";
 }
