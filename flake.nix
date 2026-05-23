@@ -6,6 +6,7 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     nicotine.url = "path:/home/henrik/projects/nicotine-nix";
+		hermes-agent.url = "github:NousResearch/hermes-agent";
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
