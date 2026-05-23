@@ -7,8 +7,8 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    ./nvf.nix
-    ./nvf_keymaps.nix
+    # ./nvf.nix
+    # ./nvf_keymaps.nix
   ];
 
   nix.settings.experimental-features = [
@@ -34,7 +34,7 @@
 
   # Boot
   boot = {
-    kernelPackages = pkgs-unstable.linuxPackages_7_0;
+    kernelPackages = pkgs.linuxPackages_7_0;
     # kernelPackages = inputs.nix-cachyos-kernel.legacyPackages.x86_64-linux.linuxPackages-cachyos-latest;
     loader = {
       systemd-boot = {
@@ -94,7 +94,6 @@
     gcc
     file
     ripgrep
-    prusa-slicer
     inputs.hyprsession.packages.${pkgs.system}.default
   ];
 
@@ -105,6 +104,8 @@
 
     nix-ld.enable = true;
   };
+
+  programs.nvim.enable = true;
 
   # Home Manager
   home-manager = {

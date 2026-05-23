@@ -65,7 +65,7 @@
     prismlauncher
     ckan
     ncdu
-    yazi
+    prusa-slicer
   ];
 
   home.sessionVariables = {
@@ -144,6 +144,8 @@
     nrs = "sudo nixos-rebuild switch";
     nrsf = "sudo nixos-rebuild switch --fast";
     ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
+    v = "nvim";
+    b = "yazi";
   };
 
   programs.fzf = {
@@ -172,6 +174,21 @@
     extraConfig = ''
       startup_session ~/.config/kitty/startup.session
     '';
+  };
+
+  programs.yazi = {
+    enable = true;
+
+    settings = {
+      opener = {
+        edit = [
+          {
+            run = ''vim "$@"'';
+            block = true;
+          }
+        ];
+      };
+    };
   };
 
   home.file.".config/kitty/startup.session".text = ''

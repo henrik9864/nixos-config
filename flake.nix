@@ -48,23 +48,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nvf = {
-      url = "github:notashelf/nvf";
+    nixvim = {
+      url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-
   };
 
-  outputs =
-    inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" ];
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux"];
 
       flake.nixosConfigurations = {
-
         nixos-build = inputs.nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
+          specialArgs = {inherit inputs;};
           modules = [
             inputs.vscode-server.nixosModules.default
             (inputs.import-tree ./hosts/build)
@@ -74,7 +71,7 @@
 
         nixos-proxmox-template = inputs.nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
+          specialArgs = {inherit inputs;};
           modules = [
             (inputs.import-tree ./hosts/proxmox-template)
             (inputs.import-tree ./nixosModules)
@@ -83,7 +80,7 @@
 
         nixos-nix-cache = inputs.nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
+          specialArgs = {inherit inputs;};
           modules = [
             (inputs.import-tree ./hosts/nix-cache)
             (inputs.import-tree ./nixosModules)
@@ -92,7 +89,7 @@
 
         nixos-docker = inputs.nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
+          specialArgs = {inherit inputs;};
           modules = [
             inputs.vscode-server.nixosModules.default
             (inputs.import-tree ./hosts/docker)
@@ -113,15 +110,18 @@
             inputs.home-manager.nixosModules.home-manager
             inputs.lanzaboote.nixosModules.lanzaboote
             inputs.nix-index-database.nixosModules.nix-index
-            inputs.nvf.nixosModules.default
             inputs.nicotine.nixosModules.nicotine
             inputs.nicotine.nixosModules.eveguru
+            inputs.nixvim.nixosModules.default
             (inputs.import-tree ./hosts/personal-desktop)
             (inputs.import-tree ./nixosModules)
             (
-              { pkgs, lib, ... }:
               {
-                environment.systemPackages = [ pkgs.sbctl ];
+                pkgs,
+                lib,
+                ...
+              }: {
+                environment.systemPackages = [pkgs.sbctl];
                 boot.loader.systemd-boot.enable = lib.mkForce false;
                 boot.lanzaboote = {
                   enable = true;
@@ -131,7 +131,6 @@
             )
           ];
         };
-
       };
     };
 }
