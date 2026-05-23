@@ -25,6 +25,8 @@ in
       };
 
       opts = {
+				number = true;
+				relativenumber = true;
         smartindent = true;
         shiftwidth = 2;
         tabstop = 2;
@@ -37,6 +39,7 @@ in
         nixd
         alejandra
         statix
+				fd
       ];
 
       keymaps = [
