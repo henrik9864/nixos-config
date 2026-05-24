@@ -63,6 +63,10 @@ in
         { key = "å"; mode = [ "n" "v" ]; action = "{"; options = { silent = true; desc = "Paragraph up (Norwegian keyboard)"; }; }
         { key = "¨"; mode = [ "n" "v" ]; action = "}"; options = { silent = true; desc = "Paragraph down (Norwegian keyboard)"; }; }
         { key = "ø"; mode = [ "n" "v" ]; action = ":"; options = { silent = true; desc = "Command mode (Norwegian keyboard)"; }; }
+
+        { key = "<A-f>"; mode = [ "i" ]; action = "<cmd>lua require('neocodeium').accept()<CR>";            options = { silent = true; desc = "Accept neocodeium suggestion"; }; }
+        { key = "<A-w>"; mode = [ "i" ]; action = "<cmd>lua require('neocodeium').accept_word()<CR>";       options = { silent = true; desc = "Accept neocodeium word"; }; }
+        { key = "<A-e>"; mode = [ "i" ]; action = "<cmd>lua require('neocodeium').cycle_or_complete()<CR>"; options = { silent = true; desc = "Cycle neocodeium suggestions"; }; }
       ];
 
       plugins = {
@@ -91,7 +95,9 @@ in
           servers.nixd.enable = true;
         };
 
-        roslyn.enable = true;
+        roslyn-nvim = {
+          enable = true;
+        };
 
         conform-nvim = {
           enable = true;
@@ -186,11 +192,30 @@ in
             sha256 = "sha256-IdsYy0K4Q1qTpUwhf97bS2vGDHB+MBjZILy1MyVlIiE=";
           };
         })
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "neocodeium";
+          src = pkgs.fetchFromGitHub {
+            owner = "monkoose";
+            repo = "neocodeium";
+            rev = "main";
+            sha256 = "sha256-4IejQ1dQVfmngyF7hUrQ3XXZsHWbuBm3tFDn4hUM/sA=";
+          };
+					doCheck = false;
+        })
       ];
 
       extraConfigLua = ''
         require("ccc").setup({})
         require("hml").setup({})
+
+        require("neocodeium").setup({
+          manual = true,
+        })
+
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "NeoCodeiumCompletionDisplayed",
+          callback = function() require("cmp").abort() end,
+        })
       '';
     };
   };
