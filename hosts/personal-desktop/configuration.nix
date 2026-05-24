@@ -14,6 +14,7 @@
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
+    "pipe-operators"
   ];
   nix.settings.trusted-users = [
     "root"
@@ -88,13 +89,14 @@
   };
 
   # System packages
-  environment.systemPackages = with pkgs; [
-    fastfetch
-    alejandra
-    gcc
-    file
-    ripgrep
+  environment.systemPackages = [
+    pkgs.fastfetch
+    pkgs.alejandra
+    pkgs.gcc
+    pkgs.file
+    pkgs.ripgrep
     inputs.hyprsession.packages.${pkgs.system}.default
+		pkgs-unstable.vectorcode
   ];
 
   programs = {
@@ -144,14 +146,12 @@
   services.llm = {
     enable = true;
     modelsDir = "/mnt/llm/models/";
-    # model = "Qwen3.6-27B-UD-Q5_K_XL-MTP.gguf";
     acceleration = "cuda";
-    contextSize = 16384;
-    #contextSize = 2048;
+		contextSize = 32000;
     flashAttn = true;
     mtp.enable = true;
     ubatchSize = 256;
-    #version = "9181";
+		extraArgs = [ "--jinja" ];
   };
 
   services.openWebui.enable = true;

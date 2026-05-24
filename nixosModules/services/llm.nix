@@ -245,7 +245,6 @@ in {
               "--ubatch-size ${toString cfg.ubatchSize}"
               "--n-gpu-layers ${toString cfg.gpuLayers}"
               "--flash-attn ${if cfg.flashAttn then "1" else "0"}"
-             #"--stream-complete-with-usage"
             ]
             ++ modelArgs
             ++ mtpArgs

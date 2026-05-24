@@ -67,6 +67,7 @@
     ncdu
     prusa-slicer
 		tree
+		fd
   ];
 
   home.sessionVariables = {
