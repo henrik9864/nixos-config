@@ -25,8 +25,8 @@ in
       };
 
       opts = {
-				number = true;
-				relativenumber = true;
+        number = true;
+        relativenumber = true;
         smartindent = true;
         shiftwidth = 2;
         tabstop = 2;
@@ -39,7 +39,7 @@ in
         nixd
         alejandra
         statix
-				fd
+        fd
       ];
 
       keymaps = [
@@ -110,8 +110,23 @@ in
               autocomplete = [ { __raw = "require('cmp').TriggerEvent.TextChanged"; } ];
               completeopt = "menu,menuone,noselect";
             };
+            sources = [
+              { name = "nvim_lsp"; }
+              { name = "buffer"; }
+              { name = "path"; }
+            ];
+            mapping = {
+              "<C-Space>" = "cmp.mapping.complete()";
+              "<CR>"      = "cmp.mapping.confirm({ select = true })";
+              "<Tab>"     = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
+              "<S-Tab>"   = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
+            };
           };
         };
+
+        cmp-nvim-lsp.enable = true;
+        cmp-buffer.enable = true;
+        cmp-path.enable = true;
 
         nvim-colorizer = {
           enable = true;

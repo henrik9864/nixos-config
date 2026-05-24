@@ -66,6 +66,7 @@
     ckan
     ncdu
     prusa-slicer
+		tree
   ];
 
   home.sessionVariables = {
