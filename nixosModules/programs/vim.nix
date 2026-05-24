@@ -167,7 +167,7 @@ in
                       chat_url = "/v1/chat/completions",
                     },
                     schema = {
-                      model = { default = "Qwen3.6-27B-UD-Q5_K_XL-MTP" },
+                      model = { default = "Qwen3.6-27B-UD-Q4_K_XL-MTP" },
                     },
                   })
                 end
