@@ -63,7 +63,7 @@ in {
             "TIKTOKEN_CACHE_DIR=${cfg.dataDir}/tiktoken-cache"
             "NLTK_DATA=${cfg.dataDir}/nltk"
             "ENABLE_OLLAMA_API=false"
-            "OPENAI_API_BASE_URL=http://${config.services.llm.host}:${toString config.services.llm.port}/v1"
+            "OPENAI_API_BASE_URL=http://${config.services.llm.host}:${toString config.services.llm.models.qwen27b-mtp.port}/v1"
             "OPENAI_API_KEY=sk-dummy"
           ]
           ++ lib.optionals config.services.searxng.enable [

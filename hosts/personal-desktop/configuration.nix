@@ -143,35 +143,35 @@
     };
   };
 
-  # services.llm = {
-  #   enable = true;
-  #   modelsDir = "/mnt/llm/models/";
-  #   acceleration = "cuda";
-  # contextSize = 32000;
-  #   flashAttn = true;
-  #   mtp.enable = true;
-  #   ubatchSize = 256;
-  # extraArgs = [ "--jinja" ];
-  # };
-
   services.llm = {
     enable = true;
     modelsDir = "/mnt/llm/models/";
-    model = "Qwen3.6-27B-UD-Q4_K_XL-MTP.gguf";
     acceleration = "cuda";
-    contextSize = 32000;
-    batchSize = 512;
-    ubatchSize = 512;
-    flashAttn = true;
-    mtp = {
-      enable = true;
-      draftTokens = 2;
+
+    common = {
+      extraArgs = [
+        "--jinja"
+        "--cache-type-k q4_0"
+        "--cache-type-v q4_0"
+      ];
     };
-    extraArgs = [
-      "--jinja"
-      "--cache-type-k q4_0"
-      "--cache-type-v q4_0"
-    ];
+
+    models = {
+      qwen27b-mtp = {
+        path = "qwen/Qwen3.6-27B-UD-Q4_K_XL-MTP.gguf";
+        port = 8080;
+        
+				contextSize = 32768;
+        batchSize = 512;
+        ubatchSize = 512;
+        flashAttn = true;
+        
+				mtp = {
+          enable = true;
+          draftTokens = 2;
+        };
+      };
+    };
   };
 
   services.openWebui.enable = true;

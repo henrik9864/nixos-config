@@ -25,7 +25,9 @@
   };
 
   cudaArch =
-    cudaArchMap.${cfg.gpuModel} or (
+    cudaArchMap.${
+      cfg.gpuModel
+    } or (
       throw "Unknown gpuModel '${cfg.gpuModel}'. Supported: ${lib.concatStringsSep ", " (lib.attrNames cudaArchMap)}"
     );
 
@@ -59,24 +61,46 @@
       "-DGGML_METAL=OFF"
     ];
 
-  mtpArgs = lib.optionals cfg.mtp.enable [
-    "--spec-type draft-mtp"
-    "--spec-draft-n-max ${toString cfg.mtp.draftTokens}"
-  ];
+  llmSrc = pkgs.fetchFromGitHub {
+    owner = "ggml-org";
+    repo = "llama.cpp";
+    rev = "b${cfg.version}";
+    hash = cfg.srcHash;
+  };
 
-  modelArgs =
-    if cfg.model != null
-    then ["--model ${cfg.modelsDir}/${cfg.model}"]
-    else ["--models-dir ${cfg.modelsDir}"];
-
+  pkg =
+    (pkgs-unstable.llama-cpp.override {
+      cudaSupport = cfg.acceleration == "cuda";
+      rocmSupport = cfg.acceleration == "rocm";
+      vulkanSupport = cfg.acceleration == "vulkan";
+    }).overrideAttrs (oldAttrs: {
+      version = cfg.version;
+      src = llmSrc;
+      npmDeps = pkgs.fetchNpmDeps {
+        src = llmSrc;
+        sourceRoot = "source/tools/ui";
+        hash = cfg.npmDepsHash;
+      };
+      postPatch =
+        (oldAttrs.postPatch or "")
+        + ''
+          mkdir -p tools/server
+          ln -s $PWD/tools/ui tools/server/webui
+        '';
+      preConfigure = oldAttrs.preConfigure or "";
+      cmakeFlags =
+        (oldAttrs.cmakeFlags or [])
+        ++ ["-DGGML_NATIVE=OFF"]
+        ++ backendCmakeFlags;
+    });
 in {
   options.services.llm = {
-    enable = lib.mkEnableOption "Local LLM service via llama.cpp";
+    enable = lib.mkEnableOption "Local LLM service(s) via llama.cpp";
 
     version = lib.mkOption {
       type = lib.types.str;
       default = "9313";
-      description = "Llama-cpp version (build number, e.g. 9181).";
+      description = "Llama-cpp version (build number, e.g. 9313).";
     };
 
     srcHash = lib.mkOption {
@@ -93,21 +117,14 @@ in {
 
     modelsDir = lib.mkOption {
       type = lib.types.str;
-      description = "Path to models folder.";
+      description = "Base path to models folder.";
       example = "/mnt/llm/models";
-    };
-
-    model = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = null;
-      description = "Model filename relative to modelsDir. Required when using MTP. If null, uses --models-dir auto-selection.";
-      example = "Qwen3.6-27B-UD-Q5_K_XL-MTP.gguf";
     };
 
     user = lib.mkOption {
       type = lib.types.str;
       default = "henrik";
-      description = "User to run the llama-cpp service as.";
+      description = "User to run the llama-cpp service(s) as.";
     };
 
     acceleration = lib.mkOption {
@@ -128,133 +145,135 @@ in {
     host = lib.mkOption {
       type = lib.types.str;
       default = "127.0.0.1";
-      description = "Address llama.cpp server listens on.";
+      description = "Address llama.cpp server(s) listen on.";
     };
 
-    port = lib.mkOption {
-      type = lib.types.port;
-      default = 8080;
-      description = "Port llama.cpp server listens on.";
+    /*
+    * Per-model definitions.
+    * Each model gets its own systemd service with its own port and parameters.
+    */
+    models = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.submodule {
+        options = {
+          enable = lib.mkEnableOption "this model" // {
+            default = true;
+          };
+
+          path = lib.mkOption {
+            type = lib.types.str;
+            description = "Model filename, relative to modelsDir.";
+          };
+
+          port = lib.mkOption {
+            type = lib.types.port;
+            default = 8080;
+            description = "Port this model's server listens on.";
+          };
+
+          contextSize = lib.mkOption {
+            type = lib.types.int;
+            default = 4096;
+            description = "Context window size in tokens.";
+          };
+
+          batchSize = lib.mkOption {
+            type = lib.types.int;
+            default = 2048;
+            description = "Logical batch size.";
+          };
+
+          ubatchSize = lib.mkOption {
+            type = lib.types.int;
+            default = 512;
+            description = "Physical (micro) batch size.";
+          };
+
+          gpuLayers = lib.mkOption {
+            type = lib.types.int;
+            default = 99;
+            description = "Number of layers to offload to GPU.";
+          };
+
+          flashAttn = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = "Enable flash attention.";
+          };
+
+          mtp = {
+            enable = lib.mkEnableOption "MTP speculative decoding";
+            draftTokens = lib.mkOption {
+              type = lib.types.int;
+              default = 4;
+              description = "Speculative draft tokens per step.";
+            };
+          };
+
+          extraArgs = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            description = "Extra arguments for llama-server.";
+          };
+        };
+      });
+      default = {};
+      description = "Named models, each served on its own port.";
     };
 
-    contextSize = lib.mkOption {
-      type = lib.types.int;
-      default = 4096;
-      description = "Context window size in tokens.";
-    };
-
-    batchSize = lib.mkOption {
-      type = lib.types.int;
-      default = 2048;
-      description = "Logical batch size.";
-    };
-
-    ubatchSize = lib.mkOption {
-      type = lib.types.int;
-      default = 512;
-      description = "Physical (micro) batch size.";
-    };
-
-    gpuLayers = lib.mkOption {
-      type = lib.types.int;
-      default = 99;
-      description = "Number of layers to offload to GPU.";
-    };
-
-    flashAttn = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Enable flash attention.";
-    };
-
-    mtp = {
-      enable = lib.mkEnableOption "Multi-Token Prediction (MTP) speculative decoding";
-
-      draftTokens = lib.mkOption {
-        type = lib.types.int;
-        default = 4;
-        description = "Number of tokens to speculatively draft per step (--spec-draft-n-max).";
+    /*
+    * Global defaults inherited by every model.
+    */
+    common = {
+      extraArgs = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [];
+        description = "Extra arguments prepended to every model's command line.";
       };
-    };
-
-    extraArgs = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [];
-      description = "Extra arguments to pass to llama-server.";
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    let
-      pkg =
-        (pkgs-unstable.llama-cpp.override {
-          cudaSupport = cfg.acceleration == "cuda";
-          rocmSupport = cfg.acceleration == "rocm";
-          vulkanSupport = cfg.acceleration == "vulkan";
-        }).overrideAttrs (oldAttrs: {
-          version = cfg.version;
-          src = pkgs.fetchFromGitHub {
-            owner = "ggml-org";
-            repo = "llama.cpp";
-            rev = "b${cfg.version}";
-            hash = cfg.srcHash;
-          };
-          npmDeps = pkgs.fetchNpmDeps {
-            src = pkgs.fetchFromGitHub {
-              owner = "ggml-org";
-              repo = "llama.cpp";
-              rev = "b${cfg.version}";
-              hash = cfg.srcHash;
-            };
-            sourceRoot = "source/tools/ui";
-            hash = cfg.npmDepsHash;
-          };
-          # Upstream npmConfigHook looks for tools/server/webui which was
-          # moved to tools/ui in newer builds — shim it with a symlink.
-          postPatch = (oldAttrs.postPatch or "") + ''
-            mkdir -p tools/server
-            ln -s $PWD/tools/ui tools/server/webui
-          '';
-          preConfigure = oldAttrs.preConfigure or "";
-          cmakeFlags =
-            (oldAttrs.cmakeFlags or [])
-            ++ [
-              "-DGGML_NATIVE=OFF"
-            ]
-            ++ backendCmakeFlags;
-        });
+  config = lib.mkIf cfg.enable (let
+    effectiveModels = lib.mapAttrs' (_: v: lib.nameValuePair _ v)
+      (lib.filterAttrs (_: v: v.enable) cfg.models);
+  in {
+    assertions = [
+      {
+        assertion = effectiveModels != {};
+        message = "services.llm.enable is true but no models are defined in services.llm.models.";
+      }
+    ];
+
+    systemd.services = lib.genAttrs (lib.attrNames effectiveModels) (name: let
+      m = effectiveModels.${name};
+      cmd = lib.concatStringsSep " " ([
+          "${pkg}/bin/llama-server"
+          "--host ${cfg.host}"
+          "--port ${toString m.port}"
+          "--ctx-size ${toString m.contextSize}"
+          "--batch-size ${toString m.batchSize}"
+          "--ubatch-size ${toString m.ubatchSize}"
+          "--n-gpu-layers ${toString m.gpuLayers}"
+          "--flash-attn ${if m.flashAttn then "1" else "0"}"
+          "--model ${cfg.modelsDir}/${m.path}"
+        ]
+        ++ lib.optionals m.mtp.enable [
+          "--spec-type draft-mtp"
+          "--spec-draft-n-max ${toString m.mtp.draftTokens}"
+        ]
+        ++ cfg.common.extraArgs
+        ++ m.extraArgs);
     in {
-      assertions = [
-        # {
-        #   assertion = cfg.mtp.enable -> cfg.model != null;
-        #   message = "services.llm.model must be set when services.llm.mtp.enable is true (MTP requires a specific model file, not --models-dir).";
-        # }
-      ];
-
-      systemd.services.llama-cpp = {
-        description = "llama.cpp HTTP server";
-        wantedBy = ["multi-user.target"];
-        after = ["network.target"];
-        serviceConfig = {
-          ExecStart = lib.concatStringsSep " " ([
-              "${pkg}/bin/llama-server"
-              "--host ${cfg.host}"
-              "--port ${toString cfg.port}"
-              "--ctx-size ${toString cfg.contextSize}"
-              "--batch-size ${toString cfg.batchSize}"
-              "--ubatch-size ${toString cfg.ubatchSize}"
-              "--n-gpu-layers ${toString cfg.gpuLayers}"
-              "--flash-attn ${if cfg.flashAttn then "1" else "0"}"
-            ]
-            ++ modelArgs
-            ++ mtpArgs
-            ++ cfg.extraArgs);
-          Restart = "on-failure";
-          User = cfg.user;
-        };
+      description = "llama.cpp server for '${name}'";
+      wantedBy = ["multi-user.target"];
+      after = ["network.target"];
+      serviceConfig = {
+        ExecStart = cmd;
+        Restart = "on-failure";
+        User = cfg.user;
       };
+    });
 
-      environment.systemPackages = [pkg];
-    }
-  );
+    environment.systemPackages = [pkg];
+  });
 }
+
