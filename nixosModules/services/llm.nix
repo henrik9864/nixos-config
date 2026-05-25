@@ -75,14 +75,14 @@ in {
 
     version = lib.mkOption {
       type = lib.types.str;
-      default = "9297";
+      default = "9313";
       description = "Llama-cpp version (build number, e.g. 9181).";
     };
 
     srcHash = lib.mkOption {
       type = lib.types.str;
       description = "SHA256 hash for the llama.cpp source at the given version.";
-      default = "sha256-ey3YleKVJOtVJXuB8vO2Lf8YCqQr6LNH3KagKdFULqg=";
+      default = "sha256-nou/fobIUto9YpFqYPGovp7SUUQOT1f1sg1l06LVso8=";
     };
 
     npmDepsHash = lib.mkOption {

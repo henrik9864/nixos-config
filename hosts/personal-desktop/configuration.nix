@@ -96,7 +96,7 @@
     pkgs.file
     pkgs.ripgrep
     inputs.hyprsession.packages.${pkgs.system}.default
-		pkgs-unstable.vectorcode
+    pkgs-unstable.vectorcode
   ];
 
   programs = {
@@ -143,20 +143,40 @@
     };
   };
 
+  # services.llm = {
+  #   enable = true;
+  #   modelsDir = "/mnt/llm/models/";
+  #   acceleration = "cuda";
+  # contextSize = 32000;
+  #   flashAttn = true;
+  #   mtp.enable = true;
+  #   ubatchSize = 256;
+  # extraArgs = [ "--jinja" ];
+  # };
+
   services.llm = {
     enable = true;
     modelsDir = "/mnt/llm/models/";
+    model = "Qwen3.6-27B-UD-Q4_K_XL-MTP.gguf";
     acceleration = "cuda";
-		contextSize = 32000;
+    contextSize = 32000;
+    batchSize = 512;
+    ubatchSize = 512;
     flashAttn = true;
-    mtp.enable = true;
-    ubatchSize = 256;
-		extraArgs = [ "--jinja" ];
+    mtp = {
+      enable = true;
+      draftTokens = 2;
+    };
+    extraArgs = [
+      "--jinja"
+      "--cache-type-k q4_0"
+      "--cache-type-v q4_0"
+    ];
   };
 
   services.openWebui.enable = true;
   services.searxng.enable = true;
-	services.hermes.enable = false;
+  services.hermes.enable = false;
 
   services.gaming = {
     enable = true;
@@ -165,7 +185,7 @@
 
   services.environments.dotnet = {
     enable = true;
-    sdks = [ pkgs.dotnet-sdk_9 pkgs.dotnet-sdk_11 ];
+    sdks = [pkgs.dotnet-sdk_9 pkgs.dotnet-sdk_11];
   };
 
   # Filesystems
