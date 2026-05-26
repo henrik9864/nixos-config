@@ -147,7 +147,6 @@
     enable = true;
     modelsDir = "/mnt/llm/models/";
     acceleration = "cuda";
-
     common = {
       extraArgs = [
         "--jinja"
@@ -155,21 +154,39 @@
         "--cache-type-v q4_0"
       ];
     };
-
     models = {
       qwen27b-mtp = {
+        enable = false;
         path = "qwen/Qwen3.6-27B-UD-Q4_K_XL-MTP.gguf";
         port = 8080;
-        
-				contextSize = 32768;
+        contextSize = 32768;
         batchSize = 512;
         ubatchSize = 512;
         flashAttn = true;
-        
-				mtp = {
+        mtp = {
           enable = true;
           draftTokens = 2;
         };
+        extraArgs = [
+          "--parallel 1"
+        ];
+      };
+
+      qwen27b-q5-mtp = {
+        enable = true;
+        path = "qwen/Qwen3.6-27B-UD-Q5_K_XL-MTP.gguf";
+        port = 8080;
+        contextSize = 32768;
+        batchSize = 512;
+        ubatchSize = 512;
+        flashAttn = true;
+        mtp = {
+          enable = true;
+          draftTokens = 2;
+        };
+        extraArgs = [
+          "--parallel 1"
+        ];
       };
     };
   };

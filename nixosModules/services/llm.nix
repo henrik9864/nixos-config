@@ -148,10 +148,6 @@ in {
       description = "Address llama.cpp server(s) listen on.";
     };
 
-    /*
-    * Per-model definitions.
-    * Each model gets its own systemd service with its own port and parameters.
-    */
     models = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule {
         options = {
@@ -220,9 +216,6 @@ in {
       description = "Named models, each served on its own port.";
     };
 
-    /*
-    * Global defaults inherited by every model.
-    */
     common = {
       extraArgs = lib.mkOption {
         type = lib.types.listOf lib.types.str;
