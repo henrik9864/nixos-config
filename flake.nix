@@ -3,10 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+
     nicotine.url = "path:/home/henrik/projects/nicotine-nix";
-		hermes-agent.url = "github:NousResearch/hermes-agent";
+
+    hermes-agent.url = "github:NousResearch/hermes-agent";
 
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -31,18 +35,13 @@
     };
 
     hyprland = {
-      url = "github:hyprwm/Hyprland";
+      url = "github:hyprwm/Hyprland/v0.55.2";
     };
 
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
-      inputs.nixpkgs.follows = "hyprland";
+      inputs.hyprland.follows = "hyprland";
     };
-
-    # hyprsession = {
-    #   url = "github:joshurtree/hyprsession";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
 
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
@@ -58,7 +57,6 @@
   outputs = inputs:
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       systems = ["x86_64-linux"];
-
       flake.nixosConfigurations = {
         nixos-build = inputs.nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";

@@ -17,7 +17,11 @@
       focus_on_activate = true;
       middle_click_paste = false;
       disable_autoreload = false;
+    };
+
+    debug = {
       vfr = true;
+			disable_logs = false;
     };
 
     dwindle = {

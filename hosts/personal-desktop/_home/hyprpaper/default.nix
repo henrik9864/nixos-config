@@ -1,17 +1,12 @@
-{...}: {
-  imports = [
-  ];
-
-  services.hyprpaper.enable = true;
-
-  # TODO: Move to separate file
+{ pkgs, lib, config, ... }: {
   services.hyprpaper = {
+    enable = true;
     settings = {
-      preload = ["~/walls/otherWallpaper/space_kurz/space_earth.jpg"];
+      preload = [ "/home/henrik/walls/otherWallpaper/space_kurz/space_earth.jpg" ];
       wallpaper = [
-        "HDMI-A-1,~/walls/otherWallpaper/space_kurz/space_earth.jpg"
-        "DP-1,~/walls/otherWallpaper/space_kurz/space_earth.jpg"
-        "DP-2,~/walls/otherWallpaper/space_kurz/space_earth.jpg"
+        "HDMI-A-1,/home/henrik/walls/otherWallpaper/space_kurz/space_earth.jpg"
+        "DP-1,/home/henrik/walls/otherWallpaper/space_kurz/space_earth.jpg"
+        "DP-2,/home/henrik/walls/otherWallpaper/space_kurz/space_earth.jpg"
       ];
     };
   };
