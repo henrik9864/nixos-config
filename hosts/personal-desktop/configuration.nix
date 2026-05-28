@@ -40,7 +40,7 @@
     loader = {
       systemd-boot = {
         enable = true;
-        configurationLimit = 10;
+        configurationLimit = 1;
       };
       efi.canTouchEfiVariables = true;
     };
@@ -95,7 +95,7 @@
     pkgs.gcc
     pkgs.file
     pkgs.ripgrep
-    inputs.hyprsession.packages.${pkgs.system}.default
+    # inputs.hyprsession.packages.${pkgs.system}.default
     pkgs-unstable.vectorcode
   ];
 
