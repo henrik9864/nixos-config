@@ -1,4 +1,5 @@
 [
+  # General
   {
     key = "<leader>e";
     mode = ["n"];
@@ -26,6 +27,8 @@
       desc = "Find files";
     };
   }
+
+  # CodeCompanion
   {
     key = "<leader>cc";
     mode = ["n"];
@@ -35,7 +38,17 @@
       desc = "Toggle CodeCompanion chat";
     };
   }
+  {
+    key = "<leader>ca";
+    mode = ["n"];
+    action.__raw = ''function() require("codecompanion").chat({ type = "acp", adapter = "claude_code" }) end'';
+    options = {
+      silent = true;
+      desc = "Claude Code ACP chat";
+    };
+  }
 
+  # Split resize
   {
     key = "<C-Left>";
     mode = ["n"];
@@ -73,6 +86,7 @@
     };
   }
 
+  # Split navigation
   {
     key = "<A-Left>";
     mode = ["n"];
@@ -110,6 +124,7 @@
     };
   }
 
+  # Color picker
   {
     key = "<leader>cp";
     mode = ["n"];
@@ -120,22 +135,23 @@
     };
   }
 
+  # Norwegian keyboard
   {
     key = "å";
-    mode = ["n" "v"];
+    mode = ["n" "v" "i"];
     action = "{";
     options = {
       silent = true;
-      desc = "Paragraph up (Norwegian keyboard)";
+      desc = "{ (Norwegian keyboard)";
     };
   }
   {
     key = "¨";
-    mode = ["n" "v"];
+    mode = ["n" "v" "i"];
     action = "}";
     options = {
       silent = true;
-      desc = "Paragraph down (Norwegian keyboard)";
+      desc = "} (Norwegian keyboard)";
     };
   }
   {
@@ -147,5 +163,33 @@
       desc = "Command mode (Norwegian keyboard)";
     };
   }
-]
 
+  # Neocodeium
+  {
+    key = "<A-f>";
+    mode = ["i"];
+    action = "<cmd>lua require('neocodeium').accept()<CR>";
+    options = {
+      silent = true;
+      desc = "Accept neocodeium suggestion";
+    };
+  }
+  {
+    key = "<A-w>";
+    mode = ["i"];
+    action = "<cmd>lua require('neocodeium').accept_word()<CR>";
+    options = {
+      silent = true;
+      desc = "Accept neocodeium word";
+    };
+  }
+  {
+    key = "<A-e>";
+    mode = ["i"];
+    action = "<cmd>lua require('neocodeium').cycle_or_complete()<CR>";
+    options = {
+      silent = true;
+      desc = "Cycle neocodeium suggestions";
+    };
+  }
+]

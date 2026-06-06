@@ -6,6 +6,7 @@
   ...
 }: let
   cfg = config.programs.nvim;
+  keymaps = import ./_vim_keymaps.nix;
 in {
   options.programs.nvim = {
     enable = lib.mkEnableOption "Henrik's Neovim configuration";
@@ -15,10 +16,12 @@ in {
       enable = true;
       package = pkgs-unstable.neovim-unwrapped;
       globals.mapleader = " ";
+
       colorschemes.gruvbox = {
         enable = true;
         settings.transparent_mode = true;
       };
+
       opts = {
         number = true;
         relativenumber = true;
@@ -31,6 +34,7 @@ in {
         ignorecase = true;
         smartcase = true;
       };
+
       extraPackages = with pkgs-unstable; [
         nixd
         alejandra
@@ -39,188 +43,9 @@ in {
         vectorcode
         claude-code-acp
       ];
-      keymaps = [
-        {
-          key = "<leader>e";
-          mode = ["n"];
-          action = ":Neotree toggle<CR>";
-          options = {
-            silent = true;
-            desc = "Toggle file tree";
-          };
-        }
-        {
-          key = "<leader>f";
-          mode = ["n"];
-          action = ":w<bar>!alejandra %<CR>";
-          options = {
-            silent = true;
-            desc = "Format Nix file with alejandra";
-          };
-        }
-        {
-          key = "<leader>r";
-          mode = ["n"];
-          action = ":Telescope find_files<CR>";
-          options = {
-            silent = true;
-            desc = "Find files";
-          };
-        }
-        {
-          key = "<leader>cc";
-          mode = ["n"];
-          action = ":CodeCompanionChat toggle<CR>";
-          options = {
-            silent = true;
-            desc = "Toggle CodeCompanion chat";
-          };
-        }
-        {
-          key = "<leader>ca";
-          mode = ["n"];
-          action.__raw = ''function() require("codecompanion").chat({ type = "acp", adapter = "claude_code" }) end'';
-          options = {
-            silent = true;
-            desc = "Claude Code ACP chat";
-          };
-        }
-        {
-          key = "<C-Left>";
-          mode = ["n"];
-          action = ":vertical resize -2<CR>";
-          options = {
-            silent = true;
-            desc = "Resize split left";
-          };
-        }
-        {
-          key = "<C-Right>";
-          mode = ["n"];
-          action = ":vertical resize +2<CR>";
-          options = {
-            silent = true;
-            desc = "Resize split right";
-          };
-        }
-        {
-          key = "<C-Up>";
-          mode = ["n"];
-          action = ":resize -2<CR>";
-          options = {
-            silent = true;
-            desc = "Resize split up";
-          };
-        }
-        {
-          key = "<C-Down>";
-          mode = ["n"];
-          action = ":resize +2<CR>";
-          options = {
-            silent = true;
-            desc = "Resize split down";
-          };
-        }
-        {
-          key = "<A-Left>";
-          mode = ["n"];
-          action = "<C-w>h";
-          options = {
-            silent = true;
-            desc = "Move to left split";
-          };
-        }
-        {
-          key = "<A-Right>";
-          mode = ["n"];
-          action = "<C-w>l";
-          options = {
-            silent = true;
-            desc = "Move to right split";
-          };
-        }
-        {
-          key = "<A-Up>";
-          mode = ["n"];
-          action = "<C-w>k";
-          options = {
-            silent = true;
-            desc = "Move to upper split";
-          };
-        }
-        {
-          key = "<A-Down>";
-          mode = ["n"];
-          action = "<C-w>j";
-          options = {
-            silent = true;
-            desc = "Move to lower split";
-          };
-        }
-        {
-          key = "<leader>cp";
-          mode = ["n"];
-          action = ":CccPick<CR>";
-          options = {
-            silent = true;
-            desc = "Open color picker";
-          };
-        }
-        {
-          key = "å";
-          mode = ["n" "v"];
-          action = "{";
-          options = {
-            silent = true;
-            desc = "Paragraph up (Norwegian keyboard)";
-          };
-        }
-        {
-          key = "¨";
-          mode = ["n" "v"];
-          action = "}";
-          options = {
-            silent = true;
-            desc = "Paragraph down (Norwegian keyboard)";
-          };
-        }
-        {
-          key = "ø";
-          mode = ["n" "v"];
-          action = ":";
-          options = {
-            silent = true;
-            desc = "Command mode (Norwegian keyboard)";
-          };
-        }
-        {
-          key = "<A-f>";
-          mode = ["i"];
-          action = "<cmd>lua require('neocodeium').accept()<CR>";
-          options = {
-            silent = true;
-            desc = "Accept neocodeium suggestion";
-          };
-        }
-        {
-          key = "<A-w>";
-          mode = ["i"];
-          action = "<cmd>lua require('neocodeium').accept_word()<CR>";
-          options = {
-            silent = true;
-            desc = "Accept neocodeium word";
-          };
-        }
-        {
-          key = "<A-e>";
-          mode = ["i"];
-          action = "<cmd>lua require('neocodeium').cycle_or_complete()<CR>";
-          options = {
-            silent = true;
-            desc = "Cycle neocodeium suggestions";
-          };
-        }
-      ];
+
+      keymaps = keymaps;
+
       plugins.lualine = {
         enable = true;
         settings.sections.lualine_x = [
@@ -237,6 +62,7 @@ in {
           "filetype"
         ];
       };
+
       plugins = {
         telescope.enable = true;
         neo-tree.enable = true;
@@ -244,6 +70,7 @@ in {
         which-key.enable = true;
         indent-blankline.enable = true;
         web-devicons.enable = true;
+
         treesitter = {
           enable = true;
           highlight.enable = true;
@@ -255,26 +82,31 @@ in {
             c_sharp
           ];
         };
+
         lsp = {
           enable = true;
           servers.nixd.enable = true;
         };
+
         roslyn-nvim = {
           enable = true;
         };
+
         conform-nvim = {
           enable = true;
           settings.formatters_by_ft.nix = ["alejandra"];
         };
+
         lint = {
           enable = true;
           lintersByFt.nix = ["statix"];
         };
+
         cmp = {
           enable = true;
           settings = {
             completion = {
-              autocomplete = [{__raw = "require('cmp').TriggerEvent.TextChanged";}];
+              autocomplete = [{__raw = "require('cmp').TriggerEvent.TextChanged;";}];
               completeopt = "menu,menuone,noselect";
             };
             sources = [
@@ -290,9 +122,11 @@ in {
             };
           };
         };
+
         cmp-nvim-lsp.enable = true;
         cmp-buffer.enable = true;
         cmp-path.enable = true;
+
         nvim-colorizer = {
           enable = true;
           settings = {
@@ -306,6 +140,7 @@ in {
           };
         };
       };
+
       extraPlugins = [
         pkgs.vimPlugins.ccc-nvim
         pkgs-unstable.vimPlugins.codecompanion-nvim
@@ -370,7 +205,7 @@ in {
                 height = 0.8,
                 relative = "editor",
                 border = "rounded",
-								pertab = true,
+        pertab = true,
               },
             },
           },
@@ -391,7 +226,7 @@ in {
                   schema = {
                     model = { default = "Qwen3.6-27B-UD-Q4_K_XL-MTP" },
                   },
-									opts = { tools = true, },
+        	opts = { tools = true, },
                 })
               end,
             },
