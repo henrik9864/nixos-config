@@ -99,7 +99,7 @@ in {
 
     version = lib.mkOption {
       type = lib.types.str;
-      default = "9313";
+      default = "9542";
       description = "Llama-cpp version (build number, e.g. 9313).";
     };
 

@@ -32,42 +32,63 @@
   '';
 
   home.packages = with pkgs; [
+    # Nix tooling
     home-manager
     nix-search-tv
     nixd
-    nixfmt-rfc-style
+    nixfmt
     statix
     deadnix
+
+    # Fonts
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
+
+    # System utilities
     efibootmgr
-    discord
     pciutils
-    swaynotificationcenter
-    wlogout
-    waypaper
-    hyprpaper
-    udiskie
-    cliphist
-    wl-clipboard
-    pavucontrol
-    playerctl
-    grim
-    slurp
-    nemo
-    rofi
+    evtest
     nmap
     curl
     jq
     htop
-    curl
-    evtest
+    ncdu
+    tree
+    fd
+
+    # Desktop utilities
+    swaynotificationcenter
+    wlogout
+    waypaper
+		awww
+    udiskie
+    nemo
+    rofi
+
+    # Clipboard
+    cliphist
+    wl-clipboard
+
+    # Audio
+    pavucontrol
+    playerctl
+
+    # Screenshots
+    grim
+    slurp
+
+    # Chat
+    discord
+
+    # Gaming
     prismlauncher
     ckan
-    ncdu
-    prusa-slicer
-		tree
-		fd
+
+    # Monitoring
+    siomon
+
+    # Coding
+		claude-code
   ];
 
   home.sessionVariables = {
@@ -94,26 +115,6 @@
     };
   };
 
-  programs.aichat = {
-    enable = true;
-    settings = {
-      model = "ollama:llama3.2";
-      clients = [
-        {
-          type = "openai-compatible";
-          name = "ollama";
-          api_base = "http://127.0.0.1:11434/v1";
-          models = [
-            {
-              name = "llama3.2";
-              supports_function_calling = true;
-            }
-          ];
-        }
-      ];
-    };
-  };
-
   programs.git = {
     enable = true;
     settings.user = {
@@ -127,7 +128,7 @@
     initContent = ''
       export LS_COLORS="$LS_COLORS:ow=1;38;2;0;0;0;48;2;64;160;43"
       if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then
-        exec Hyprland
+        exec start-hyprland
       fi
     '';
     oh-my-zsh = {
@@ -180,6 +181,7 @@
 
   programs.yazi = {
     enable = true;
+		shellWrapperName = "yy";
 
     settings = {
       opener = {

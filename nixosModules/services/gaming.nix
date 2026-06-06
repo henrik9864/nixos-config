@@ -33,7 +33,7 @@ in
     programs.gamescope.enable = true;
 
     environment.systemPackages = with pkgs; [
-      wineWowPackages.stable
+      wineWow64Packages.stable
       winetricks
       protontricks
     ];

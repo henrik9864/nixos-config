@@ -37,6 +37,7 @@ in {
         statix
         fd
         vectorcode
+        claude-code-acp
       ];
       keymaps = [
         {
@@ -73,6 +74,15 @@ in {
           options = {
             silent = true;
             desc = "Toggle CodeCompanion chat";
+          };
+        }
+        {
+          key = "<leader>ca";
+          mode = ["n"];
+          action.__raw = ''function() require("codecompanion").chat({ type = "acp", adapter = "claude_code" }) end'';
+          options = {
+            silent = true;
+            desc = "Claude Code ACP chat";
           };
         }
         {
@@ -328,6 +338,16 @@ in {
           };
           doCheck = false;
         })
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "codecompanion-spinners-nvim";
+          src = pkgs.fetchFromGitHub {
+            owner = "lalitmee";
+            repo = "codecompanion-spinners.nvim";
+            rev = "main";
+            sha256 = "sha256-L+vG4wj2O1VaiHhhjBAi26nglW0WnPSTk8FihkK8cn0=";
+          };
+          doCheck = false;
+        })
       ];
 
       extraConfigLua = ''
@@ -350,10 +370,16 @@ in {
                 height = 0.8,
                 relative = "editor",
                 border = "rounded",
+								pertab = true,
               },
             },
           },
           adapters = {
+            acp = {
+              claude_code = function()
+                return require("codecompanion.adapters").extend("claude_code", {})
+              end,
+            },
             http = {
               llamacpp = function()
                 return require("codecompanion.adapters").extend("openai_compatible", {
@@ -375,6 +401,11 @@ in {
             inline = { adapter = "llamacpp" },
           },
           extensions = {
+            spinner = {
+              opts = {
+                style = "dots",
+              },
+            },
             vectorcode = {
               opts = {
                 tool_group = {

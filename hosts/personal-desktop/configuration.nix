@@ -7,8 +7,6 @@
 }: {
   imports = [
     ./hardware-configuration.nix
-    # ./nvf.nix
-    # ./nvf_keymaps.nix
   ];
 
   nix.settings.experimental-features = [
@@ -56,6 +54,7 @@
   networking = {
     hostName = "nixos-personal";
     networkmanager.enable = true;
+    nameservers = ["9.9.9.9"];
   };
 
   # Locale & keyboard
@@ -95,7 +94,6 @@
     pkgs.gcc
     pkgs.file
     pkgs.ripgrep
-    # inputs.hyprsession.packages.${pkgs.system}.default
     pkgs-unstable.vectorcode
   ];
 
