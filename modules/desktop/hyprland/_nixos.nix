@@ -1,9 +1,5 @@
-{
-  config,
-  pkgs,
-  inputs,
-  ...
-}:
+inputs: homeHyprland:
+{ config, pkgs, ... }:
 let
   waybar-proxmox = pkgs.writeShellScriptBin "waybar-proxmox" ''
     token=$(cat "$HOME/.secrets/proxmox-token" 2>/dev/null) || exit 1
@@ -28,10 +24,12 @@ in
     trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
   };
 
-  hardware.nvidia.open = false;
-  hardware.nvidia.modesetting.enable = true;
-  hardware.nvidia.nvidiaSettings = true;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  hardware.nvidia = {
+    open = false;
+    modesetting.enable = true;
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
   hardware.graphics.enable = true;
 
   services.getty.autologinUser = "henrik";
@@ -39,27 +37,18 @@ in
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
-    package = inputs.hyprland.packages."${pkgs.stdenv.hostPlatform.system}".hyprland;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
 
   environment.systemPackages = with pkgs; [
-    kitty
-    waybar
-    hyprpaper
-    hypridle
-    hyprlock
-    rofi
-    dunst
-    libnotify
-    grim
-    slurp
-    wl-clipboard
-    brightnessctl
-    pamixer
-    kdePackages.dolphin
-    polkit_gnome
-    btop
-    fastfetch
+    kitty waybar hyprpaper hypridle hyprlock
+    rofi dunst libnotify
+    grim slurp wl-clipboard
+    brightnessctl pamixer
+    kdePackages.dolphin polkit_gnome
+    btop fastfetch
     waybar-proxmox
   ];
+
+  home-manager.users.henrik = homeHyprland;
 }

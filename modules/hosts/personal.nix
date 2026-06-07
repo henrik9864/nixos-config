@@ -12,6 +12,8 @@ let inherit (config.flake.modules) nixos; in
         inputs.nicotine.nixosModules.nicotine
         inputs.nicotine.nixosModules.eveguru
         inputs.nixvim.nixosModules.default
+        nixos.hyprland
+        nixos.waybar
         nixos.vim
         nixos.gaming
         nixos.llm

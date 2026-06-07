@@ -1,9 +1,10 @@
-{...}: {
+{ ... }: {
   wayland.windowManager.hyprland.settings = {
     binds = {
       scroll_event_delay = 100;
       movefocus_cycles_fullscreen = true;
     };
+
     bind = [
       "$mod, Return, exec, kitty"
       "$mod, Q, killactive,"
@@ -22,7 +23,7 @@
       # screenshot
       ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"
       "$mod, Print, exec, grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"
-      # switch focus
+      # focus
       "$mod, left,  movefocus, l"
       "$mod, right, movefocus, r"
       "$mod, up,    movefocus, u"
@@ -31,7 +32,7 @@
       "$mod, j, movefocus, d"
       "$mod, k, movefocus, u"
       "$mod, l, movefocus, r"
-      # switch workspace
+      # workspaces
       "$mod, 1, workspace, 1"
       "$mod, 2, workspace, 2"
       "$mod, 3, workspace, 3"
@@ -52,7 +53,7 @@
       "$mod SHIFT, 8, movetoworkspacesilent, 8"
       "$mod SHIFT, 9, movetoworkspacesilent, 9"
       "$mod SHIFT, 0, movetoworkspacesilent, 10"
-      # window control
+      # window movement
       "$mod SHIFT, left,  movewindow, l"
       "$mod SHIFT, right, movewindow, r"
       "$mod SHIFT, up,    movewindow, u"
@@ -77,6 +78,7 @@
       "$mod, mouse_down, workspace, e-1"
       "$mod, mouse_up, workspace, e+1"
     ];
+
     bindm = [
       "$mod, mouse:272, movewindow"
       "$mod, mouse:273, resizewindow"

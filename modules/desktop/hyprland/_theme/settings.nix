@@ -1,5 +1,5 @@
-{...}: {
-	wayland.windowManager.hyprland.configType = "hyprlang";
+{ ... }: {
+  wayland.windowManager.hyprland.configType = "hyprlang";
   wayland.windowManager.hyprland.settings = {
     "$mod" = "SUPER";
 
@@ -22,7 +22,7 @@
 
     debug = {
       vfr = true;
-			disable_logs = false;
+      disable_logs = false;
     };
 
     dwindle = {
@@ -31,9 +31,7 @@
       use_active_for_splits = true;
     };
 
-    master = {
-      new_status = "master";
-    };
+    master.new_status = "master";
 
     decoration = {
       rounding = 0;
@@ -76,9 +74,7 @@
       ];
     };
 
-    xwayland = {
-      force_zero_scaling = true;
-    };
+    xwayland.force_zero_scaling = true;
 
     env = [
       "XCURSOR_THEME,Bibata-Modern-Classic"

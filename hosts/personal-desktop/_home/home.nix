@@ -20,9 +20,6 @@
   '';
 
   imports = [
-    ./hyprland/default.nix
-    ./waybar/default.nix
-    ./hyprpaper/default.nix
     ./scripts.nix
   ];
 
