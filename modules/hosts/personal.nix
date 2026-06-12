@@ -22,6 +22,7 @@ let inherit (config.flake.modules) nixos; in
         nixos.hermes
         nixos.networkStorage
         nixos.dotnet
+        nixos.remoteBuild
         (inputs.import-tree ../../hosts/personal-desktop)
       ];
       _module.args.pkgs-unstable = import inputs.nixpkgs-unstable {

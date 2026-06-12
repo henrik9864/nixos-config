@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-unstable,
   inputs,
   lib,
   ...
@@ -85,7 +86,7 @@
     siomon
 
     # Coding
-		claude-code
+		pkgs-unstable.claude-code
   ];
 
   home.sessionVariables = {

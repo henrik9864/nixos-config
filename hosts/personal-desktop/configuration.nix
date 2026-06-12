@@ -21,20 +21,19 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  # system.remoteBuild = {
-  #   enable = true;
-  #   hostName = "192.168.10.62";
-  #   hostPublicKeyFile = ../../keys/nix-cache-host.pub;
-  #   sshUser = "henrik";
-  #   sshKey = "/home/henrik/.ssh/nix-build";
-  #   maxJobs = 4;
-  #   speedFactor = 2;
-  # };
+  system.remoteBuild = {
+    enable = true;
+    hostName = "192.168.10.62";
+    hostPublicKeyFile = ../../keys/nix-cache-host.pub;
+    sshUser = "henrik";
+    sshKey = "/home/henrik/.ssh/nix-build";
+    maxJobs = 4;
+    speedFactor = 2;
+  };
 
   # Boot
   boot = {
     kernelPackages = pkgs.linuxPackages_7_0;
-    # kernelPackages = inputs.nix-cachyos-kernel.legacyPackages.x86_64-linux.linuxPackages-cachyos-latest;
     loader = {
       systemd-boot = {
         enable = true;
@@ -111,7 +110,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = {inherit inputs;};
+    extraSpecialArgs = {inherit inputs pkgs-unstable;};
     users.henrik = import ./_home/home.nix;
     backupFileExtension = "backup";
   };
