@@ -7,16 +7,45 @@
     options = { silent = true; desc = "Toggle file tree"; };
   }
   {
+    # Was ":w|!alejandra %" — that reformatted the file on disk *after* the
+    # write, leaving the buffer stale. conform formats the buffer in place
+    # (and format_on_save already covers the common case).
     key = "<leader>f";
     mode = ["n"];
-    action = ":w<bar>!alejandra %<CR>";
-    options = { silent = true; desc = "Format Nix file with alejandra"; };
+    action.__raw = ''function() require("conform").format({ async = true, lsp_format = "fallback" }) end'';
+    options = { silent = true; desc = "Format buffer"; };
   }
+
+  # Telescope (rg and fd are already installed)
   {
     key = "<leader>r";
     mode = ["n"];
     action = ":Telescope find_files<CR>";
     options = { silent = true; desc = "Find files"; };
+  }
+  {
+    key = "<leader>g";
+    mode = ["n"];
+    action = ":Telescope live_grep<CR>";
+    options = { silent = true; desc = "Grep project"; };
+  }
+  {
+    key = "<leader>b";
+    mode = ["n"];
+    action = ":Telescope buffers<CR>";
+    options = { silent = true; desc = "Open buffers"; };
+  }
+  {
+    key = "<leader>o";
+    mode = ["n"];
+    action = ":Telescope oldfiles<CR>";
+    options = { silent = true; desc = "Recent files"; };
+  }
+  {
+    key = "<leader>q";
+    mode = ["n"];
+    action = ":Telescope diagnostics<CR>";
+    options = { silent = true; desc = "Workspace diagnostics"; };
   }
 
   # CodeCompanion
@@ -94,15 +123,19 @@
   }
 
   # Norwegian keyboard
+  # NOTE: "i" removed from the modes below — with insert mode included you
+  # could never type the literal characters å or ¨ in text. In insert mode,
+  # AltGr+7 / AltGr+0 produce { } on the Norwegian layout. (This remap is
+  # also the likely origin of the stray file named "¨" in the repo root.)
   {
     key = "å";
-    mode = ["n" "v" "i"];
+    mode = ["n" "v"];
     action = "{";
     options = { silent = true; desc = "{ (Norwegian keyboard)"; };
   }
   {
     key = "¨";
-    mode = ["n" "v" "i"];
+    mode = ["n" "v"];
     action = "}";
     options = { silent = true; desc = "} (Norwegian keyboard)"; };
   }
