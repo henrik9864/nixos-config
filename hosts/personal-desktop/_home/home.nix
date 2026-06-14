@@ -58,7 +58,7 @@
     swaynotificationcenter
     wlogout
     waypaper
-		awww
+    awww
     udiskie
     nemo
     rofi
@@ -85,8 +85,11 @@
     # Monitoring
     siomon
 
+    # Productivity
+    libreoffice
+
     # Coding
-		pkgs-unstable.claude-code
+    pkgs-unstable.claude-code
   ];
 
   home.sessionVariables = {
@@ -179,7 +182,7 @@
 
   programs.yazi = {
     enable = true;
-		shellWrapperName = "yy";
+    shellWrapperName = "yy";
 
     settings = {
       opener = {
