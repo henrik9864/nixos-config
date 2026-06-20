@@ -81,7 +81,25 @@
 
     # Coding
     pkgs-unstable.claude-code
+    pkgs-unstable.opencode
   ];
+
+  home.file.".config/opencode/opencode.json".text = builtins.toJSON {
+    "$schema" = "https://opencode.ai/config.json";
+    provider."llama.cpp" = {
+      npm = "@ai-sdk/openai-compatible";
+      name = "llama-server (local)";
+      options.baseURL = "http://127.0.0.1:8080/v1";
+      models."qwen27b-q5-mtp" = {
+        name = "Qwen3 27B Q5 MTP (local)";
+        limit = {
+          context = 32768;
+          output = 8192;
+        };
+      };
+    };
+    model = "llama.cpp/qwen27b-q5-mtp";
+  };
 
   home.sessionVariables = {
     NIXOS_OZONE_WL = "1";

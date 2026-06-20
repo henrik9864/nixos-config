@@ -22,6 +22,10 @@ let
               builtin_ids = [ "btop" ];
             };
           };
+          widget.clock = {
+            format = "{:%d/%m/%Y - %H:%M:%S}";
+            tooltip_format = "{:%A, %B %d, %Y}";
+          };
           bar.main = {
             position = "bottom";
             thickness = 38;
@@ -31,8 +35,30 @@ let
             background_opacity = 0.85;
             capsule = true;
             shadow = true;
+            start = [ "launcher" "wallpaper" "workspaces" ];
+            center = [ "clock" ];
+            end = [
+              "weather"
+              "media"
+              "tray"
+              "notifications"
+              "clipboard"
+              "network"
+              "bluetooth"
+              "volume"
+              "brightness"
+              "battery"
+              "control-center"
+              "session"
+            ];
           };
           wallpaper.default.path = "/home/henrik/walls/otherWallpaper/space_kurz/space_earth.jpg";
+          weather = {
+            enabled = true;
+            unit = "celsius";
+            refresh_minutes = 30;
+          };
+          location.auto_locate = true;
         };
       };
     };

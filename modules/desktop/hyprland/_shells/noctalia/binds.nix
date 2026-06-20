@@ -15,7 +15,7 @@
       "$mod, D, exec, noctalia msg panel-toggle launcher"
       "$mod, Escape, exec, noctalia msg session lock"
       "$mod SHIFT, Escape, exec, noctalia msg panel-toggle session"
-      "$mod, N, exec, noctalia msg panel-toggle notifications"
+      "$mod, N, exec, noctalia msg panel-toggle control-center notifications"
       "$mod, W, exec, noctalia msg panel-toggle wallpaper"
       "$mod, C, exec, noctalia msg panel-toggle control-center"
       "$mod, P, pseudo,"
