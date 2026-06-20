@@ -93,7 +93,6 @@
     pkgs.gcc
     pkgs.file
     pkgs.ripgrep
-    pkgs-unstable.vectorcode
   ];
 
   programs = {
