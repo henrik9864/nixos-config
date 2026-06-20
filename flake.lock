@@ -895,6 +895,26 @@
         "type": "github"
       }
     },
+    "noctalia": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1781979875,
+        "narHash": "sha256-lB4HRhev+4SVj1SjPqG52BrHUxfkv0D4ZkDesOUz+FI=",
+        "owner": "noctalia-dev",
+        "repo": "noctalia",
+        "rev": "5d813facdbd5a96c495ded3df462de7cf4bf030a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "noctalia-dev",
+        "repo": "noctalia",
+        "type": "github"
+      }
+    },
     "npm-lockfile-fix": {
       "inputs": {
         "nixpkgs": [
@@ -1065,6 +1085,7 @@
         "nixpkgs": "nixpkgs_5",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
+        "noctalia": "noctalia",
         "vscode-server": "vscode-server"
       }
     },

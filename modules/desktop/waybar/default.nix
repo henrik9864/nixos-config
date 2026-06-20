@@ -1,12 +1,25 @@
-{ ... }:
+{ config, ... }:
 let
-  homeWaybar = { ... }: {
-    imports = [
-      ./_theme/settings.nix
-      ./_theme/style.nix
-    ];
-    programs.waybar.enable = true;
-  };
+  active = config.desktopShell == "waybar";
+  homeWaybar =
+    if !active then { }
+    else { pkgs, ... }: {
+      imports = [
+        ./_settings.nix
+        ./_style.nix
+        ./_scripts.nix
+      ];
+      programs.waybar.enable = true;
+      home.packages = with pkgs; [
+        hyprlock
+        dunst
+        rofi
+        swaynotificationcenter
+        wlogout
+        waypaper
+        awww
+      ];
+    };
 in
 {
   flake.modules.nixos.waybar = { ... }: {

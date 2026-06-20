@@ -20,10 +20,6 @@
     done
   '';
 
-  imports = [
-    ./scripts.nix
-  ];
-
   home.file.".config/aichat/.aichatignore".text = ''
     .git/
     *.lock
@@ -55,13 +51,8 @@
     fd
 
     # Desktop utilities
-    swaynotificationcenter
-    wlogout
-    waypaper
-    awww
     udiskie
     nemo
-    rofi
 
     # Clipboard
     cliphist

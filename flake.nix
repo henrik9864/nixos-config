@@ -38,6 +38,10 @@
       url = "github:nix-community/nixvim/nixos-26.05"; # pinned to match nixpkgs
       inputs.nixpkgs.follows = "nixpkgs"; # use same nixpkgs
     };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; }

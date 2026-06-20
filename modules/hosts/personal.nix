@@ -14,6 +14,7 @@ let inherit (config.flake.modules) nixos; in
         inputs.nixvim.nixosModules.default
         nixos.hyprland
         nixos.waybar
+        nixos.noctalia
         nixos.vim
         nixos.gaming
         nixos.llm

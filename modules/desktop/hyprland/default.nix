@@ -1,14 +1,15 @@
-{ inputs, ... }:
+{ inputs, config, ... }:
 let
-  homeHyprland = { pkgs, ... }: {
+  shells = {
+    waybar = ./_shells/waybar;
+    noctalia = ./_shells/noctalia;
+  };
+  homeHyprland = { ... }: {
     imports = [
-      ./_theme/settings.nix
-      ./_theme/hw.nix
-      ./_theme/binds.nix
-      ./_theme/exec-once.nix
-      ./_theme/windowrules.nix
+      shells.${config.desktopShell}
+      ./_shared/hw.nix
+      ./_shared/windowrules.nix
     ];
-    home.packages = [ pkgs.swww ];
     wayland.windowManager.hyprland.enable = true;
   };
 in
