@@ -22,9 +22,7 @@
     config = lib.mkIf cfg.enable {
       environment.systemPackages = [
         combinedSdk
-        pkgs.omnisharp-roslyn
         pkgs.nuget-to-json
-        pkgs.roslyn-ls
       ] ++ cfg.extraPackages;
       environment.sessionVariables = {
         DOTNET_ROOT = "${combinedSdk}";

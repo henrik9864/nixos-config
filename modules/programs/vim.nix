@@ -167,7 +167,32 @@
             };
           };
 
-          roslyn-nvim.enable = true;
+          roslyn.enable = true;
+
+          blink-cmp = {
+            enable = true;
+            setupLspCapabilities = true;
+            settings = {
+              appearance.nerd_font_variant = "normal";
+              completion = {
+                menu.auto_show = true;
+                documentation.auto_show = true;
+                accept.auto_brackets.enabled = true;
+              };
+              signature.enabled = true;
+              sources.default = ["lsp" "path" "buffer"];
+              keymap = {
+                preset = "none";
+                "<C-Space>" = ["show" "show_documentation" "hide_documentation"];
+                "<C-e>" = ["hide" "fallback"];
+                "<C-d>" = ["scroll_documentation_down" "fallback"];
+                "<C-u>" = ["scroll_documentation_up" "fallback"];
+                "<CR>" = ["accept" "fallback"];
+                "<Tab>" = ["select_next" "fallback"];
+                "<S-Tab>" = ["select_prev" "fallback"];
+              };
+            };
+          };
 
           conform-nvim = {
             enable = true;
@@ -186,33 +211,6 @@
             enable = true;
             lintersByFt.nix = ["statix" "deadnix"];
           };
-
-          cmp = {
-            enable = true;
-            settings = {
-              # autocomplete-on-TextChanged is nvim-cmp's default; the old
-              # __raw override was redundant (and relied on a stray ';').
-              completion.completeopt = "menu,menuone,noselect";
-              sources = [
-                {name = "nvim_lsp";}
-                {name = "buffer";}
-                {name = "path";}
-              ];
-              mapping = {
-                "<C-Space>" = "cmp.mapping.complete()";
-                "<C-e>" = "cmp.mapping.abort()";
-                "<C-d>" = "cmp.mapping.scroll_docs(4)";
-                "<C-u>" = "cmp.mapping.scroll_docs(-4)";
-                "<CR>" = "cmp.mapping.confirm({ select = true })";
-                "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
-                "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
-              };
-            };
-          };
-
-          cmp-nvim-lsp.enable = true;
-          cmp-buffer.enable = true;
-          cmp-path.enable = true;
 
           nvim-colorizer = {
             enable = true;
@@ -284,7 +282,7 @@
           })
           vim.api.nvim_create_autocmd("User", {
             pattern = "NeoCodeiumCompletionDisplayed",
-            callback = function() require("cmp").abort() end,
+            callback = function() require("blink.cmp").hide() end,
           })
 
           require("vectorcode").setup({})
