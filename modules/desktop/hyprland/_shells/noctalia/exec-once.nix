@@ -6,6 +6,5 @@
     "wl-paste --watch cliphist store &"
     "noctalia-shell &"
     "udiskie --automount --notify --smart-tray &"
-    "[workspace 9 silent] discord"
   ];
 }

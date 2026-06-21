@@ -96,7 +96,7 @@
       enable = lib.mkEnableOption "Local LLM service(s) via llama.cpp";
       version = lib.mkOption {
         type = lib.types.str;
-        default = "9626";
+        default = "9741";
         description = "Llama-cpp version (build number, e.g. 9313).";
       };
       srcHash = lib.mkOption {

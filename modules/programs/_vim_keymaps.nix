@@ -145,6 +145,12 @@
     action = ":";
     options = { silent = true; desc = "Command mode (Norwegian keyboard)"; };
   }
+  {
+    key = "æ";
+    mode = ["n" "v"];
+    action = "@";
+    options = { silent = true; desc = "@ — play macro (Norwegian keyboard)"; };
+  }
 
   # Neocodeium
   {

@@ -8,7 +8,7 @@ let
     imports = [
       shells.${config.desktopShell}
       ./_shared/hw.nix
-      ./_shared/windowrules.nix
+      ./_shared/scratchpad.nix
     ];
     wayland.windowManager.hyprland.enable = true;
   };

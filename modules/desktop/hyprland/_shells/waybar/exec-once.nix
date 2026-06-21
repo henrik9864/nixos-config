@@ -9,6 +9,5 @@
     "awww-daemon &"
     "awww img /home/henrik/walls/otherWallpaper/space_kurz/space_earth.jpg &"
     "udiskie --automount --notify --smart-tray &"
-    "[workspace 9 silent] discord"
   ];
 }

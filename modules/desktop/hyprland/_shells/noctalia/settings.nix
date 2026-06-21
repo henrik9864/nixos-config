@@ -38,7 +38,7 @@
     master.new_status = "master";
 
     decoration = {
-      rounding = 14;
+      rounding = 7;
       active_opacity = 1.0;
       inactive_opacity = 0.96;
       blur = {
