@@ -47,6 +47,48 @@
     action = ":Telescope diagnostics<CR>";
     options = { silent = true; desc = "Workspace diagnostics"; };
   }
+  {
+    key = "<leader>s";
+    mode = ["n"];
+    action = ":Telescope lsp_document_symbols<CR>";
+    options = { silent = true; desc = "Document symbols"; };
+  }
+  {
+    key = "<leader>S";
+    mode = ["n"];
+    action = ":Telescope lsp_workspace_symbols<CR>";
+    options = { silent = true; desc = "Workspace symbols"; };
+  }
+  {
+    key = "<leader>gx";
+    mode = ["n"];
+    action = ":Telescope git_commits<CR>";
+    options = { silent = true; desc = "Git commits"; };
+  }
+  {
+    key = "<leader>gb";
+    mode = ["n"];
+    action = ":Telescope git_branches<CR>";
+    options = { silent = true; desc = "Git branches"; };
+  }
+  {
+    key = "<leader>/";
+    mode = ["n"];
+    action = ":Telescope current_buffer_fuzzy_find<CR>";
+    options = { silent = true; desc = "Fuzzy find in buffer"; };
+  }
+  {
+    key = "<leader>k";
+    mode = ["n"];
+    action = ":Telescope keymaps<CR>";
+    options = { silent = true; desc = "Search keymaps"; };
+  }
+  {
+    key = "<leader>G";
+    mode = ["n"];
+    action = ":Telescope grep_string<CR>";
+    options = { silent = true; desc = "Grep word under cursor"; };
+  }
 
   # CodeCompanion
   {
@@ -122,34 +164,57 @@
     options = { silent = true; desc = "Open color picker"; };
   }
 
-  # Norwegian keyboard
-  # NOTE: "i" removed from the modes below — with insert mode included you
-  # could never type the literal characters å or ¨ in text. In insert mode,
-  # AltGr+7 / AltGr+0 produce { } on the Norwegian layout. (This remap is
-  # also the likely origin of the stray file named "¨" in the repo root.)
+  # Norwegian keyboard — maps physical key positions to their US equivalents.
+  # å/¨/ø/æ sit at [/]/;/' on a US layout; insert mode excluded so literal
+  # characters can still be typed. AltGr+7/0 still produce {/} in insert mode.
+  # Note: } (paragraph forward) has no clean key — use AltGr+0 when needed.
   {
     key = "å";
-    mode = ["n" "v"];
+    mode = ["n" "v" "o"];
+    action = "[";
+    options = { silent = true; desc = "[ (Norwegian keyboard)"; };
+  }
+  {
+    key = "Å";
+    mode = ["n" "v" "o"];
     action = "{";
     options = { silent = true; desc = "{ (Norwegian keyboard)"; };
   }
   {
     key = "¨";
-    mode = ["n" "v"];
-    action = "}";
-    options = { silent = true; desc = "} (Norwegian keyboard)"; };
+    mode = ["n" "v" "o"];
+    action = "]";
+    options = { silent = true; desc = "] (Norwegian keyboard)"; };
   }
   {
     key = "ø";
     mode = ["n" "v"];
+    action = ";";
+    options = { silent = true; desc = "; repeat f/t (Norwegian keyboard)"; };
+  }
+  {
+    key = "Ø";
+    mode = ["n" "v"];
     action = ":";
-    options = { silent = true; desc = "Command mode (Norwegian keyboard)"; };
+    options = { silent = true; desc = ": command mode (Norwegian keyboard)"; };
   }
   {
     key = "æ";
+    mode = ["n" "v" "o"];
+    action = "'";
+    options = { silent = true; desc = "' jump to mark (Norwegian keyboard)"; };
+  }
+  {
+    key = "Æ";
     mode = ["n" "v"];
     action = "@";
-    options = { silent = true; desc = "@ — play macro (Norwegian keyboard)"; };
+    options = { silent = true; desc = "@ run macro (Norwegian keyboard)"; };
+  }
+  {
+    key = "ææ";
+    mode = ["n"];
+    action = "@@";
+    options = { silent = true; desc = "@@ repeat last macro (Norwegian keyboard)"; };
   }
 
   # Neocodeium

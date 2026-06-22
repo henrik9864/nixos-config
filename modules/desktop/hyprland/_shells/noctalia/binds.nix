@@ -25,15 +25,6 @@
       # screenshot
       ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"
       "$mod, Print, exec, grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"
-      # focus
-      "$mod, left,  movefocus, l"
-      "$mod, right, movefocus, r"
-      "$mod, up,    movefocus, u"
-      "$mod, down,  movefocus, d"
-      "$mod, h, movefocus, l"
-      "$mod, j, movefocus, d"
-      "$mod, k, movefocus, u"
-      "$mod, l, movefocus, r"
       # workspaces
       "$mod, 1, workspace, 1"
       "$mod, 2, workspace, 2"
@@ -79,6 +70,18 @@
       ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
       "$mod, mouse_down, workspace, e-1"
       "$mod, mouse_up, workspace, e+1"
+    ];
+
+    # bindl works even when a fullscreen app (e.g. browser video) inhibits shortcuts
+    bindl = [
+      "$mod, left,  movefocus, l"
+      "$mod, right, movefocus, r"
+      "$mod, up,    movefocus, u"
+      "$mod, down,  movefocus, d"
+      "$mod, h, movefocus, l"
+      "$mod, j, movefocus, d"
+      "$mod, k, movefocus, u"
+      "$mod, l, movefocus, r"
     ];
 
     bindm = [

@@ -79,7 +79,22 @@
         };
 
         plugins = {
-          telescope.enable = true;
+          telescope = {
+            enable = true;
+            extensions = {
+              fzf-native.enable = true;
+              ui-select.enable = true;
+            };
+            settings = {
+              defaults.file_ignore_patterns = [
+                "%.git/" "node_modules/" "build/" "dist/"
+              ];
+              pickers = {
+                find_files.hidden = true;
+                live_grep.additional_args = ["--hidden"];
+              };
+            };
+          };
           neo-tree.enable = true;
           gitsigns.enable = true;
           which-key.enable = true;
