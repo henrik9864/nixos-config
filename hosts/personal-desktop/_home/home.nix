@@ -131,6 +131,14 @@
       name = "Henrik Strocka";
       email = "henstr@hotmail.com";
     };
+    delta = {
+      enable = true;
+      options = {
+        navigate = true;
+        side-by-side = true;
+        line-numbers = true;
+      };
+    };
   };
 
   programs.zsh = {
@@ -159,6 +167,16 @@
     ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
     v = "nvim";
     b = "yazi";
+
+    gs    = "git status -s";
+    ga    = "git add";
+    gr    = "git reset";
+    gll   = "git log --oneline --graph --decorate --all";
+    gundo = "git reset HEAD~1 --mixed";
+    gnah  = "git reset --hard && git clean -fd";
+    gri   = "git rebase -i HEAD~";
+    gwip  = "git add -A && git commit -m 'WIP'";
+    gcfix = "git commit --fixup";
   };
 
   programs.fzf = {
