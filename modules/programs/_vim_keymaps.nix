@@ -167,7 +167,6 @@
   # Norwegian keyboard — maps physical key positions to their US equivalents.
   # å/¨/ø/æ sit at [/]/;/' on a US layout; insert mode excluded so literal
   # characters can still be typed. AltGr+7/0 still produce {/} in insert mode.
-  # Note: } (paragraph forward) has no clean key — use AltGr+0 when needed.
   {
     key = "å";
     mode = ["n" "v" "o"];
@@ -185,6 +184,12 @@
     mode = ["n" "v" "o"];
     action = "]";
     options = { silent = true; desc = "] (Norwegian keyboard)"; };
+  }
+  {
+    key = "^";
+    mode = ["n" "v" "o"];
+    action = "}";
+    options = { silent = true; desc = "} paragraph forward (Norwegian keyboard)"; };
   }
   {
     key = "ø";
