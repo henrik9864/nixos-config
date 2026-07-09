@@ -37,7 +37,7 @@
     loader = {
       systemd-boot = {
         enable = true;
-        configurationLimit = 1;
+        configurationLimit = 10;
       };
       efi.canTouchEfiVariables = true;
     };
@@ -195,6 +195,8 @@
     enable = true;
     extraUsers = ["henrik"];
   };
+
+  powerManagement.cpuFreqGovernor = "performance";
 
   services.environments.dotnet = {
     enable = true;

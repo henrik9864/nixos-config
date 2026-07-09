@@ -58,6 +58,7 @@
               "cpu"
               "gpu"
               "ram"
+              "storage"
               "session"
             ];
           };
@@ -72,7 +73,10 @@
 
           location.auto_locate = true;
           nightlight.enabled = true;
-          system.monitor.gpu_poll_seconds = 2;
+          system.monitor = {
+            enabled = true;
+            gpu_poll_seconds = 2;
+          };
         };
       };
     };

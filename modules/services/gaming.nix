@@ -24,6 +24,7 @@
         wineWow64Packages.stable
         winetricks
         protontricks
+        mangohud
       ];
       hardware.graphics = {
         enable = true;

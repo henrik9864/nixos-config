@@ -96,18 +96,18 @@
       enable = lib.mkEnableOption "Local LLM service(s) via llama.cpp";
       version = lib.mkOption {
         type = lib.types.str;
-        default = "9741";
+        default = "9542";
         description = "Llama-cpp version (build number, e.g. 9313).";
       };
       srcHash = lib.mkOption {
         type = lib.types.str;
         description = "SHA256 hash for the llama.cpp source at the given version.";
-        default = "sha256-nou/fobIUto9YpFqYPGovp7SUUQOT1f1sg1l06LVso8=";
+        default = "sha256-Un7K11rXn3wllSIZcGo3hf84zuQQwD5VvNFX0MyTI/I=";
       };
       npmDepsHash = lib.mkOption {
         type = lib.types.str;
         description = "SHA256 hash for the llama.cpp WebUI npm dependencies.";
-        default = "sha512-A3ZDi8UnIkzLdnboi7dh0HOa8Q4NaLSBOxZ38iA9WaNfbkk4ppjlRSMbwDqlkEBz7//Ieyf7kdDStftkWAYdUg==";
+        default = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
       };
       modelsDir = lib.mkOption {
         type = lib.types.str;
