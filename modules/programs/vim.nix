@@ -227,6 +227,15 @@
             lintersByFt.nix = ["statix" "deadnix"];
           };
 
+          toggleterm = {
+            enable = true;
+            settings = {
+              direction = "float";
+              float_opts.border = "rounded";
+              start_in_insert = true;
+            };
+          };
+
           nvim-colorizer = {
             enable = true;
             settings = {
@@ -244,12 +253,13 @@
         extraPlugins = [
           pkgs.vimPlugins.ccc-nvim
           pkgs-unstable.vimPlugins.codecompanion-nvim
+          pkgs.vimPlugins.dropbar-nvim
         ];
 
         extraConfigLua = ''
-          require("ccc").setup({})
+          require("dropbar").setup({})
 
-          require("vectorcode").setup({})
+          require("ccc").setup({})
 
           require("codecompanion").setup({
             display = {
@@ -291,27 +301,6 @@
               inline = { adapter = "llamacpp" },
             },
             extensions = {
-              spinner = {
-                opts = {
-                  style = "dots",
-                },
-              },
-              vectorcode = {
-                opts = {
-                  tool_group = {
-                    enabled = true,
-                    extras = {},
-                    collapse = false,
-                  },
-                  tool_opts = {
-                    ["*"] = {},
-                    query = {
-                      default_num = { chunk = 50, document = 10 },
-                      max_num     = { chunk = -1, document = -1 },
-                    },
-                  },
-                },
-              },
             },
           })
         '';

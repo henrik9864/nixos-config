@@ -60,6 +60,7 @@
     layout = "no";
     variant = "nodeadkeys";
   };
+
   console.keyMap = "no";
 
   programs.ydotool.enable = true;

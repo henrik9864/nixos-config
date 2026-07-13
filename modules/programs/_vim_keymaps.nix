@@ -222,23 +222,87 @@
     options = { silent = true; desc = "@@ repeat last macro (Norwegian keyboard)"; };
   }
 
-  # Neocodeium
+  # Terminal
   {
-    key = "<A-f>";
-    mode = ["i"];
-    action = "<cmd>lua require('neocodeium').accept()<CR>";
-    options = { silent = true; desc = "Accept neocodeium suggestion"; };
+    key = "<Esc>";
+    mode = ["t"];
+    action = "<C-\\><C-n>";
+    options = { silent = true; desc = "Exit terminal insert mode"; };
   }
   {
-    key = "<A-w>";
-    mode = ["i"];
-    action = "<cmd>lua require('neocodeium').accept_word()<CR>";
-    options = { silent = true; desc = "Accept neocodeium word"; };
+    key = "<leader>tt";
+    mode = ["n"];
+    action = ":ToggleTerm dir=%:p:h<CR>";
+    options = { silent = true; desc = "Terminal in current file dir"; };
+  }
+
+  # .NET
+  {
+    key = "<leader>dn";
+    mode = ["n"];
+    action = ":TermExec cmd='lazynuget'<CR>";
+    options = { silent = true; desc = "lazynuget"; };
   }
   {
-    key = "<A-e>";
-    mode = ["i"];
-    action = "<cmd>lua require('neocodeium').cycle_or_complete()<CR>";
-    options = { silent = true; desc = "Cycle neocodeium suggestions"; };
+    key = "<leader>dr";
+    mode = ["n"];
+    action.__raw = ''
+      function()
+        local csprojs = vim.fn.glob(vim.fn.getcwd() .. "/**/*.csproj", false, true)
+        local function run(proj)
+          local cmd = proj ~= "" and ("dotnet run --project " .. vim.fn.shellescape(proj)) or "dotnet run"
+          require("toggleterm").exec(cmd)
+        end
+        if #csprojs == 0 then
+          run("")
+        elseif #csprojs == 1 then
+          run(csprojs[1])
+        else
+          local items = { "Select project:" }
+          for i, proj in ipairs(csprojs) do
+            table.insert(items, i .. ". " .. vim.fn.fnamemodify(proj, ":~:."))
+          end
+          local choice = vim.fn.inputlist(items)
+          if choice > 0 and csprojs[choice] then run(csprojs[choice]) end
+        end
+      end
+    '';
+    options = { silent = true; desc = "dotnet run"; };
+  }
+  {
+    key = "<leader>db";
+    mode = ["n"];
+    action = ":TermExec cmd='dotnet build'<CR>";
+    options = { silent = true; desc = "dotnet build"; };
+  }
+  {
+    key = "<leader>dt";
+    mode = ["n"];
+    action = ":TermExec cmd='dotnet test'<CR>";
+    options = { silent = true; desc = "dotnet test"; };
+  }
+  {
+    key = "<leader>dw";
+    mode = ["n"];
+    action = ":TermExec cmd='dotnet watch'<CR>";
+    options = { silent = true; desc = "dotnet watch"; };
+  }
+  {
+    key = "<leader>dR";
+    mode = ["n"];
+    action = ":TermExec cmd='dotnet restore'<CR>";
+    options = { silent = true; desc = "dotnet restore"; };
+  }
+  {
+    key = "<leader>dc";
+    mode = ["n"];
+    action = ":TermExec cmd='dotnet clean'<CR>";
+    options = { silent = true; desc = "dotnet clean"; };
+  }
+  {
+    key = "<leader>dp";
+    mode = ["n"];
+    action = ":TermExec cmd='dotnet publish'<CR>";
+    options = { silent = true; desc = "dotnet publish"; };
   }
 ]
