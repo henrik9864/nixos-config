@@ -33,11 +33,11 @@
 
   # Boot
   boot = {
-    kernelPackages = pkgs.linuxPackages_7_0;
+    kernelPackages = pkgs.linuxPackages_latest;
     loader = {
       systemd-boot = {
         enable = true;
-        configurationLimit = 10;
+        configurationLimit = 25;
       };
       efi.canTouchEfiVariables = true;
     };
@@ -45,9 +45,6 @@
       "sd_mod"
     ];
   };
-
-  programs.nicotine.enable = true;
-  programs.eveguru.enable = true;
 
   # Networking
   networking = {
@@ -64,6 +61,8 @@
     variant = "nodeadkeys";
   };
   console.keyMap = "no";
+
+  programs.ydotool.enable = true;
 
   # Audio
   services.pulseaudio.enable = false;
@@ -82,6 +81,7 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "uinput"
     ];
     shell = pkgs.zsh;
   };

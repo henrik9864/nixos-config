@@ -26,7 +26,7 @@
       exec-once = [
         ''kitty --class kitty-calc -- sh -c "while true; do qalc -set 'autocalc 1'; sleep 0.1; done"''
         ''kitty --class kitty-misc -- sh -c "while true; do zsh; sleep 0.1; done"''
-        "discord"
+        "[workspace special:discord silent] discord"
       ];
     };
   };

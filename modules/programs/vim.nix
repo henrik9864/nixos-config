@@ -15,10 +15,7 @@
     config = lib.mkIf cfg.enable {
       programs.nixvim = {
         enable = true;
-        # NOTE: unstable neovim under stable nixvim (nixos-26.05) is a compat
-        # risk. Consider dropping this line (use nixvim's default neovim) or
-        # switching the nixvim flake input to master.
-        package = pkgs-unstable.neovim-unwrapped;
+        # package = pkgs-unstable.neovim-unwrapped;
         globals.mapleader = " ";
 
         colorschemes.gruvbox = {
@@ -87,7 +84,10 @@
             };
             settings = {
               defaults.file_ignore_patterns = [
-                "%.git/" "node_modules/" "build/" "dist/"
+                "%.git/"
+                "node_modules/"
+                "build/"
+                "dist/"
               ];
               pickers = {
                 find_files.hidden = true;
@@ -244,61 +244,10 @@
         extraPlugins = [
           pkgs.vimPlugins.ccc-nvim
           pkgs-unstable.vimPlugins.codecompanion-nvim
-          # NOTE: pin these to commit SHAs instead of "main".
-          # `rev = "main"` + a fixed sha256 breaks on any fresh fetch once the
-          # branch moves. Get rev+hash with: nix-prefetch-github <owner> <repo>
-          (pkgs.vimUtils.buildVimPlugin {
-            name = "hml-nvim";
-            src = pkgs.fetchFromGitHub {
-              owner = "mawkler";
-              repo = "hml.nvim";
-              rev = "main"; # TODO: pin commit
-              sha256 = "sha256-IdsYy0K4Q1qTpUwhf97bS2vGDHB+MBjZILy1MyVlIiE=";
-            };
-          })
-          (pkgs.vimUtils.buildVimPlugin {
-            name = "neocodeium";
-            src = pkgs.fetchFromGitHub {
-              owner = "monkoose";
-              repo = "neocodeium";
-              rev = "main"; # TODO: pin commit
-              sha256 = "sha256-4IejQ1dQVfmngyF7hUrQ3XXZsHWbuBm3tFDn4hUM/sA=";
-            };
-            doCheck = false;
-          })
-          (pkgs.vimUtils.buildVimPlugin {
-            name = "vectorcode-nvim";
-            src = pkgs.fetchFromGitHub {
-              owner = "Davidyz";
-              repo = "VectorCode";
-              rev = "main"; # TODO: pin commit
-              sha256 = "sha256-/nxadVYrtW3vBxGFAHkbKUj0F6PTED4PoRtx9Cjf4No=";
-            };
-            doCheck = false;
-          })
-          (pkgs.vimUtils.buildVimPlugin {
-            name = "codecompanion-spinners-nvim";
-            src = pkgs.fetchFromGitHub {
-              owner = "lalitmee";
-              repo = "codecompanion-spinners.nvim";
-              rev = "main"; # TODO: pin commit
-              sha256 = "sha256-L+vG4wj2O1VaiHhhjBAi26nglW0WnPSTk8FihkK8cn0=";
-            };
-            doCheck = false;
-          })
         ];
 
         extraConfigLua = ''
           require("ccc").setup({})
-          require("hml").setup({})
-
-          require("neocodeium").setup({
-            manual = true,
-          })
-          vim.api.nvim_create_autocmd("User", {
-            pattern = "NeoCodeiumCompletionDisplayed",
-            callback = function() require("blink.cmp").hide() end,
-          })
 
           require("vectorcode").setup({})
 

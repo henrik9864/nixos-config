@@ -33,6 +33,7 @@
     nixfmt
     statix
     deadnix
+    ydotool
 
     # Fonts
     nerd-fonts.jetbrains-mono
@@ -82,6 +83,9 @@
     # Coding
     pkgs-unstable.claude-code
     pkgs-unstable.opencode
+
+    # Emulator
+    melonDS
   ];
 
   home.file.".config/opencode/opencode.json".text = builtins.toJSON {
@@ -169,14 +173,14 @@
     v = "nvim";
     b = "yazi";
 
-    gs    = "git status -s";
-    ga    = "git add";
-    gr    = "git reset";
-    gll   = "git log --oneline --graph --decorate --all";
+    gs = "git status -s";
+    ga = "git add";
+    gr = "git reset";
+    gll = "git log --oneline --graph --decorate --all";
     gundo = "git reset HEAD~1 --mixed";
-    gnah  = "git reset --hard && git clean -fd";
-    gri   = "git rebase -i HEAD~";
-    gwip  = "git add -A && git commit -m 'WIP'";
+    gnah = "git reset --hard && git clean -fd";
+    gri = "git rebase -i HEAD~";
+    gwip = "git add -A && git commit -m 'WIP'";
     gcfix = "git commit --fixup";
   };
 

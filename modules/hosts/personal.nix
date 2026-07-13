@@ -9,8 +9,8 @@ let inherit (config.flake.modules) nixos; in
         inputs.home-manager.nixosModules.home-manager
         inputs.lanzaboote.nixosModules.lanzaboote
         inputs.nix-index-database.nixosModules.nix-index
-        inputs.nicotine.nixosModules.nicotine
-        inputs.nicotine.nixosModules.eveguru
+        #inputs.nicotine.nixosModules.nicotine
+        #inputs.nicotine.nixosModules.eveguru
         inputs.nixvim.nixosModules.default
         nixos.hyprland
         nixos.waybar
