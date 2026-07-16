@@ -31,6 +31,8 @@
     speedFactor = 2;
   };
 
+  boot.kernel.sysctl."fs.inotify.max_user_watches" = 1048576;
+
   # Boot
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;

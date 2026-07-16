@@ -182,6 +182,14 @@
     gri = "git rebase -i HEAD~";
     gwip = "git add -A && git commit -m 'WIP'";
     gcfix = "git commit --fixup";
+
+    dr = "dotnet run";
+    db = "dotnet build";
+    dt = "dotnet test";
+    dw = "dotnet watch";
+    dR = "dotnet restore";
+    dc = "dotnet clean";
+    dp = "dotnet publish";
   };
 
   programs.fzf = {

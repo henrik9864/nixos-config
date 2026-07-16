@@ -11,6 +11,7 @@
     else {
       imports = [inputs.noctalia.homeModules.default];
       systemd.user.services.noctalia.Service.KillMode = "process";
+      systemd.user.services.noctalia.Service.Environment = "LD_LIBRARY_PATH=/run/opengl-driver/lib";
       programs.noctalia = {
         enable = true;
         systemd.enable = true;
@@ -30,9 +31,19 @@
             };
           };
 
-          widget.clock = {
-            format = "{:%d/%m/%Y - %H:%M:%S}";
-            tooltip_format = "{:%A, %B %d, %Y}";
+          widget = {
+            clock = {
+              format = "{:%d/%m/%Y - %H:%M:%S}";
+              tooltip_format = "{:%A, %B %d, %Y}";
+            };
+            gpu = {
+              type = "sysmon";
+              stat = "gpu_usage";
+            };
+            storage = {
+              type = "sysmon";
+              stat = "disk_pct";
+            };
           };
 
           bar.main = {
@@ -43,7 +54,11 @@
             background_opacity = 0.85;
             capsule = true;
             shadow = true;
-            start = ["launcher" "wallpaper" "workspaces"];
+            start = [
+              "launcher"
+              "wallpaper"
+              "workspaces"
+            ];
             center = [
               "clock"
               "weather"
