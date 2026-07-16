@@ -40,6 +40,10 @@
               type = "sysmon";
               stat = "gpu_usage";
             };
+            gpu_vram = {
+              type = "sysmon";
+              stat = "gpu_vram";
+            };
             storage = {
               type = "sysmon";
               stat = "disk_pct";
@@ -66,15 +70,24 @@
             end = [
               "tray"
               "notifications"
-              "network_rx"
-              "network_tx"
+              "group:network_group"
               "volume"
               "brightness"
               "cpu"
-              "gpu"
+              "group:gpu_group"
               "ram"
               "storage"
               "session"
+            ];
+            capsule_group = [
+              {
+                id = "network_group";
+                members = ["network_rx" "network_tx"];
+              }
+              {
+                id = "gpu_group";
+                members = ["gpu" "gpu_vram"];
+              }
             ];
           };
 
