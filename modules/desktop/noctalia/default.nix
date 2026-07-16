@@ -62,6 +62,7 @@
               "launcher"
               "wallpaper"
               "workspaces"
+              "nix-monitor"
             ];
             center = [
               "clock"
@@ -97,6 +98,13 @@
             enabled = true;
             unit = "celsius";
             refresh_minutes = 30;
+          };
+
+          plugins.enabled = ["avivbintangaringga/nix-monitor" "noctalia/notes" "noctalia/wallhaven"];
+
+          "plugin_settings"."avivbintangaringga/nix-monitor" = {
+            branch = "nixos-26.05";
+            update_command = "sudo nixos-rebuild switch";
           };
 
           location.auto_locate = true;
