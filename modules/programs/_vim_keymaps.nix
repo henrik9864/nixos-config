@@ -155,6 +155,30 @@
     action = "<C-w>j";
     options = { silent = true; desc = "Move to lower split"; };
   }
+  {
+    key = "<A-h>";
+    mode = ["n"];
+    action = "<C-w>h";
+    options = { silent = true; desc = "Move to left split"; };
+  }
+  {
+    key = "<A-l>";
+    mode = ["n"];
+    action = "<C-w>l";
+    options = { silent = true; desc = "Move to right split"; };
+  }
+  {
+    key = "<A-k>";
+    mode = ["n"];
+    action = "<C-w>k";
+    options = { silent = true; desc = "Move to upper split"; };
+  }
+  {
+    key = "<A-j>";
+    mode = ["n"];
+    action = "<C-w>j";
+    options = { silent = true; desc = "Move to lower split"; };
+  }
 
   # Color picker
   {
