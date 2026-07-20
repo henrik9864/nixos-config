@@ -33,9 +33,11 @@
 
   boot.kernel.sysctl."fs.inotify.max_user_watches" = 1048576;
 
+  nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.default ];
+
   # Boot
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.cachyosKernels."linuxPackages-cachyos-bore";
     loader = {
       systemd-boot = {
         enable = true;
