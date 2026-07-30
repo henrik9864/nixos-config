@@ -27,7 +27,9 @@
             builtin = "Catppuccin";
             templates = {
               enable_builtin_templates = true;
+              enable_community_templates = true;
               builtin_ids = ["btop"];
+              community_ids = [];
             };
           };
 
@@ -98,13 +100,6 @@
             enabled = true;
             unit = "celsius";
             refresh_minutes = 30;
-          };
-
-          plugins.enabled = ["avivbintangaringga/nix-monitor" "noctalia/notes" "noctalia/wallhaven"];
-
-          "plugin_settings"."avivbintangaringga/nix-monitor" = {
-            branch = "nixos-26.05";
-            update_command = "sudo nixos-rebuild switch";
           };
 
           location.auto_locate = true;

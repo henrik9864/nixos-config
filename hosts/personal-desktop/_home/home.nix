@@ -50,6 +50,7 @@
     ncdu
     tree
     fd
+    tio
 
     # Desktop utilities
     udiskie
@@ -86,6 +87,9 @@
 
     # Emulator
     melonDS
+
+    # 3D Printing
+    prusa-slicer
   ];
 
   home.file.".config/opencode/opencode.json".text = builtins.toJSON {

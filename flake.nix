@@ -4,7 +4,6 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
-    #nicotine.url = "path:/home/henrik/projects/nicotine-nix";
     hermes-agent.url = "github:NousResearch/hermes-agent";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -44,6 +43,6 @@
     };
   };
   outputs = inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; }
+    inputs.flake-parts.lib.mkFlake {inherit inputs;}
     (inputs.import-tree ./modules);
 }

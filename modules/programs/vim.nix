@@ -127,13 +127,12 @@
           lsp = {
             enable = true;
             servers = {
-              nixd.enable = true;
-              # Kernel/embedded C. In a kernel tree, generate
-              # compile_commands.json first:
-              #   ./scripts/clang-tools/gen_compile_commands.py
+              nixd = {
+                enable = true;
+                extraOptions.flags.debounce_text_changes = 300;
+              };
               clangd.enable = true;
             };
-            # The missing piece: actual LSP keybindings.
             keymaps = {
               lspBuf = {
                 gd = {
@@ -156,7 +155,7 @@
                   action = "hover";
                   desc = "Hover docs";
                 };
-                "<leader>rn" = {
+                "<leader>lr" = {
                   action = "rename";
                   desc = "Rename symbol";
                 };
@@ -182,7 +181,10 @@
             };
           };
 
-          roslyn.enable = true;
+          roslyn = {
+            enable = true;
+            settings.broad_search = true;
+          };
 
           blink-cmp = {
             enable = true;
@@ -225,6 +227,11 @@
           lint = {
             enable = true;
             lintersByFt.nix = ["statix" "deadnix"];
+          };
+
+          fidget = {
+            enable = true;
+            settings.progress.display.done_ttl = 1;
           };
 
           toggleterm = {

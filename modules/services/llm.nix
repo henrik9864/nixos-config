@@ -96,7 +96,7 @@
       enable = lib.mkEnableOption "Local LLM service(s) via llama.cpp";
       version = lib.mkOption {
         type = lib.types.str;
-        default = "10051";
+        default = "10159";
         description = "Llama-cpp version (build number, e.g. 9313).";
       };
       srcHash = lib.mkOption {
@@ -173,6 +173,11 @@
               default = false;
               description = "Enable flash attention.";
             };
+            thinking = lib.mkOption {
+              type = lib.types.bool;
+              default = true;
+              description = "Enable thinking/reasoning mode (--reasoning-budget -1). Set to false to disable (--reasoning-budget 0).";
+            };
             mtp = {
               enable = lib.mkEnableOption "MTP speculative decoding";
               draftTokens = lib.mkOption {
@@ -223,6 +228,7 @@
             }"
             "--model ${cfg.modelsDir}/${m.path}"
           ]
+          ++ ["--reasoning-budget ${if m.thinking then "-1" else "0"}"]
           ++ lib.optionals m.mtp.enable [
             "--spec-type draft-mtp"
             "--spec-draft-n-max ${toString m.mtp.draftTokens}"
