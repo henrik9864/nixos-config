@@ -145,44 +145,14 @@
     };
   };
 
-  programs.zsh = {
-    enable = true;
-    initContent = ''
-      export LS_COLORS="$LS_COLORS:ow=1;38;2;0;0;0;48;2;64;160;43"
-      if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then
-        exec start-hyprland
-      fi
-    '';
-    oh-my-zsh = {
-      enable = true;
-      theme = "robbyrussell";
-      plugins = [
-        "git"
-        "sudo"
-        "docker"
-        "z"
-      ];
-    };
-  };
+  programs.zsh.initContent = ''
+    export LS_COLORS="$LS_COLORS:ow=1;38;2;0;0;0;48;2;64;160;43"
+    if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = "1" ]; then
+      exec start-hyprland
+    fi
+  '';
 
   programs.zsh.shellAliases = {
-    nrs = "sudo nixos-rebuild switch";
-    nrsf = "sudo nixos-rebuild switch --fast";
-    ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
-    ndc = "nix develop -c $SHELL";
-    v = "nvim";
-    b = "yazi";
-
-    gs = "git status -s";
-    ga = "git add";
-    gr = "git reset";
-    gll = "git log --oneline --graph --decorate --all";
-    gundo = "git reset HEAD~1 --mixed";
-    gnah = "git reset --hard && git clean -fd";
-    gri = "git rebase -i HEAD~";
-    gwip = "git add -A && git commit -m 'WIP'";
-    gcfix = "git commit --fixup";
-
     dr = "dotnet run";
     db = "dotnet build";
     dt = "dotnet test";

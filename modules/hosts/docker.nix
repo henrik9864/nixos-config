@@ -9,6 +9,7 @@ let inherit (config.flake.modules) nixos; in
       nixos.nixCache
       nixos.ip
       nixos.docker
+      nixos.zsh
       (inputs.import-tree ../../hosts/docker)
     ];
   };

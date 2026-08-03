@@ -6,6 +6,7 @@ let inherit (config.flake.modules) nixos; in
     imports = [
       nixos.sshKeys
       nixos.ip
+      nixos.zsh
       (inputs.import-tree ../../hosts/nix-cache)
     ];
   };

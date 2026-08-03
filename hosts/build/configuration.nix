@@ -18,6 +18,7 @@
 
   system.sshKeys.enable = true;
   system.nixCache.enable = true;
+  system.zsh.enable = true;
 
   system.ip = {
     enable = true;
@@ -35,26 +36,6 @@
     packages = with pkgs; [
       tree
     ];
-  };
-
-  programs.zsh = {
-    enable = true;
-    oh-my-zsh = {
-      enable = true;
-      theme = "robbyrussell";
-      plugins = [
-        "git"
-        "sudo"
-        "docker"
-        "z"
-      ];
-    };
-  };
-
-  programs.zsh.shellAliases = {
-    nrs = "sudo nixos-rebuild switch";
-    nrsf = "sudo nixos-rebuild switch --fast";
-    ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
   };
 
   environment.systemPackages = with pkgs; [

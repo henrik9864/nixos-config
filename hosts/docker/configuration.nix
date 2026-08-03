@@ -15,6 +15,7 @@
 
   system.sshKeys.enable = true;
   system.nixCache.enable = true;
+  system.zsh.enable = true;
 
   networking.hostName = "nixos-docker";
 
@@ -34,6 +35,7 @@
   users.users.henrik = {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
+    shell = pkgs.zsh;
     packages = with pkgs; [
       tree
     ];

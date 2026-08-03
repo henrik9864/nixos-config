@@ -16,6 +16,7 @@ let inherit (config.flake.modules) nixos; in
         nixos.waybar
         nixos.noctalia
         nixos.vim
+        nixos.zshHome
         nixos.gaming
         nixos.llm
         nixos.openWebui

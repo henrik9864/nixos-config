@@ -102,11 +102,12 @@
 
   programs = {
     firefox.enable = true;
-    zsh.enable = true;
     nix-index-database.comma.enable = true;
 
     nix-ld.enable = true;
   };
+
+  system.zsh.enable = true;
 
   programs.nvim.enable = true;
 

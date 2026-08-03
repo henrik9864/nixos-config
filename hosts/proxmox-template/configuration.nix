@@ -36,6 +36,7 @@
   ...
 }: {
   system.sshKeys.enable = true;
+  system.zsh.enable = true;
 
   networking.hostName = "nixos-proxmox";
 
@@ -53,6 +54,7 @@
   users.users.henrik = {
     isNormalUser = true;
     extraGroups = ["wheel"];
+    shell = pkgs.zsh;
   };
 
   security.sudo.wheelNeedsPassword = false;

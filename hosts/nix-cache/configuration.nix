@@ -14,6 +14,7 @@
   networking.hostName = "nixos-nix-cache";
 
   system.sshKeys.enable = true;
+  system.zsh.enable = true;
 
   system.ip = {
     enable = true;
@@ -27,6 +28,7 @@
   users.users.henrik = {
     isNormalUser = true;
     extraGroups = ["wheel"];
+    shell = pkgs.zsh;
   };
 
   security.sudo.wheelNeedsPassword = false;
