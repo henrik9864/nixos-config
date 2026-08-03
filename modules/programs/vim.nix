@@ -52,7 +52,6 @@
           deadnix
           fd
           ripgrep
-          vectorcode
           claude-code-acp
         ];
 
@@ -183,6 +182,7 @@
 
           roslyn = {
             enable = true;
+            package = pkgs-unstable.vimPlugins.roslyn-nvim;
             settings.broad_search = true;
           };
 
@@ -234,6 +234,16 @@
             settings.progress.display.done_ttl = 1;
           };
 
+          flash = {
+            enable = true;
+            settings = {
+              modes = {
+                char.enabled = true;
+                search.enabled = false;
+              };
+            };
+          };
+
           toggleterm = {
             enable = true;
             settings = {
@@ -264,6 +274,26 @@
         ];
 
         extraConfigLua = ''
+          vim.diagnostic.config({
+            virtual_text = false,
+            virtual_lines = { current_line = true },
+          })
+
+          vim.lsp.config("roslyn", {
+            settings = {
+              ["csharp|background_analysis"] = {
+                dotnet_analyzer_diagnostics_scope = "fullSolution",
+                dotnet_compiler_diagnostics_scope = "fullSolution",
+              },
+              ["csharp|symbol_search"] = {
+                dotnet_search_reference_assemblies = true,
+              },
+              ["navigation"] = {
+                dotnet_navigate_to_decompiled_sources = true,
+              },
+            },
+          })
+
           require("dropbar").setup({})
 
           require("ccc").setup({})

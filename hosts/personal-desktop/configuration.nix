@@ -194,8 +194,6 @@
 
   services.openWebui.enable = true;
   services.searxng.enable = true;
-  services.hermes.enable = false;
-
   services.gaming = {
     enable = true;
     extraUsers = ["henrik"];

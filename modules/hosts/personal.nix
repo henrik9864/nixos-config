@@ -20,7 +20,6 @@ let inherit (config.flake.modules) nixos; in
         nixos.llm
         nixos.openWebui
         nixos.searxng
-        nixos.hermes
         nixos.networkStorage
         nixos.dotnet
         nixos.remoteBuild

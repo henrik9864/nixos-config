@@ -16,6 +16,32 @@
     options = { silent = true; desc = "Format buffer"; };
   }
 
+  # Flash — jump anywhere visible with 2-key labels
+  {
+    key = "s";
+    mode = ["n" "x" "o"];
+    action.__raw = ''function() require("flash").jump() end'';
+    options = { silent = true; desc = "Flash jump"; };
+  }
+  {
+    key = "S";
+    mode = ["n" "x" "o"];
+    action.__raw = ''function() require("flash").treesitter() end'';
+    options = { silent = true; desc = "Flash treesitter"; };
+  }
+  {
+    key = "r";
+    mode = ["o"];
+    action.__raw = ''function() require("flash").remote() end'';
+    options = { silent = true; desc = "Flash remote (operator)"; };
+  }
+  {
+    key = "R";
+    mode = ["o" "x"];
+    action.__raw = ''function() require("flash").treesitter_search() end'';
+    options = { silent = true; desc = "Flash treesitter search"; };
+  }
+
   # Telescope (rg and fd are already installed)
   {
     key = "<leader>r";

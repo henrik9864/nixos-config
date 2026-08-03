@@ -82,13 +82,6 @@
           sourceRoot = "source/tools/ui";
           hash = cfg.npmDepsHash;
         };
-        postPatch =
-          (oldAttrs.postPatch or "")
-          + ''
-            mkdir -p tools/server
-            ln -s $PWD/tools/ui tools/server/webui
-          '';
-        preConfigure = oldAttrs.preConfigure or "";
         cmakeFlags = (oldAttrs.cmakeFlags or []) ++ ["-DGGML_NATIVE=OFF"] ++ backendCmakeFlags;
       });
   in {

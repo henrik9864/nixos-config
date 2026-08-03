@@ -20,11 +20,6 @@
     done
   '';
 
-  home.file.".config/aichat/.aichatignore".text = ''
-    .git/
-    *.lock
-  '';
-
   home.packages = with pkgs; [
     # Nix tooling
     home-manager
@@ -174,6 +169,7 @@
     nrs = "sudo nixos-rebuild switch";
     nrsf = "sudo nixos-rebuild switch --fast";
     ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
+    ndc = "nix develop -c $SHELL";
     v = "nvim";
     b = "yazi";
 
