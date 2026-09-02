@@ -33,7 +33,7 @@
 
   boot.kernel.sysctl."fs.inotify.max_user_watches" = 1048576;
 
-  nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.default ];
+  nixpkgs.overlays = [inputs.nix-cachyos-kernel.overlays.default];
 
   # Boot
   boot = {
@@ -175,7 +175,7 @@
       };
 
       qwen27b-q5-mtp = {
-        enable = true;
+        enable = false;
         path = "qwen/Qwen3.6-27B-UD-Q5_K_XL-MTP.gguf";
         port = 8080;
         contextSize = 32768;
@@ -186,6 +186,19 @@
           enable = true;
           draftTokens = 2;
         };
+        extraArgs = [
+          "--parallel 1"
+        ];
+      };
+
+      qwen38-q5 = {
+        enable = true;
+        path = "qwen/Qwen3.8-27B-Q5_K_S.gguf";
+        port = 8080;
+        contextSize = 32768 * 4;
+        batchSize = 2048;
+        ubatchSize = 512;
+        flashAttn = true;
         extraArgs = [
           "--parallel 1"
         ];

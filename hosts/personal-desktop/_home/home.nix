@@ -79,6 +79,7 @@
     # Coding
     pkgs-unstable.claude-code
     pkgs-unstable.opencode
+    pkgs-unstable.pi-coding-agent
 
     # Emulator
     melonDS
@@ -102,6 +103,35 @@
       };
     };
     model = "llama.cpp/qwen27b-q5-mtp";
+  };
+
+  home.file.".pi/agent/models.json".text = builtins.toJSON {
+    providers."llama-cpp" = {
+      baseUrl = "http://127.0.0.1:8080/v1";
+      api = "openai-completions";
+      apiKey = "dummy";
+      models = [
+        {
+          id = "qwen27b-q5-mtp";
+          name = "Qwen3 27B Q5 MTP (local)";
+          reasoning = false;
+          input = ["text"];
+          contextWindow = 32768 * 4;
+          maxTokens = 8192;
+          cost = {
+            input = 0;
+            output = 0;
+            cacheRead = 0;
+            cacheWrite = 0;
+          };
+        }
+      ];
+    };
+  };
+
+  home.file.".pi/agent/settings.json".text = builtins.toJSON {
+    defaultProvider = "llama-cpp";
+    defaultModel = "qwen27b-q5-mtp";
   };
 
   home.sessionVariables = {

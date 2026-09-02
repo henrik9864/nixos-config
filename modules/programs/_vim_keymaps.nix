@@ -42,6 +42,44 @@
     options = { silent = true; desc = "Flash treesitter search"; };
   }
 
+  # Gitsigns
+  {
+    key = "]c";
+    mode = ["n"];
+    action = ":Gitsigns nav_hunk next<CR>";
+    options = { silent = true; desc = "Next git hunk"; };
+  }
+  {
+    key = "[c";
+    mode = ["n"];
+    action = ":Gitsigns nav_hunk prev<CR>";
+    options = { silent = true; desc = "Previous git hunk"; };
+  }
+  {
+    key = "<leader>hp";
+    mode = ["n"];
+    action = ":Gitsigns preview_hunk<CR>";
+    options = { silent = true; desc = "Preview git hunk"; };
+  }
+  {
+    key = "<leader>hr";
+    mode = ["n" "v"];
+    action = ":Gitsigns reset_hunk<CR>";
+    options = { silent = true; desc = "Reset git hunk"; };
+  }
+  {
+    key = "<leader>hd";
+    mode = ["n"];
+    action = ":Gitsigns diffthis<CR>";
+    options = { silent = true; desc = "Diff file vs index"; };
+  }
+  {
+    key = "<leader>hR";
+    mode = ["n"];
+    action = ":Gitsigns reset_buffer<CR>";
+    options = { silent = true; desc = "Reset whole buffer"; };
+  }
+
   # Telescope (rg and fd are already installed)
   {
     key = "<leader>r";

@@ -27,6 +27,8 @@
       environment.sessionVariables = {
         DOTNET_ROOT = "${combinedSdk}";
         DOTNET_CLI_TELEMETRY_OPTOUT = "1";
+        MSBUILDTERMINALLOGGER = "on";
+        SuppressNETCoreSdkPreviewMessage = "true";
       };
     };
   };

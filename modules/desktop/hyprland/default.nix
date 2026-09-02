@@ -9,6 +9,7 @@ let
       shells.${config.desktopShell}
       ./_shared/hw.nix
       ./_shared/scratchpad.nix
+      ./_shared/dev-windows.nix
     ];
     wayland.windowManager.hyprland.enable = true;
   };

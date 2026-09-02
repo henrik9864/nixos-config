@@ -279,6 +279,13 @@
             virtual_lines = { current_line = true },
           })
 
+          vim.api.nvim_set_hl(0, "@lsp.type.class.cs",        { fg = "#8ec07c" })
+          vim.api.nvim_set_hl(0, "@lsp.type.struct.cs",       { fg = "#b8bb26" })
+          vim.api.nvim_set_hl(0, "@lsp.type.recordClass.cs",  { fg = "#689d6a" })
+          vim.api.nvim_set_hl(0, "@lsp.type.recordStruct.cs", { fg = "#98971a" })
+          vim.api.nvim_set_hl(0, "@lsp.type.interface.cs",    { fg = "#d79921" })
+          vim.api.nvim_set_hl(0, "@lsp.type.typeParameter.cs", { fg = "#fe8019" })
+
           vim.lsp.config("roslyn", {
             settings = {
               ["csharp|background_analysis"] = {
@@ -326,7 +333,7 @@
                       chat_url = "/v1/chat/completions",
                     },
                     schema = {
-                      model = { default = "Qwen3.6-27B-UD-Q4_K_XL-MTP" },
+                      model = { default = "Qwen3.8-27B-Q5_K_S" },
                     },
                     opts = { tools = true },
                   })

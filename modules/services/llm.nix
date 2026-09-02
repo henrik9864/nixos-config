@@ -89,7 +89,7 @@
       enable = lib.mkEnableOption "Local LLM service(s) via llama.cpp";
       version = lib.mkOption {
         type = lib.types.str;
-        default = "10159";
+        default = "10437";
         description = "Llama-cpp version (build number, e.g. 9313).";
       };
       srcHash = lib.mkOption {
@@ -221,7 +221,13 @@
             }"
             "--model ${cfg.modelsDir}/${m.path}"
           ]
-          ++ ["--reasoning-budget ${if m.thinking then "-1" else "0"}"]
+          ++ [
+            "--reasoning-budget ${
+              if m.thinking
+              then "-1"
+              else "0"
+            }"
+          ]
           ++ lib.optionals m.mtp.enable [
             "--spec-type draft-mtp"
             "--spec-draft-n-max ${toString m.mtp.draftTokens}"
