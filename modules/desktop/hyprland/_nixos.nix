@@ -1,5 +1,9 @@
 inputs: homeHyprland:
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-unstable ? pkgs, ... }:
+let
+  nvidiaPackage =
+    (pkgs-unstable.linuxPackagesFor config.boot.kernelPackages.kernel).nvidiaPackages.latest;
+in
 {
   services.xserver.videoDrivers = [ "nvidia" ];
 
@@ -13,7 +17,7 @@ inputs: homeHyprland:
     open = true;
     modesetting.enable = true;
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = nvidiaPackage;
     powerManagement.enable = true;
   };
   hardware.graphics.enable = true;

@@ -253,18 +253,18 @@
             };
           };
 
-          nvim-colorizer = {
-            enable = true;
-            settings = {
-              filetypes = ["*"];
-              user_default_options = {
-                AARRGGBB = true;
-                RGB = true;
-                RRGGBB = true;
-                RRGGBBAA = true;
-              };
-            };
-          };
+          # nvim-colorizer = {
+          #   enable = true;
+          #   settings = {
+          #     filetypes = ["*"];
+          #     user_default_options = {
+          #       AARRGGBB = true;
+          #       RGB = true;
+          #       RRGGBB = true;
+          #       RRGGBBAA = true;
+          #     };
+          #   };
+          # };
         };
 
         extraPlugins = [
