@@ -29,6 +29,7 @@
     statix
     deadnix
     ydotool
+    unzip
 
     # Fonts
     nerd-fonts.jetbrains-mono
