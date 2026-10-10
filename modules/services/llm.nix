@@ -65,7 +65,7 @@
     llmSrc = pkgs.fetchFromGitHub {
       owner = "ggml-org";
       repo = "llama.cpp";
-      rev = "b${cfg.version}";
+      rev = "v${cfg.version}";
       hash = cfg.srcHash;
     };
 
@@ -89,18 +89,18 @@
       enable = lib.mkEnableOption "Local LLM service(s) via llama.cpp";
       version = lib.mkOption {
         type = lib.types.str;
-        default = "10437";
-        description = "Llama-cpp version (build number, e.g. 9313).";
+        default = "0.6.0";
+        description = "Llama-cpp release version.";
       };
       srcHash = lib.mkOption {
         type = lib.types.str;
         description = "SHA256 hash for the llama.cpp source at the given version.";
-        default = "sha256-Un7K11rXn3wllSIZcGo3hf84zuQQwD5VvNFX0MyTI/I=";
+        default = "sha256-l6l6JIlIVTaVC6xh5M4fRHFtXsweQuugtkNTWHcZZF4=";
       };
       npmDepsHash = lib.mkOption {
         type = lib.types.str;
         description = "SHA256 hash for the llama.cpp WebUI npm dependencies.";
-        default = "sha256-pjdbI6NcZRlJVd62xhgbLhWrwFYwgsIwjORqvo1+VD8=";
+        default = "sha256-a17M+L3nLdRnN6WMB6imPFmwqG2g8uv+gwN0XTAUrf8=";
       };
       modelsDir = lib.mkOption {
         type = lib.types.str;

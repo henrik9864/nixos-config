@@ -28,8 +28,6 @@
     nixfmt
     statix
     deadnix
-    ydotool
-    unzip
 
     # Fonts
     nerd-fonts.jetbrains-mono
@@ -47,6 +45,9 @@
     tree
     fd
     tio
+    ydotool
+    unzip
+    tcpdump
 
     # Desktop utilities
     udiskie
