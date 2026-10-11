@@ -1,14 +1,10 @@
-{
-  inputs,
-  config,
-  lib,
-  ...
-}: let
-  active = config.desktopShell == "noctalia";
-  homeNoctalia =
-    if !active
-    then {}
-    else {
+{inputs, ...}: {
+  flake.modules.nixos.noctalia = {
+    hardware.bluetooth.enable = true;
+    services.upower.enable = true;
+    services.power-profiles-daemon.enable = true;
+
+    home-manager.users.henrik = {
       imports = [inputs.noctalia.homeModules.default];
       systemd.user.services.noctalia.Service.KillMode = "process";
       systemd.user.services.noctalia.Service.Environment = "LD_LIBRARY_PATH=/run/opengl-driver/lib";
@@ -19,6 +15,7 @@
           shell = {
             font_family = "JetBrainsMono Nerd Font";
             corner_radius_scale = 1.5;
+            polkit_agent = true;
           };
 
           theme = {
@@ -111,12 +108,5 @@
         };
       };
     };
-in {
-  flake.modules.nixos.noctalia = {lib, ...}: {
-    home-manager.users.henrik = homeNoctalia;
-    hardware.bluetooth.enable = lib.mkIf active true;
-    services.upower.enable = lib.mkIf active true;
-    services.power-profiles-daemon.enable = lib.mkIf active true;
   };
-  flake.modules.homeManager.noctalia = homeNoctalia;
 }

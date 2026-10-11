@@ -13,7 +13,6 @@ let inherit (config.flake.modules) nixos; in
         #inputs.nicotine.nixosModules.eveguru
         inputs.nixvim.nixosModules.default
         nixos.hyprland
-        nixos.waybar
         nixos.noctalia
         nixos.vim
         nixos.zshHome

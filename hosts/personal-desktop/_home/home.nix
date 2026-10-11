@@ -2,23 +2,10 @@
   pkgs,
   pkgs-unstable,
   inputs,
-  lib,
   ...
 }: {
   home.username = "henrik";
   home.homeDirectory = "/home/henrik";
-
-  home.activation.cleanupStaleSymlinks = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
-    for path in \
-      "$HOME/.config/hypr" \
-      "$HOME/.config/waybar" \
-      "$HOME/.gtkrc-2.0"; do
-      if [ -L "$path" ]; then
-        echo "Removing stale symlink: $path"
-        rm "$path"
-      fi
-    done
-  '';
 
   home.packages = with pkgs; [
     # Nix tooling
@@ -41,6 +28,7 @@
     curl
     jq
     htop
+    btop
     ncdu
     tree
     fd
@@ -49,21 +37,8 @@
     unzip
     tcpdump
 
-    # Desktop utilities
-    udiskie
-    nemo
-
-    # Clipboard
-    cliphist
-    wl-clipboard
-
     # Audio
     pavucontrol
-    playerctl
-
-    # Screenshots
-    grim
-    slurp
 
     # Chat
     discord
