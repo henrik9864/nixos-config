@@ -52,8 +52,11 @@
           deadnix
           fd
           ripgrep
+          lazygit
           claude-code-acp
         ];
+
+        dependencies.roslyn_ls.package = pkgs-unstable.roslyn-ls;
 
         keymaps = keymaps;
 
@@ -285,8 +288,17 @@
           vim.api.nvim_set_hl(0, "@lsp.type.recordStruct.cs", { fg = "#98971a" })
           vim.api.nvim_set_hl(0, "@lsp.type.interface.cs",    { fg = "#d79921" })
           vim.api.nvim_set_hl(0, "@lsp.type.typeParameter.cs", { fg = "#fe8019" })
+          vim.api.nvim_set_hl(0, "@lsp.type.variable.cs",     { fg = "#a3bfcf" })
+          vim.api.nvim_set_hl(0, "@lsp.type.method.cs",       { fg = "#d5b96d" })
+          vim.api.nvim_set_hl(0, "@lsp.type.extensionMethod.cs", { fg = "#d5b96d" })
 
           vim.lsp.config("roslyn", {
+            cmd = {
+              require("roslyn.utils").get_roslyn_lsp_path(),
+              "--stdio",
+              "--clientProcessId",
+              tostring(vim.uv.os_getpid()),
+            },
             settings = {
               ["csharp|background_analysis"] = {
                 dotnet_analyzer_diagnostics_scope = "fullSolution",

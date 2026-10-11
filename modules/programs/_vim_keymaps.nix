@@ -136,6 +136,32 @@
     options = { silent = true; desc = "Git branches"; };
   }
   {
+    key = "<leader>gg";
+    mode = ["n"];
+    action.__raw = ''
+      (function()
+        local lazygit
+        return function()
+          if not lazygit then
+            lazygit = require("toggleterm.terminal").Terminal:new({
+              cmd = "lazygit",
+              dir = "git_dir",
+              direction = "float",
+              hidden = true,
+              close_on_exit = true,
+              on_open = function(term)
+                -- lazygit needs <Esc> itself; don't leave terminal mode
+                vim.keymap.set("t", "<Esc>", "<Esc>", { buffer = term.bufnr, nowait = true })
+              end,
+            })
+          end
+          lazygit:toggle()
+        end
+      end)()
+    '';
+    options = { silent = true; desc = "lazygit"; };
+  }
+  {
     key = "<leader>/";
     mode = ["n"];
     action = ":Telescope current_buffer_fuzzy_find<CR>";

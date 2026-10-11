@@ -26,8 +26,6 @@
     gateway = "192.168.10.1";
   };
 
-  services.vscode-server.enable = true;
-
   networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Oslo";
