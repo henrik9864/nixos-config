@@ -37,8 +37,17 @@
     unzip
     tcpdump
 
+    # Images
+    exiftool
+    openimageio
+
+    # Video
+    yt-dlp
+    ffmpeg
+
     # Audio
     pavucontrol
+    sox
 
     # Chat
     discord

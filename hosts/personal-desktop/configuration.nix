@@ -206,7 +206,7 @@
     };
   };
 
-  services.openWebui.enable = true;
+  services.openWebui.enable = false;
   services.searxng.enable = true;
   services.gaming = {
     enable = true;
