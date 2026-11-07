@@ -83,6 +83,7 @@
           hash = cfg.npmDepsHash;
         };
         cmakeFlags = (oldAttrs.cmakeFlags or []) ++ ["-DGGML_NATIVE=OFF"] ++ backendCmakeFlags;
+        doCheck = false;
       });
   in {
     options.services.llm = {

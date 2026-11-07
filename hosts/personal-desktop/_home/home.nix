@@ -200,6 +200,7 @@
       background_opacity = "0.85";
       cursor_trail = 1;
       cursor_trail_devay = "0.1 0.4";
+      remember_window_size = "no";
     };
     extraConfig = ''
       startup_session ~/.config/kitty/startup.session

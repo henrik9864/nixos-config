@@ -85,7 +85,7 @@ in
       animation = [
         { leaf = "windowsIn";        enabled = true; speed = 5;  bezier = "noctalia";    style = "popin 60%"; }
         { leaf = "windowsOut";       enabled = true; speed = 4;  bezier = "noctaliaOut"; style = "popin 60%"; }
-        { leaf = "windowsMove";      enabled = true; speed = 5;  bezier = "wind";        style = "slide"; }
+        { leaf = "windowsMove";      enabled = true; speed = 2;  bezier = "noctalia";    style = "slide"; }
         { leaf = "fadeIn";           enabled = true; speed = 3;  bezier = "noctalia"; }
         { leaf = "fadeOut";          enabled = true; speed = 3;  bezier = "noctaliaOut"; }
         { leaf = "fadeSwitch";       enabled = true; speed = 2;  bezier = "noctalia"; }
