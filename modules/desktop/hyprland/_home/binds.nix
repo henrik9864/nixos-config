@@ -1,92 +1,113 @@
-{ lib, ... }:
-let
+{lib, ...}: let
   inherit (lib.generators) mkLuaInline;
   k = key: mkLuaInline ''mod .. " + ${key}"'';
-in
-{
+
+  bind = key: action: {_args = [key (mkLuaInline action)];};
+  bindLocked = key: action: {_args = [key (mkLuaInline action) {locked = true;}];};
+  bindMouse = key: action: {_args = [key (mkLuaInline action) {mouse = true;}];};
+
+  exec = cmd: "hl.dsp.exec_cmd(${builtins.toJSON cmd})";
+  noctalia = args: exec "noctalia msg ${args}";
+
+  # arrow key + vim key for each direction
+  directions = [
+    { arrow = "left";  vim = "H"; dir = "left";  }
+    { arrow = "down";  vim = "J"; dir = "down";  }
+    { arrow = "up";    vim = "K"; dir = "up";    }
+    { arrow = "right"; vim = "L"; dir = "right"; }
+  ];
+  perDirection = mkBinds: lib.concatMap (d: [(mkBinds d.arrow d.dir) (mkBinds d.vim d.dir)]) directions;
+
+  # keys 1..9, 0 -> workspaces 1..10; numpad by keycode so it works regardless of numlock/shift
+  numpadCodes = [87 88 89 83 84 85 79 80 81 90];
+  workspaces = lib.genList (i: {
+    key = toString (lib.mod (i + 1) 10);
+    numpad = "code:${toString (builtins.elemAt numpadCodes i)}";
+    ws = toString (i + 1);
+  }) 10;
+in {
   wayland.windowManager.hyprland.settings = {
     config.binds = {
       scroll_event_delay = 100;
       movefocus_cycles_fullscreen = true;
     };
 
-    bind = [
-      { _args = [ (k "RETURN")         (mkLuaInline "hl.dsp.exec_cmd(\"kitty\")")                                                ]; }
-      { _args = [ (k "Q")              (mkLuaInline "hl.dsp.window.close()")                                                     ]; }
-      { _args = [ (k "F")              (mkLuaInline "hl.dsp.window.fullscreen()")                                                 ]; }
-      { _args = [ (k "SHIFT + F")      (mkLuaInline "hl.dsp.window.fullscreen(1)")                                               ]; }
-      { _args = [ (k "V")              (mkLuaInline "hl.dsp.window.float({ action = \"toggle\" })")                              ]; }
-      # noctalia ipc
-      { _args = [ (k "D")              (mkLuaInline "hl.dsp.exec_cmd(\"noctalia msg panel-toggle launcher\")")                   ]; }
-      { _args = [ (k "ESCAPE")         (mkLuaInline "hl.dsp.exec_cmd(\"noctalia msg session lock\")")                           ]; }
-      { _args = [ (k "SHIFT + ESCAPE") (mkLuaInline "hl.dsp.exec_cmd(\"noctalia msg panel-toggle session\")")                   ]; }
-      { _args = [ (k "N")              (mkLuaInline "hl.dsp.exec_cmd(\"noctalia msg panel-toggle control-center notifications\")") ]; }
-      { _args = [ (k "W")              (mkLuaInline "hl.dsp.exec_cmd(\"noctalia msg panel-toggle wallpaper\")")                  ]; }
-      { _args = [ (k "C")              (mkLuaInline "hl.dsp.exec_cmd(\"noctalia msg panel-toggle control-center\")")             ]; }
-      { _args = [ (k "P")              (mkLuaInline "hl.dsp.window.pseudo()")                                                    ]; }
-      { _args = [ (k "X")              (mkLuaInline "hl.dsp.layout(\"togglesplit\")")                                            ]; }
-      { _args = [ (k "E")              (mkLuaInline "hl.dsp.exec_cmd(\"nemo\")")                                                 ]; }
-      { _args = [ (k "SHIFT + R")      (mkLuaInline "hl.dsp.exit()")                                                            ]; }
-      # screenshot
-      { _args = [ "Print"              (mkLuaInline "hl.dsp.exec_cmd(\"grim -g \\\"$(slurp)\\\" - | wl-copy\")")                ]; }
-      { _args = [ (k "PRINT")          (mkLuaInline "hl.dsp.exec_cmd(\"grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png\")") ]; }
-      # workspaces
-      { _args = [ (k "1") (mkLuaInline "hl.dsp.focus({ workspace = 1  })") ]; }
-      { _args = [ (k "2") (mkLuaInline "hl.dsp.focus({ workspace = 2  })") ]; }
-      { _args = [ (k "3") (mkLuaInline "hl.dsp.focus({ workspace = 3  })") ]; }
-      { _args = [ (k "4") (mkLuaInline "hl.dsp.focus({ workspace = 4  })") ]; }
-      { _args = [ (k "5") (mkLuaInline "hl.dsp.focus({ workspace = 5  })") ]; }
-      { _args = [ (k "6") (mkLuaInline "hl.dsp.focus({ workspace = 6  })") ]; }
-      { _args = [ (k "7") (mkLuaInline "hl.dsp.focus({ workspace = 7  })") ]; }
-      { _args = [ (k "8") (mkLuaInline "hl.dsp.focus({ workspace = 8  })") ]; }
-      { _args = [ (k "9") (mkLuaInline "hl.dsp.focus({ workspace = 9  })") ]; }
-      { _args = [ (k "0") (mkLuaInline "hl.dsp.focus({ workspace = 10 })") ]; }
-      { _args = [ (k "SHIFT + 1") (mkLuaInline "hl.dsp.window.move({ workspace = 1,  follow = false })") ]; }
-      { _args = [ (k "SHIFT + 2") (mkLuaInline "hl.dsp.window.move({ workspace = 2,  follow = false })") ]; }
-      { _args = [ (k "SHIFT + 3") (mkLuaInline "hl.dsp.window.move({ workspace = 3,  follow = false })") ]; }
-      { _args = [ (k "SHIFT + 4") (mkLuaInline "hl.dsp.window.move({ workspace = 4,  follow = false })") ]; }
-      { _args = [ (k "SHIFT + 5") (mkLuaInline "hl.dsp.window.move({ workspace = 5,  follow = false })") ]; }
-      { _args = [ (k "SHIFT + 6") (mkLuaInline "hl.dsp.window.move({ workspace = 6,  follow = false })") ]; }
-      { _args = [ (k "SHIFT + 7") (mkLuaInline "hl.dsp.window.move({ workspace = 7,  follow = false })") ]; }
-      { _args = [ (k "SHIFT + 8") (mkLuaInline "hl.dsp.window.move({ workspace = 8,  follow = false })") ]; }
-      { _args = [ (k "SHIFT + 9") (mkLuaInline "hl.dsp.window.move({ workspace = 9,  follow = false })") ]; }
-      { _args = [ (k "SHIFT + 0") (mkLuaInline "hl.dsp.window.move({ workspace = 10, follow = false })") ]; }
-      # window movement
-      { _args = [ (k "SHIFT + left" ) (mkLuaInline "hl.dsp.window.move({ direction = \"left\"  })") ]; }
-      { _args = [ (k "SHIFT + right") (mkLuaInline "hl.dsp.window.move({ direction = \"right\" })") ]; }
-      { _args = [ (k "SHIFT + up"   ) (mkLuaInline "hl.dsp.window.move({ direction = \"up\"    })") ]; }
-      { _args = [ (k "SHIFT + down" ) (mkLuaInline "hl.dsp.window.move({ direction = \"down\"  })") ]; }
-      { _args = [ (k "SHIFT + H")     (mkLuaInline "hl.dsp.window.move({ direction = \"left\"  })") ]; }
-      { _args = [ (k "SHIFT + J")     (mkLuaInline "hl.dsp.window.move({ direction = \"down\"  })") ]; }
-      { _args = [ (k "SHIFT + K")     (mkLuaInline "hl.dsp.window.move({ direction = \"up\"    })") ]; }
-      { _args = [ (k "SHIFT + L")     (mkLuaInline "hl.dsp.window.move({ direction = \"right\" })") ]; }
-      { _args = [ (k "CTRL + left" ) (mkLuaInline "hl.dsp.window.resize({ x = -80, y = 0,   relative = true })") ]; }
-      { _args = [ (k "CTRL + right") (mkLuaInline "hl.dsp.window.resize({ x = 80,  y = 0,   relative = true })") ]; }
-      { _args = [ (k "CTRL + up"   ) (mkLuaInline "hl.dsp.window.resize({ x = 0,   y = -80, relative = true })") ]; }
-      { _args = [ (k "CTRL + down" ) (mkLuaInline "hl.dsp.window.resize({ x = 0,   y = 80,  relative = true })") ]; }
+    bind =
+      # apps
+      [
+        (bind (k "RETURN") (exec "kitty"))
+        (bind (k "E") (exec "nemo"))
+        (bind (k "D") (noctalia "panel-toggle launcher"))
+      ]
+
+      # window state
+      ++ [
+        (bind (k "Q") "hl.dsp.window.close()")
+        (bind (k "F") "hl.dsp.window.fullscreen()")
+        (bind (k "SHIFT + F") "hl.dsp.window.fullscreen(1)")
+        (bind (k "V") ''hl.dsp.window.float({ action = "toggle" })'')
+        (bind (k "P") "hl.dsp.window.pseudo()")
+        (bind (k "X") ''hl.dsp.layout("togglesplit")'')
+      ]
+
       # focus (works through fullscreen inhibitors)
-      { _args = [ (k "left" ) (mkLuaInline "hl.dsp.focus({ direction = \"left\"  })") { locked = true; } ]; }
-      { _args = [ (k "right") (mkLuaInline "hl.dsp.focus({ direction = \"right\" })") { locked = true; } ]; }
-      { _args = [ (k "up"   ) (mkLuaInline "hl.dsp.focus({ direction = \"up\"    })") { locked = true; } ]; }
-      { _args = [ (k "down" ) (mkLuaInline "hl.dsp.focus({ direction = \"down\"  })") { locked = true; } ]; }
-      { _args = [ (k "H")     (mkLuaInline "hl.dsp.focus({ direction = \"left\"  })") { locked = true; } ]; }
-      { _args = [ (k "J")     (mkLuaInline "hl.dsp.focus({ direction = \"down\"  })") { locked = true; } ]; }
-      { _args = [ (k "K")     (mkLuaInline "hl.dsp.focus({ direction = \"up\"    })") { locked = true; } ]; }
-      { _args = [ (k "L")     (mkLuaInline "hl.dsp.focus({ direction = \"right\" })") { locked = true; } ]; }
-      # media
-      { _args = [ "XF86AudioPlay"         (mkLuaInline "hl.dsp.exec_cmd(\"playerctl play-pause\")") { locked = true; } ]; }
-      { _args = [ "XF86AudioNext"         (mkLuaInline "hl.dsp.exec_cmd(\"playerctl next\")")        { locked = true; } ]; }
-      { _args = [ "XF86AudioPrev"         (mkLuaInline "hl.dsp.exec_cmd(\"playerctl previous\")")    { locked = true; } ]; }
-      { _args = [ "XF86AudioRaiseVolume"  (mkLuaInline "hl.dsp.exec_cmd(\"pamixer -i 5\")")          { locked = true; } ]; }
-      { _args = [ "XF86AudioLowerVolume"  (mkLuaInline "hl.dsp.exec_cmd(\"pamixer -d 5\")")          { locked = true; } ]; }
-      { _args = [ "XF86AudioMute"         (mkLuaInline "hl.dsp.exec_cmd(\"pamixer -t\")")            { locked = true; } ]; }
-      { _args = [ "XF86MonBrightnessUp"   (mkLuaInline "hl.dsp.exec_cmd(\"brightnessctl set 5%+\")") { locked = true; } ]; }
-      { _args = [ "XF86MonBrightnessDown" (mkLuaInline "hl.dsp.exec_cmd(\"brightnessctl set 5%-\")") { locked = true; } ]; }
-      { _args = [ (k "mouse_down") (mkLuaInline "hl.dsp.focus({ workspace = \"e-1\" })") ]; }
-      { _args = [ (k "mouse_up"  ) (mkLuaInline "hl.dsp.focus({ workspace = \"e+1\" })") ]; }
-      # mouse drag/resize
-      { _args = [ (k "mouse:272") (mkLuaInline "hl.dsp.window.drag()"  ) { mouse = true; } ]; }
-      { _args = [ (k "mouse:273") (mkLuaInline "hl.dsp.window.resize()") { mouse = true; } ]; }
-    ];
+      ++ perDirection (key: dir: bindLocked (k key) ''hl.dsp.focus({ direction = "${dir}" })'')
+
+      # move window
+      ++ perDirection (key: dir: bind (k "SHIFT + ${key}") ''hl.dsp.window.move({ direction = "${dir}" })'')
+
+      # resize window
+      ++ [
+        (bind (k "CTRL + left") "hl.dsp.window.resize({ x = -80, y = 0, relative = true })")
+        (bind (k "CTRL + right") "hl.dsp.window.resize({ x = 80, y = 0, relative = true })")
+        (bind (k "CTRL + up") "hl.dsp.window.resize({ x = 0, y = -80, relative = true })")
+        (bind (k "CTRL + down") "hl.dsp.window.resize({ x = 0, y = 80, relative = true })")
+      ]
+
+      # workspaces
+      ++ map (w: bind (k w.key) "hl.dsp.focus({ workspace = ${w.ws} })") workspaces
+      ++ map (w: bind (k "SHIFT + ${w.key}") "hl.dsp.window.move({ workspace = ${w.ws}, follow = false })") workspaces
+      ++ map (w: bind (k w.numpad) "hl.dsp.focus({ workspace = ${w.ws} })") workspaces
+      ++ map (w: bind (k "SHIFT + ${w.numpad}") "hl.dsp.window.move({ workspace = ${w.ws}, follow = false })") workspaces
+      ++ [
+        (bind (k "mouse_down") ''hl.dsp.focus({ workspace = "e-1" })'')
+        (bind (k "mouse_up") ''hl.dsp.focus({ workspace = "e+1" })'')
+        (bind (k "ALT + left") ''hl.dsp.workspace.move({ monitor = "l" })'')
+        (bind (k "ALT + right") ''hl.dsp.workspace.move({ monitor = "r" })'')
+      ]
+
+      # noctalia shell
+      ++ [
+        (bind (k "N") (noctalia "panel-toggle control-center notifications"))
+        (bind (k "C") (noctalia "panel-toggle control-center"))
+        (bind (k "W") (noctalia "panel-toggle wallpaper"))
+        (bind (k "ESCAPE") (noctalia "session lock"))
+        (bind (k "SHIFT + ESCAPE") (noctalia "panel-toggle session"))
+        (bind (k "SHIFT + R") "hl.dsp.exit()")
+      ]
+
+      # screenshot
+      ++ [
+        (bind "Print" (exec ''grim -g "$(slurp)" - | wl-copy''))
+        (bind (k "PRINT") (exec "grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"))
+      ]
+
+      # media / hardware keys
+      ++ [
+        (bindLocked "XF86AudioPlay" (exec "playerctl play-pause"))
+        (bindLocked "XF86AudioNext" (exec "playerctl next"))
+        (bindLocked "XF86AudioPrev" (exec "playerctl previous"))
+        (bindLocked "XF86AudioRaiseVolume" (exec "pamixer -i 5"))
+        (bindLocked "XF86AudioLowerVolume" (exec "pamixer -d 5"))
+        (bindLocked "XF86AudioMute" (exec "pamixer -t"))
+        (bindLocked "XF86MonBrightnessUp" (exec "brightnessctl set 5%+"))
+        (bindLocked "XF86MonBrightnessDown" (exec "brightnessctl set 5%-"))
+      ]
+
+      # mouse drag / resize
+      ++ [
+        (bindMouse (k "mouse:272") "hl.dsp.window.drag()")
+        (bindMouse (k "mouse:273") "hl.dsp.window.resize()")
+      ];
   };
 }
