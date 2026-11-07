@@ -28,43 +28,47 @@
 #     Add public key files there and commit them before building.
 #   - The "no EFI environment" warning from cloud-init on boot is harmless.
 #   - cloud-init handles hostname and network config on cloned VMs via Proxmox UI.
+{config, ...}: let
+  inherit (config.flake.modules) nixos;
+in {
+  configurations.nixos.nixos-proxmox-template.module = {pkgs, ...}: {
+    nixpkgs.hostPlatform = "x86_64-linux";
+    imports = [
+      nixos.sshKeys
+      nixos.zsh
+    ];
 
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
-  system.sshKeys.enable = true;
-  system.zsh.enable = true;
+    system.sshKeys.enable = true;
+    system.zsh.enable = true;
 
-  networking.hostName = "nixos-proxmox";
+    networking.hostName = "nixos-proxmox";
 
-  networking.useDHCP = true;
+    networking.useDHCP = true;
 
-  services.qemuGuest.enable = true;
+    services.qemuGuest.enable = true;
 
-  services.cloud-init = {
-    enable = true;
-    network.enable = true;
+    services.cloud-init = {
+      enable = true;
+      network.enable = true;
+    };
+
+    time.timeZone = "Europe/Oslo";
+
+    users.users.henrik = {
+      isNormalUser = true;
+      extraGroups = ["wheel"];
+      shell = pkgs.zsh;
+    };
+
+    security.sudo.wheelNeedsPassword = false;
+
+    environment.systemPackages = with pkgs; [
+      vim
+      wget
+      git
+      cloud-utils
+    ];
+
+    system.stateVersion = "25.11";
   };
-
-  time.timeZone = "Europe/Oslo";
-
-  users.users.henrik = {
-    isNormalUser = true;
-    extraGroups = ["wheel"];
-    shell = pkgs.zsh;
-  };
-
-  security.sudo.wheelNeedsPassword = false;
-
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-    cloud-utils
-  ];
-
-  system.stateVersion = "25.11";
 }

@@ -1,65 +1,65 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
-  imports = [
-    ./hardware-configuration.nix
-  ];
+{config, ...}: let
+  inherit (config.flake.modules) nixos;
+in {
+  configurations.nixos.nixos-nix-cache.module = {pkgs, ...}: {
+    nixpkgs.hostPlatform = "x86_64-linux";
+    imports = [
+      nixos.sshKeys
+      nixos.ip
+      nixos.zsh
+      ./hardware-configuration.nix
+    ];
 
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/vda";
+    boot.loader.grub.enable = true;
+    boot.loader.grub.device = "/dev/vda";
 
-  networking.hostName = "nixos-nix-cache";
+    networking.hostName = "nixos-nix-cache";
 
-  system.sshKeys.enable = true;
-  system.zsh.enable = true;
+    system.sshKeys.enable = true;
+    system.zsh.enable = true;
 
-  system.ip = {
-    enable = true;
-    interface = "ens18";
-    address = "192.168.10.62";
-    gateway = "192.168.10.1";
+    system.ip = {
+      enable = true;
+      interface = "ens18";
+      address = "192.168.10.62";
+      gateway = "192.168.10.1";
+    };
+
+    time.timeZone = "Europe/Oslo";
+
+    users.users.henrik = {
+      isNormalUser = true;
+      extraGroups = ["wheel"];
+      shell = pkgs.zsh;
+    };
+
+    security.sudo.wheelNeedsPassword = false;
+
+    environment.systemPackages = with pkgs; [
+      vim
+      wget
+      git
+    ];
+
+    # Harmonia binary cache server
+    # On first deploy, generate a signing key:
+    #   nix-store --generate-binary-cache-key nixos-nix-cache-1 /etc/harmonia/secret-key /etc/harmonia/public-key
+    # Then add the public key to your other machines' nix.settings.trusted-public-keys.
+    # To use this cache on other machines, add to their configuration:
+    #   nix.settings.substituters = [ "http://192.168.10.62:5000" ];
+    #   nix.settings.trusted-public-keys = [ "<contents of /etc/harmonia/public-key>" ];
+    services.harmonia = {
+      enable = true;
+      signKeyPaths = ["/etc/harmonia/secret-key"];
+      settings.bind = "0.0.0.0:5000";
+      settings.priority = 30;
+    };
+
+    networking.firewall.allowedTCPPorts = [5000];
+
+    # Allow the harmonia user to access the nix store
+    nix.settings.allowed-users = ["harmonia"];
+
+    system.stateVersion = "25.11";
   };
-
-  time.timeZone = "Europe/Oslo";
-
-  users.users.henrik = {
-    isNormalUser = true;
-    extraGroups = ["wheel"];
-    shell = pkgs.zsh;
-  };
-
-  security.sudo.wheelNeedsPassword = false;
-
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-  ];
-
-  # Harmonia binary cache server
-  # On first deploy, generate a signing key:
-  #   nix-store --generate-binary-cache-key nixos-nix-cache-1 /etc/harmonia/secret-key /etc/harmonia/public-key
-  # Then add the public key to your other machines' nix.settings.trusted-public-keys.
-  # To use this cache on other machines, add to their configuration:
-  #   nix.settings.substituters = [ "http://192.168.10.62:5000" ];
-  #   nix.settings.trusted-public-keys = [ "<contents of /etc/harmonia/public-key>" ];
-  services.harmonia = {
-    enable = true;
-    signKeyPaths = ["/etc/harmonia/secret-key"];
-    settings.bind = "0.0.0.0:5000";
-    settings.priority = 30;
-  };
-
-  # Allow trusted users to upload to the cache via nix copy
-  nix.settings.trusted-users = ["root" "henrik"];
-
-  networking.firewall.allowedTCPPorts = [5000];
-
-  # Allow the harmonia user to access the nix store
-  nix.settings.allowed-users = ["harmonia"];
-
-  system.stateVersion = "25.11";
 }

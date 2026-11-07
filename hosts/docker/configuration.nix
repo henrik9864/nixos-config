@@ -1,54 +1,57 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-
-{
-  imports = [
-    ./hardware-configuration.nix
-  ];
-
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-
-  system.sshKeys.enable = true;
-  system.nixCache.enable = true;
-  system.zsh.enable = true;
-
-  networking.hostName = "nixos-docker";
-
-  system.ip = {
-    enable = true;
-    interface = "ens18";
-    address = "192.168.10.61";
-    gateway = "192.168.10.1";
-  };
-
-  networking.networkmanager.enable = true;
-
-  time.timeZone = "Europe/Oslo";
-
-  users.users.henrik = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-    shell = pkgs.zsh;
-    packages = with pkgs; [
-      tree
+{config, ...}: let
+  inherit (config.flake.modules) nixos;
+in {
+  configurations.nixos.nixos-docker.module = {pkgs, ...}: {
+    nixpkgs.hostPlatform = "x86_64-linux";
+    imports = [
+      nixos.sshKeys
+      nixos.nixCache
+      nixos.ip
+      nixos.docker
+      nixos.zsh
+      ./hardware-configuration.nix
     ];
+
+    boot.loader.grub.enable = true;
+    boot.loader.grub.device = "/dev/sda";
+
+    system.sshKeys.enable = true;
+    system.nixCache.enable = true;
+    system.zsh.enable = true;
+
+    networking.hostName = "nixos-docker";
+
+    system.ip = {
+      enable = true;
+      interface = "ens18";
+      address = "192.168.10.61";
+      gateway = "192.168.10.1";
+    };
+
+    networking.networkmanager.enable = true;
+
+    time.timeZone = "Europe/Oslo";
+
+    users.users.henrik = {
+      isNormalUser = true;
+      extraGroups = ["wheel"];
+      shell = pkgs.zsh;
+      packages = with pkgs; [
+        tree
+      ];
+    };
+
+    environment.systemPackages = with pkgs; [
+      vim
+      wget
+      git
+    ];
+
+    services.docker = {
+      enable = true;
+      extraUsers = ["henrik"];
+    };
+
+    system.stateVersion = "25.11";
   };
-
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-  ];
-
-  services.docker = {
-    enable = true;
-    extraUsers = [ "henrik" ];
-  };
-
-  system.stateVersion = "25.11";
 }

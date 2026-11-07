@@ -33,7 +33,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;}
-    (inputs.import-tree ./modules);
+  outputs = inputs: let
+    hostFile = dir: ./hosts/${dir}/configuration.nix;
+    hosts = builtins.filter (dir: builtins.pathExists (hostFile dir)) (builtins.attrNames (builtins.readDir ./hosts));
+  in
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [(inputs.import-tree ./modules)] ++ map hostFile hosts;
+    };
 }

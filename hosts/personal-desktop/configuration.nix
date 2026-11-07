@@ -1,230 +1,258 @@
 {
-  pkgs,
-  pkgs-unstable ? pkgs,
   inputs,
-  lib,
+  config,
   ...
-}: {
-  imports = [
-    ./hardware-configuration.nix
-  ];
-
-  nix.settings.experimental-features = ["pipe-operators"];
-  nix.settings.trusted-users = [
-    "root"
-    "henrik"
-  ];
-
-  nixpkgs.config.allowUnfree = true;
-
-  system.remoteBuild = {
-    enable = true;
-    hostName = "192.168.10.62";
-    hostPublicKeyFile = ../../keys/hosts/nix-cache.pub;
-    sshUser = "henrik";
-    sshKey = "/home/henrik/.ssh/id_ed25519";
-    maxJobs = 4;
-    speedFactor = 2;
-  };
-
-  boot.kernel.sysctl."fs.inotify.max_user_watches" = 1048576;
-
-  nixpkgs.overlays = [inputs.nix-cachyos-kernel.overlays.default];
-
-  # Boot
-  boot = {
-    kernelPackages = pkgs.cachyosKernels."linuxPackages-cachyos-bore";
-    loader = {
-      systemd-boot = {
-        enable = true;
-        configurationLimit = 25;
-      };
-      efi.canTouchEfiVariables = true;
-    };
-    initrd.availableKernelModules = [
-      "sd_mod"
+}: let
+  inherit (config.flake.modules) nixos;
+in {
+  configurations.nixos.nixos-personal.module = {
+    pkgs,
+    pkgs-unstable ? pkgs,
+    ...
+  }: {
+    nixpkgs.hostPlatform = "x86_64-linux";
+    imports = [
+      inputs.home-manager.nixosModules.home-manager
+      inputs.lanzaboote.nixosModules.lanzaboote
+      inputs.nixvim.nixosModules.default
+      nixos.hyprland
+      nixos.noctalia
+      nixos.vim
+      nixos.zshHome
+      nixos.gaming
+      nixos.llm
+      nixos.openWebui
+      nixos.searxng
+      nixos.networkStorage
+      nixos.dotnet
+      nixos.remoteBuild
+      nixos.sshKeys
+      nixos.deploy
+      ./hardware-configuration.nix
     ];
-  };
-
-  # Networking
-  networking = {
-    hostName = "nixos-personal";
-    networkmanager.enable = true;
-    nameservers = ["9.9.9.9"];
-  };
-
-  # Locale & keyboard
-  time.timeZone = "Europe/Oslo";
-  i18n.defaultLocale = "en_US.UTF-8";
-  services.xserver.xkb = {
-    layout = "no";
-    variant = "nodeadkeys";
-  };
-
-  console.keyMap = "no";
-
-  programs.ydotool.enable = true;
-
-  # Audio
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  # User
-  users.users.henrik = {
-    isNormalUser = true;
-    description = "Henrik Strocka";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "uinput"
-    ];
-    shell = pkgs.zsh;
-  };
-
-  # System packages
-  environment.systemPackages = [
-    pkgs.fastfetch
-    pkgs.alejandra
-    pkgs.gcc
-    pkgs.file
-    pkgs.ripgrep
-  ];
-
-  programs = {
-    firefox.enable = true;
-
-    nix-ld.enable = true;
-  };
-
-  system.zsh.enable = true;
-
-  programs.nvim.enable = true;
-
-  # Home Manager
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    extraSpecialArgs = {inherit inputs pkgs-unstable;};
-    users.henrik = import ./_home/home.nix;
-    backupFileExtension = "backup";
-  };
-
-  # Services
-  services.printing.enable = true;
-  system.sshKeys.enable = true;
-
-  services.networkStorage = {
-    enable = true;
-    mounts.share = {
-      device = "192.168.10.196:/mnt/HDD16/Share";
-      mountPoint = "/mnt/s";
-      options = [
-        "rw"
-        "nolock"
-      ];
+    _module.args.pkgs-unstable = import inputs.nixpkgs-unstable {
+      system = "x86_64-linux";
+      config.allowUnfree = true;
     };
 
-    mounts.llm = {
-      device = "192.168.10.196:/mnt/HDD16/LLM";
-      mountPoint = "/mnt/llm";
-      options = [
-        "rw"
-        "nolock"
-      ];
-    };
-  };
+    nix.settings.experimental-features = ["pipe-operators"];
 
-  services.llm = {
-    enable = true;
-    modelsDir = "/mnt/llm/models/";
-    acceleration = "cuda";
-    common = {
-      extraArgs = [
-        "--jinja"
-        "--cache-type-k q4_0"
-        "--cache-type-v q4_0"
-      ];
+    nixpkgs.config.allowUnfree = true;
+
+    system.remoteBuild = {
+      enable = true;
+      hostName = "192.168.10.62";
+      hostPublicKeyFile = ../../keys/hosts/nix-cache.pub;
+      sshUser = "henrik";
+      sshKey = "/home/henrik/.ssh/id_ed25519";
+      maxJobs = 4;
+      speedFactor = 2;
     };
-    models = {
-      qwen27b-mtp = {
-        enable = false;
-        path = "qwen/Qwen3.6-27B-UD-Q4_K_XL-MTP.gguf";
-        port = 8080;
-        contextSize = 32768;
-        batchSize = 512;
-        ubatchSize = 512;
-        flashAttn = true;
-        mtp = {
-          enable = true;
-          draftTokens = 2;
+
+    boot.kernel.sysctl."fs.inotify.max_user_watches" = 1048576;
+
+    nixpkgs.overlays = [inputs.nix-cachyos-kernel.overlays.default];
+
+    # Boot
+    boot = {
+      kernelPackages = pkgs.cachyosKernels."linuxPackages-cachyos-bore";
+      loader = {
+        systemd-boot = {
+          enable = false;
+          configurationLimit = 25;
         };
-        extraArgs = [
-          "--parallel 1"
-        ];
+        efi.canTouchEfiVariables = true;
       };
-
-      qwen27b-q5-mtp = {
-        enable = false;
-        path = "qwen/Qwen3.6-27B-UD-Q5_K_XL-MTP.gguf";
-        port = 8080;
-        contextSize = 32768;
-        batchSize = 512;
-        ubatchSize = 512;
-        flashAttn = true;
-        mtp = {
-          enable = true;
-          draftTokens = 2;
-        };
-        extraArgs = [
-          "--parallel 1"
-        ];
-      };
-
-      qwen38-q5 = {
+      lanzaboote = {
         enable = true;
-        path = "qwen/Qwen3.8-27B-Q5_K_S.gguf";
-        port = 8080;
-        contextSize = 32768 * 4;
-        batchSize = 2048;
-        ubatchSize = 512;
-        flashAttn = true;
-        extraArgs = [
-          "--parallel 1"
+        pkiBundle = "/var/lib/sbctl";
+      };
+      initrd.availableKernelModules = [
+        "sd_mod"
+      ];
+    };
+
+    # Networking
+    networking = {
+      hostName = "nixos-personal";
+      networkmanager.enable = true;
+      nameservers = ["9.9.9.9"];
+    };
+
+    # Locale & keyboard
+    time.timeZone = "Europe/Oslo";
+    i18n.defaultLocale = "en_US.UTF-8";
+    services.xserver.xkb = {
+      layout = "no";
+      variant = "nodeadkeys";
+    };
+
+    console.keyMap = "no";
+
+    programs.ydotool.enable = true;
+
+    # Audio
+    services.pulseaudio.enable = false;
+    security.rtkit.enable = true;
+    services.pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
+
+    # User
+    users.users.henrik = {
+      isNormalUser = true;
+      description = "Henrik Strocka";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+        "uinput"
+      ];
+      shell = pkgs.zsh;
+    };
+
+    # System packages
+    environment.systemPackages = [
+      pkgs.fastfetch
+      pkgs.alejandra
+      pkgs.gcc
+      pkgs.file
+      pkgs.ripgrep
+      pkgs.sbctl
+    ];
+
+    programs = {
+      firefox.enable = true;
+
+      nix-ld.enable = true;
+    };
+
+    system.zsh.enable = true;
+
+    programs.nvim.enable = true;
+
+    # Home Manager
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      extraSpecialArgs = {inherit inputs pkgs-unstable;};
+      users.henrik = import ./_home/home.nix;
+      backupFileExtension = "backup";
+    };
+
+    # Services
+    services.printing.enable = true;
+    system.sshKeys.enable = true;
+
+    services.networkStorage = {
+      enable = true;
+      mounts.share = {
+        device = "192.168.10.196:/mnt/HDD16/Share";
+        mountPoint = "/mnt/s";
+        options = [
+          "rw"
+          "nolock"
+        ];
+      };
+
+      mounts.llm = {
+        device = "192.168.10.196:/mnt/HDD16/LLM";
+        mountPoint = "/mnt/llm";
+        options = [
+          "rw"
+          "nolock"
         ];
       };
     };
+
+    services.llm = {
+      enable = true;
+      modelsDir = "/mnt/llm/models/";
+      acceleration = "cuda";
+      common = {
+        extraArgs = [
+          "--jinja"
+          "--cache-type-k q4_0"
+          "--cache-type-v q4_0"
+        ];
+      };
+      models = {
+        qwen27b-mtp = {
+          enable = false;
+          path = "qwen/Qwen3.6-27B-UD-Q4_K_XL-MTP.gguf";
+          port = 8080;
+          contextSize = 32768;
+          batchSize = 512;
+          ubatchSize = 512;
+          flashAttn = true;
+          mtp = {
+            enable = true;
+            draftTokens = 2;
+          };
+          extraArgs = [
+            "--parallel 1"
+          ];
+        };
+
+        qwen27b-q5-mtp = {
+          enable = false;
+          path = "qwen/Qwen3.6-27B-UD-Q5_K_XL-MTP.gguf";
+          port = 8080;
+          contextSize = 32768;
+          batchSize = 512;
+          ubatchSize = 512;
+          flashAttn = true;
+          mtp = {
+            enable = true;
+            draftTokens = 2;
+          };
+          extraArgs = [
+            "--parallel 1"
+          ];
+        };
+
+        qwen38-q5 = {
+          enable = true;
+          path = "qwen/Qwen3.8-27B-Q5_K_S.gguf";
+          port = 8080;
+          contextSize = 32768 * 4;
+          batchSize = 2048;
+          ubatchSize = 512;
+          flashAttn = true;
+          extraArgs = [
+            "--parallel 1"
+          ];
+        };
+      };
+    };
+
+    services.openWebui.enable = false;
+    services.searxng.enable = true;
+    services.gaming = {
+      enable = true;
+      extraUsers = ["henrik"];
+    };
+
+    powerManagement.cpuFreqGovernor = "performance";
+
+    services.environments.dotnet = {
+      enable = true;
+      sdks = [pkgs.dotnet-sdk_9 pkgs.dotnet-sdk_11];
+    };
+
+    # Filesystems
+    fileSystems."/mnt/storage" = {
+      device = "/dev/disk/by-uuid/9CF4C5D4F4C5B136";
+      fsType = "ntfs";
+    };
+
+    fileSystems."/mnt/old" = {
+      device = "/dev/disk/by-uuid/0886AA3186AA1F66";
+      fsType = "ntfs";
+    };
+
+    system.stateVersion = "25.11";
   };
-
-  services.openWebui.enable = false;
-  services.searxng.enable = true;
-  services.gaming = {
-    enable = true;
-    extraUsers = ["henrik"];
-  };
-
-  powerManagement.cpuFreqGovernor = "performance";
-
-  services.environments.dotnet = {
-    enable = true;
-    sdks = [pkgs.dotnet-sdk_9 pkgs.dotnet-sdk_11];
-  };
-
-  # Filesystems
-  fileSystems."/mnt/storage" = {
-    device = "/dev/disk/by-uuid/9CF4C5D4F4C5B136";
-    fsType = "ntfs";
-  };
-
-  fileSystems."/mnt/old" = {
-    device = "/dev/disk/by-uuid/0886AA3186AA1F66";
-    fsType = "ntfs";
-  };
-
-  system.stateVersion = "25.11";
 }
