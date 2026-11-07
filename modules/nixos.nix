@@ -16,6 +16,7 @@
       modules = [
         { _module.args.inputs = inputs; }
         config.flake.modules.nixos.base
+        config.flake.modules.nixos.hostnames
         cfg.module
       ];
     }

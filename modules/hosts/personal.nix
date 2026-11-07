@@ -23,6 +23,7 @@ let inherit (config.flake.modules) nixos; in
         nixos.dotnet
         nixos.remoteBuild
         nixos.sshKeys
+        nixos.deploy
         (inputs.import-tree ../../hosts/personal-desktop)
       ];
       _module.args.pkgs-unstable = import inputs.nixpkgs-unstable {
