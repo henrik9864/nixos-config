@@ -39,12 +39,6 @@
     git
   ];
 
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "no";
-    settings.PasswordAuthentication = false;
-  };
-
   # Harmonia binary cache server
   # On first deploy, generate a signing key:
   #   nix-store --generate-binary-cache-key nixos-nix-cache-1 /etc/harmonia/secret-key /etc/harmonia/public-key

@@ -15,6 +15,7 @@
     inputs.nixpkgs.lib.nixosSystem {
       modules = [
         { _module.args.inputs = inputs; }
+        config.flake.modules.nixos.base
         cfg.module
       ];
     }

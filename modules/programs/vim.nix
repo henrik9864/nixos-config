@@ -3,6 +3,7 @@
     config,
     lib,
     pkgs,
+    inputs,
     pkgs-unstable ? pkgs,
     ...
   }: let
@@ -15,6 +16,7 @@
     config = lib.mkIf cfg.enable {
       programs.nixvim = {
         enable = true;
+        nixpkgs.source = inputs.nixpkgs;
         # package = pkgs-unstable.neovim-unwrapped;
         globals.mapleader = " ";
 
@@ -53,7 +55,7 @@
           fd
           ripgrep
           lazygit
-          claude-code-acp
+          claude-agent-acp
         ];
 
         dependencies.roslyn_ls.package = pkgs-unstable.roslyn-ls;

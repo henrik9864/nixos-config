@@ -8,7 +8,6 @@ let inherit (config.flake.modules) nixos; in
       imports = [
         inputs.home-manager.nixosModules.home-manager
         inputs.lanzaboote.nixosModules.lanzaboote
-        inputs.nix-index-database.nixosModules.nix-index
         #inputs.nicotine.nixosModules.nicotine
         #inputs.nicotine.nixosModules.eveguru
         inputs.nixvim.nixosModules.default
@@ -23,6 +22,7 @@ let inherit (config.flake.modules) nixos; in
         nixos.networkStorage
         nixos.dotnet
         nixos.remoteBuild
+        nixos.sshKeys
         (inputs.import-tree ../../hosts/personal-desktop)
       ];
       _module.args.pkgs-unstable = import inputs.nixpkgs-unstable {

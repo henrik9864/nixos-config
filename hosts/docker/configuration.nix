@@ -45,8 +45,6 @@
     git
   ];
 
-  services.openssh.enable = true;
-
   services.docker = {
     enable = true;
     extraUsers = [ "henrik" ];

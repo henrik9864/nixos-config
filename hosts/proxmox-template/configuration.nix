@@ -66,11 +66,5 @@
     cloud-utils
   ];
 
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "no";
-    settings.PasswordAuthentication = false;
-  };
-
   system.stateVersion = "25.11";
 }

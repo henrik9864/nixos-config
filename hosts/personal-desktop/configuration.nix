@@ -9,11 +9,7 @@
     ./hardware-configuration.nix
   ];
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-    "pipe-operators"
-  ];
+  nix.settings.experimental-features = ["pipe-operators"];
   nix.settings.trusted-users = [
     "root"
     "henrik"
@@ -24,7 +20,7 @@
   system.remoteBuild = {
     enable = true;
     hostName = "192.168.10.62";
-    hostPublicKeyFile = ../../keys/nix-cache-host.pub;
+    hostPublicKeyFile = ../../keys/hosts/nix-cache.pub;
     sshUser = "henrik";
     sshKey = "/home/henrik/.ssh/id_ed25519";
     maxJobs = 4;
@@ -102,7 +98,6 @@
 
   programs = {
     firefox.enable = true;
-    nix-index-database.comma.enable = true;
 
     nix-ld.enable = true;
   };
@@ -122,7 +117,7 @@
 
   # Services
   services.printing.enable = true;
-  services.openssh.enable = true;
+  system.sshKeys.enable = true;
 
   services.networkStorage = {
     enable = true;

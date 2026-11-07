@@ -56,6 +56,7 @@
         };
 
         programs.zsh = {
+          shellInit = "zsh-newuser-install() { :; }";
           shellAliases = shared.aliases;
           promptInit = shared.promptInit;
           ohMyZsh = {

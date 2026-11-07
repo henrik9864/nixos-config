@@ -68,7 +68,7 @@
     pkgs-unstable.pi-coding-agent
 
     # Emulator
-    melonDS
+    melonds
 
     # 3D Printing
     prusa-slicer
@@ -151,13 +151,15 @@
       name = "Henrik Strocka";
       email = "henstr@hotmail.com";
     };
-    delta = {
-      enable = true;
-      options = {
-        navigate = true;
-        side-by-side = true;
-        line-numbers = true;
-      };
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      navigate = true;
+      side-by-side = true;
+      line-numbers = true;
     };
   };
 

@@ -14,7 +14,7 @@
         type = lib.types.nullOr lib.types.path;
         default = null;
         description = "Path to a file containing the remote build machine's SSH host public key.";
-        example = "../../keys/nix-cache-host.pub";
+        example = "../../keys/hosts/nix-cache.pub";
       };
       sshUser = lib.mkOption {
         type = lib.types.str;
